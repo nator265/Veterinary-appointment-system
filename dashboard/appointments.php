@@ -120,7 +120,12 @@ if(isset($_GET['yes'])){
                         <input type="date" name="ap_date" id="date" required>
                         <br>
                         <div style="margin-bottom: 5px;" id="msg">Select Service:</div>
-                        <input type="checkbox" class="checkboxes" name="ap_type[]" id="checkbox" value="Vaccination"> Vaccination <br>
+                        <input type="checkbox" class="checkboxes" name="ap_type[]" id="checkbox" value="Vaccination"> Vaccination 
+                        <!-- this section will bring up the cost of the Service -->
+                            <?php
+                                
+                            ?> 
+                        <br>
                         <input type="checkbox" class="checkboxes" name="ap_type[]" id="checkbox" value="Check up"> Check up <br>
                         <input type="checkbox" class="checkboxes" name="ap_type[]" id="checkbox" value="Diet"> Diet<br>
                         <div class="bttn-container">
