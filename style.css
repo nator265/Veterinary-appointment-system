@@ -1,0 +1,121 @@
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+body{
+    height: 100vh;
+    background-image: url("Images/bg.jpg");
+    background-size: 100vw;
+    background-repeat:no-repeat;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 100;
+}
+
+h1{
+    padding: 50px;
+    font-size: 20px;
+    font-family: sans-serif;
+    font-weight: 300;
+    color: rgb(75, 75, 75);
+}
+#left-h1{
+    color: white;
+    float: left;
+    font-size: large;
+}
+#right-h1{
+    float: right;
+    font-size: 20px;
+    padding-right: 20px;
+    color: rgba(0, 0, 0, 0.596);
+}
+#sign-up{
+    margin-left: 15px;
+    padding: 15px 5px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 15px;
+    width: 120px;
+    font-family: sans-serif;
+    width: 200px;
+    background-color: rgba(10, 10, 10, 0.815);
+    color: white;
+}
+.form-container{
+    display: flex;
+    justify-content: center;
+}
+.form{
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    box-shadow: inset 0 0 2000px 0 rgba(8, 8, 8, 0.452);
+    backdrop-filter: saturate(110%) blur(5px); 
+    padding: 20px 0px;
+    width: 80%;
+}
+.fieldset{
+    border-radius: 5px;
+    padding: 5px;
+    border: 0px;
+}
+.legend{
+    padding: 10px;
+}
+h2{
+    font-size: 20px;
+    font-family: sans-serif;
+    font-weight: 200;
+    color: white;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 100;
+}
+input{
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 100;
+    padding: 10px;
+    margin: 10px 15px;
+    border: none;
+    font-size: 18px;
+    width: 300px;
+    font-family: sans-serif;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.911);
+    letter-spacing: 1px;
+}
+
+.btn{
+    text-align: center;
+}
+#bttn{
+    border: 0;
+    border-radius: 0px;
+    width: 150px;
+    padding: 10px;
+    background-color: rgba(10, 10, 10, 0.815);
+    color: white;
+    font-size: 15px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 100;
+    letter-spacing: 0px;
+}
+#bttn:hover{
+    cursor: pointer;
+}
+.fieldset-container{
+    background-color: none;
+}
+.fieldset2{
+    border: none;
+    border-top: 1px solid grey;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    background-color: none;
+}
+.legend2{
+    padding: 0px 10px;
+    padding-bottom: 20px;
+}
