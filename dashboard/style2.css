@@ -349,7 +349,7 @@ a{
     padding: 20px 0px;
     color: black;
     height: 90vh;
-    width: 40%;
+    width: 900;
     z-index: 2;
     border-radius: 20px;
     background-color: #A9C9FF;
@@ -379,6 +379,21 @@ input{
     border: none;
     border-bottom: 1px solid black;
     width: 100%;
+}
+.pushcontainer{
+    display: inline-block;
+    width: 100%;
+}
+.pushleft{
+    float: left;
+    width: 50%;
+}
+.pushright{
+    float: right;
+    width: 40%;
+}
+#msg{
+    margin-bottom: 0;
 }
 #btn{
     width: 40%;

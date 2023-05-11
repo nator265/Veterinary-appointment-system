@@ -7,34 +7,8 @@ if(!isset($_SESSION['name'])){
     header('location:../login.php');
 }
 // to set global variable for the form to access
-$_SESSION['id'] = $_GET['edit'];
-$query = "SELECT * FROM appointments WHERE ap_id = '".$_SESSION['id']."'";
-$link = mysqli_query($conn, $query);
-$result = mysqli_fetch_assoc($link);
-$_SESSION['fullname'] = $result['fullname'];
-$_SESSION['field'] = $result['field'];
-$_SESSION['animal'] = $result['animal'];
-$_SESSION['date'] = $result['ap_date'];
-$_SESSION['ap_type'] = $result['ap_type'];
-
-if(isset($_POST['submit'])){
-    $query = "SELECT * FROM appointments WHERE ap_id = '".$_SESSION['id']."'";
-    $link = mysqli_query($conn, $query);
-    $result = mysqli_fetch_assoc($link);
-    $_SESSION['fullname'] = $result['fullname'];
-    $_SESSION['field'] = $result['field'];
-    $_SESSION['animal'] = $result['animal'];
-    $_SESSION['date'] = $result['ap_date'];
-    $_SESSION['ap_type'] = $result['ap_type'];
-    $fullname = $_POST['fullname'];
-    $field = $_POST['field'];
-    $date = $_POST['ap_date'];
-    $animal = $_POST['animal'];
-    $ap_type = $_POST['ap_type'];
-    $_SESSION['field2'] = $field;
-    // converting the ap_type to string
-    $allaptype = implode(", ", $ap_type);
-    
+if(isset($_GET['edit'])){
+    $_SESSION['idforedit'] = $_GET['edit'];
 }
 ?>
 
@@ -90,31 +64,72 @@ if(isset($_POST['submit'])){
                         </h1>
                     </div>
                     <form action="appointments.php" method="POST" onsubmit="return validateForm(this);">
-                        <input type="text" name="fullname" id="fullname" placeholder="Owner Name(Fullname)" value="<?php echo $_SESSION['fullname']?>" required>
-                        <br>
-                        <br>
-                        <span style="color:white;"> Select Animal Type</span>
-                        <br>
-                        <div class="type">
-                            <select name="field" id="field" required value="<?php echo $_SESSION['field'] ?>">
-                                <option hidden><?php echo $_SESSION['field']?></option>
-                                <option value="pet">Pet</option>
-                                <option value="livestock">Livestock</option>
-                            </select>                        
-                            <input type="text" name="animal" id="animal" placeholder="Pet e.g. Dog | Livestock e.g. Cow" value="<?php echo $_SESSION['animal'] ?>" required>
+                        <div class="pushcontainer">
+                            <div class="pushleft">
+                                <input type="text" name="fullname" id="fullname" placeholder="Owner Name(Fullname)" value="<?php echo $_SESSION['fullname']?>" required>
+                                <br>
+                                <br>
+                                <span style="color:white;"> Select Animal Type</span>
+                                <br>
+                                <div class="type">
+                                    <select name="field" id="field" required value="<?php echo $_SESSION['field'] ?>">
+                                        <option hidden><?php echo $_SESSION['field']?></option>
+                                        <option value="pet">Pet</option>
+                                        <option value="livestock">Livestock</option>
+                                    </select>                        
+                                    <input type="text" name="animal" id="animal" placeholder="Pet e.g. Dog | Livestock e.g. Cow" value="<?php echo $_SESSION['animal'] ?>" required>
+                                </div>
+                                <br>
+                                <input type="date" name="ap_date" id="date" required value="<?php echo $_SESSION['date']?>" required>
+                                <br>
+                            </div>
+                            <div class="pushright">
+                                <div style="margin-bottom: 5px;" id="msg" style="color: red;" >Select Service:</div>
+                                <?php
+                                    $checked_arr = array();
+
+                                    // Fetch checked values
+                                    $fetchLang = mysqli_query($conn,"SELECT * FROM appointments");
+                                    if(mysqli_num_rows($fetchLang) > 0){
+                                          $result = mysqli_fetch_assoc($fetchLang);
+                                          $checked_arr = explode(",",$result['ap_type']);
+                                    }
+                           
+                                    // Create checkboxes
+                                     $service = "SELECT servicename FROM service_costs";
+                                    $runservice = mysqli_query($conn, $service);
+                                    checkSQL($conn, $runservice);
+                                    $service_row = mysqli_num_rows($runservice);
+                                    if (!$runservice){
+                                        die("Invalid query: " .$conn->error);
+                                    }                  
+                                    $values = [];
+                                    // reading data contained in each row
+                                    while($service_row = $runservice->fetch_assoc()){                                    
+                                        $values[]=  $service_row["servicename"];   
+                                    }
+                                    $languages_arr = $values;
+                                    foreach($checked_arr as $language){
+                           
+                                         $checked = "";
+                                         if(in_array($language,$checked_arr)){
+                                              $checked = "checked";
+                                         }
+                                         echo '<input type="checkbox" id="checkbox"name="ap_type[]" value="'.$language.'" '.$checked.' > '.$language.' <br/>';
+                                    }
+                                    // getting the other arrayas that werent checked by the user
+                                    $newarr = array_diff( $values, $checked_arr);
+                                    foreach ($newarr as $value) {
+                                        echo  " <input type='checkbox' id='checkbox' name='ap_type[]' value='". $value."' style='margin-top: 10px'> $value<br> ";
+                                    }
+                                ?>
+                            </div>
                         </div>
-                        <br>
-                        <input type="date" name="ap_date" id="date" required value="<?php echo $_SESSION['date']?>" required>
-                        <br>
-                        <div style="margin-bottom: 5px;" id="msg" style="color: red;" >Select Service:</div>
-                        <input type="checkbox" class="checkboxes" name="ap_type[]" id="checkbox" value="Vaccination"> Vaccination <br>
-                        <input type="checkbox" class="checkboxes" name="ap_type[]" id="checkbox" value="Check up"> Check up <br>
-                        <input type="checkbox" class="checkboxes" name="ap_type[]" id="checkbox" value="Diet"> Diet<br>
-                       
                         <div class="bttn-container">
                             <input type="submit" value="Submit" name="re-submit"  id="btn" onClick="valthis()">    
                         </div>
                         <!-- some javascript to control the checkboxes -->
+
                     </form>
                 </div>
             </div>

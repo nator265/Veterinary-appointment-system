@@ -36,7 +36,7 @@ if(isset($_POST['re-submit'])){
     $allaptype = implode(", ", $ap_type);
     
     // inserting data into the appointments table in the database
-    $update = "UPDATE appointments SET fullname = '$fullname', field = '$field', ap_date = '$date', animal = '$animal', ap_type = '$allaptype' where ap_id = '".$_SESSION['id']."' ";
+    $update = "UPDATE appointments SET fullname = '$fullname', field = '$field', ap_date = '$date', animal = '$animal', ap_type = '$allaptype' where ap_id = '".$_SESSION['idforedit']."' ";
     mysqli_query($conn, $update);
     header('location:appointments.php');
     
@@ -104,30 +104,45 @@ if(isset($_GET['yes'])){
                         </h1>
                     </div>
                     <form action="appointments.php" method="POST">
-                        <input type="text" name="fullname" id="fullname" placeholder="Owner Name(Fullname)" required>
-                        <br>
-                        <br>
-                        <span style="color:white;"> Select Animal Type</span>
-                        <br>
-                        <div class="type">
-                            <select name="field" id="field" required>
-                                <option value="pet">Pet</option>
-                                <option value="livestock">Livestock</option>
-                            </select>                        
-                            <input type="text" name="animal" id="animal" placeholder="Pet e.g. Dog | Livestock e.g. Cow" required>
+                        <div class="pushcontainer">
+                            <div class="pushleft">
+                                <input type="text" name="fullname" id="fullname" placeholder="Owner Name(Fullname)" required>
+                                <br>
+                                <br>
+                                <span style="color:white;"> Select Animal Type</span>
+                                <br>
+                                <div class="type">
+                                    <select name="field" id="field" required>
+                                        <option value="pet">Pet</option>
+                                        <option value="livestock">Livestock</option>
+                                    </select>                        
+                                    <input type="text" name="animal" id="animal" placeholder="Pet e.g. Dog | Livestock e.g. Cow" required>
+                                </div>
+                                <br>
+                                <input type="date" name="ap_date" id="date" required>
+                                <br>
+                            </div>
+                            <div class="pushright">
+                                <div style="margin-bottom: 5px;" id="msg">Select Service:</div>
+                                <?php
+                                    $service = "SELECT servicename FROM service_costs";
+                                    $runservice = mysqli_query($conn, $service);
+                                    checkSQL($conn, $runservice);
+                                    $service_row = mysqli_num_rows($runservice);
+                                    if (!$runservice){
+                                        die("Invalid query: " .$conn->error);
+                                    }                  
+                                    $values = [];
+                                    // reading data contained in each row
+                                    while($service_row = $runservice->fetch_assoc()){                                    
+                                        $values[]=  $service_row["servicename"];   
+                                    }
+                                    foreach ($values as $value) {
+                                        echo  " <input type='checkbox' id='checkbox' name='ap_type[]' value='". $value."' style='margin-top: 10px'> $value<br> ";
+                                    }
+                                ?>
+                            </div>
                         </div>
-                        <br>
-                        <input type="date" name="ap_date" id="date" required>
-                        <br>
-                        <div style="margin-bottom: 5px;" id="msg">Select Service:</div>
-                        <input type="checkbox" class="checkboxes" name="ap_type[]" id="checkbox" value="Vaccination"> Vaccination 
-                        <!-- this section will bring up the cost of the Service -->
-                            <?php
-                                
-                            ?> 
-                        <br>
-                        <input type="checkbox" class="checkboxes" name="ap_type[]" id="checkbox" value="Check up"> Check up <br>
-                        <input type="checkbox" class="checkboxes" name="ap_type[]" id="checkbox" value="Diet"> Diet<br>
                         <div class="bttn-container">
                             <input type="submit" value="Submit" name="submit"  id="btn">    
                         </div>
