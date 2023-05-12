@@ -12,33 +12,74 @@ if(isset($_POST['submit'])){
     $field = $_POST['field'];
     $date = $_POST['ap_date'];
     $animal = $_POST['animal'];
-    $ap_type = $_POST['ap_type'];
+    $selectedservices = $_POST['ap_type']; 
     $_SESSION['field2'] = $field;
     // converting the ap_type to string
-    $allaptype = implode(", ", $ap_type);
-    // inserting data into the appointments table in the database
-    $reg = "INSERT INTO appointments(fullname, field, animal, ap_date, ap_type, phone) VALUES ('$fullname', '$field', '$animal', '$date', '$allaptype', '".$_SESSION['phone']."')";
+    $allaptype = implode(", ", $selectedservices);
+
+     // inserting data into the appointments table in the database
+     $reg = "INSERT INTO appointments(fullname, field, animal, ap_date, ap_type, phone) VALUES ('$fullname', '$field', '$animal', '$date', '$allaptype', '".$_SESSION['phone']."')";
                             
-    $rest = mysqli_query($conn, $reg);
+     $rest = mysqli_query($conn, $reg);
+     
+     checkSQL($conn, $rest);
+
+     $ap_id = mysqli_insert_id($conn);
+ 
+    // Get the total cost by comparing selected services with `service_costs` table
+    $total = 0;
+    foreach ($selectedservices as $service) {
+        $service = mysqli_real_escape_string($conn, $service); // Prevent SQL injection
+        $query = "SELECT service_cost FROM service_costs WHERE servicename = '$service'";
+        $result = mysqli_query($conn, $query);
+
+        if ($row = mysqli_fetch_assoc($result)) {
+            $serviceCost = intval($row['service_cost']); // Convert to integer
+            $total += $serviceCost;
+        }
+    }
+
+    $query2 = "UPDATE appointments SET total = '$total' WHERE ap_id = '$ap_id'";
+    mysqli_query($conn, $query2);
     
-    checkSQL($conn, $rest);
-    header('location: appointments-success.php');
+    // Close the database connection
+    mysqli_close($conn);
+   
+    header('location: appointments-success.php');   
 }
 if(isset($_POST['re-submit'])){
     $fullname = $_POST['fullname'];
     $field = $_POST['field'];
     $date = $_POST['ap_date'];
     $animal = $_POST['animal'];
-    $ap_type = $_POST['ap_type'];
+    $selectedservices = $_POST['ap_type'];
     $_SESSION['field2'] = $field;
     
     // converting the ap_type to string
-    $allaptype = implode(", ", $ap_type);
+    $allaptype = implode(", ", $selectedservices);
     
     // inserting data into the appointments table in the database
     $update = "UPDATE appointments SET fullname = '$fullname', field = '$field', ap_date = '$date', animal = '$animal', ap_type = '$allaptype' where ap_id = '".$_SESSION['idforedit']."' ";
     mysqli_query($conn, $update);
     header('location:appointments.php');
+
+    $total = 0;
+    foreach ($selectedservices as $service) {
+        $service = mysqli_real_escape_string($conn, $service); // Prevent SQL injection
+        $query = "SELECT service_cost FROM service_costs WHERE servicename = '$service'";
+        $result = mysqli_query($conn, $query);
+
+        if ($row = mysqli_fetch_assoc($result)) {
+            $serviceCost = intval($row['service_cost']); // Convert to integer
+            $total += $serviceCost;
+        }
+    }
+
+    $query2 = "UPDATE appointments SET total = '$total' WHERE ap_id = '".$_SESSION['idforedit']."'";
+    mysqli_query($conn, $query2);
+    
+    // Close the database connection
+    mysqli_close($conn);
     
 }
 
@@ -96,7 +137,7 @@ if(isset($_GET['yes'])){
         <!-- thi is the modal for the appointments registration -->
         <div class="modal-container" id="modal-container">
             <div class="modal">
-                <div class="close">&times;</div>
+                <div class="close" onClick="document.getElementById('modal-container').style.display='none'">&times;</div>
                 <div class="form-container">
                     <div class="form-header">
                         <h1 style="text-align: center; color: white;">
@@ -125,20 +166,27 @@ if(isset($_GET['yes'])){
                             <div class="pushright">
                                 <div style="margin-bottom: 5px;" id="msg">Select Service:</div>
                                 <?php
-                                    $service = "SELECT servicename FROM service_costs";
+                                    // this is to bring out the services and costs from the service table
+                                    $service = "SELECT * FROM service_costs";
                                     $runservice = mysqli_query($conn, $service);
                                     checkSQL($conn, $runservice);
                                     $service_row = mysqli_num_rows($runservice);
                                     if (!$runservice){
                                         die("Invalid query: " .$conn->error);
-                                    }                  
+                                    }  
                                     $values = [];
+                                    $price = [];
                                     // reading data contained in each row
                                     while($service_row = $runservice->fetch_assoc()){                                    
-                                        $values[]=  $service_row["servicename"];   
+                                        $values[] =  $service_row["servicename"];
+                                        $price[] = $service_row["service_cost"];
                                     }
+                                    
+                                    $combined_arr = array_combine($values, $price);
+                                    
                                     foreach ($values as $value) {
-                                        echo  " <input type='checkbox' id='checkbox' name='ap_type[]' value='". $value."' style='margin-top: 10px'> $value<br> ";
+                                        $formated = number_format($combined_arr[$value]);
+                                        echo "<input type='checkbox' id='checkbox' name='ap_type[]' value='". $value."' .style='margin-top: 10px'>   $value (K$formated) <br> ";
                                     }
                                 ?>
                             </div>
@@ -182,6 +230,9 @@ if(isset($_GET['yes'])){
                                 <th>
                                     Date
                                 </th>
+                                <th>
+                                    Total
+                                </th>
                                 <th colspan="2" style = "z-index: 2">
                                     Actions
                                 </th>
@@ -192,9 +243,7 @@ if(isset($_GET['yes'])){
                                 $fetch_rest2 = mysqli_fetch_assoc($rest2);
                                 
                                 // retrieve data for the user matching the phone number
-                                // if($fetch_rest2['phone'] == )
-                                // retrieving data from the database for the user to see
-                                $retrieve = "SELECT doctors.fullname as name, appointments.animal, appointments.ap_type, appointments.ap_date, appointments.ap_id FROM doctors INNER JOIN appointments ON doctors.field = appointments.field where appointments.phone = '".$_SESSION['phone']."' ORDER BY appointments.ap_date asc";
+                                $retrieve = "SELECT doctors.fullname as name, appointments.animal, appointments.ap_type, appointments.ap_date, appointments.ap_id, appointments.total FROM doctors INNER JOIN appointments ON doctors.field = appointments.field where appointments.phone = '".$_SESSION['phone']."' ORDER BY appointments.ap_date asc";
                                 $link = mysqli_query($conn, $retrieve);
                                 checkSQL($conn, $link);
                                 $row = mysqli_num_rows($link);
@@ -212,10 +261,12 @@ if(isset($_GET['yes'])){
                                     <td><?php echo $row["animal"] ?></td>
                                     <td><?php echo $row["ap_type"] ?></td>
                                     <td><?php echo $ap_date2 ?></td>
+                                    <td><?php echo "K".number_format($row["total"]) ?></td>
                                     <td style = "z-index: 1"><a href="appointments-edit.php?edit=<?php echo $ap_id ?>" class="edit">Edit</td>
                                     <td style = "z-index: 1"><a href="appointments-delete.php?delete=<?php echo $ap_id ?>" class="cancel" id="clearance">Cancel</a></td>
                                     </tr>
-                                    <?php } ?>                                    
+                                <?php } 
+                            ?>                                    
                         </table>
                     </div>
                 </div> 

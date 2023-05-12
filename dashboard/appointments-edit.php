@@ -89,14 +89,14 @@ if(isset($_GET['edit'])){
                                     $checked_arr = array();
 
                                     // Fetch checked values
-                                    $fetchLang = mysqli_query($conn,"SELECT * FROM appointments");
+                                    $fetchLang = mysqli_query($conn,"SELECT * FROM appointments where ap_id = '".$_SESSION['idforedit']."'");
                                     if(mysqli_num_rows($fetchLang) > 0){
                                           $result = mysqli_fetch_assoc($fetchLang);
-                                          $checked_arr = explode(",",$result['ap_type']);
+                                          $checked_arr = explode(", ",$result['ap_type']);
                                     }
                            
                                     // Create checkboxes
-                                     $service = "SELECT servicename FROM service_costs";
+                                    $service = "SELECT * FROM service_costs";
                                     $runservice = mysqli_query($conn, $service);
                                     checkSQL($conn, $runservice);
                                     $service_row = mysqli_num_rows($runservice);
@@ -104,24 +104,51 @@ if(isset($_GET['edit'])){
                                         die("Invalid query: " .$conn->error);
                                     }                  
                                     $values = [];
+                                    $price = [];
                                     // reading data contained in each row
                                     while($service_row = $runservice->fetch_assoc()){                                    
                                         $values[]=  $service_row["servicename"];   
+                                        $price[] = $service_row["service_cost"];
                                     }
+
+                                    $combined_arr = array_combine($values, $price);
                                     $languages_arr = $values;
-                                    foreach($checked_arr as $language){
+                                    // $newarr = array_diff($values, $checked_arr);
+                                    foreach($values as $value){
+                                        $formated = number_format($combined_arr[$value]);
+                                        if(in_array($value, $checked_arr)){
+                                            echo "<input type='checkbox' id='checkbox' name= 'ap_type[]' value ='".$value."' checked .style='margin-top: 10px' > $value (K$formated) <br>";
+                                        }
+                                        else{
+                                            echo "<input type='checkbox' id='checkbox' name='ap_type[]' value='". $value."' .style='margin-top: 10px'>   $value (K$formated) <br> ";
+                                        }
+
+                                        // echo '<input type="checkbox" id="checkbox" name="ap_type[]" "'. echo in_array($value, $newarr)? "checked" : "".'" value="$value" style="margin-top: 10px"><br>';
+                                    }
+                                    // foreach($checked_arr as $language){
                            
-                                         $checked = "";
-                                         if(in_array($language,$checked_arr)){
-                                              $checked = "checked";
-                                         }
-                                         echo '<input type="checkbox" id="checkbox"name="ap_type[]" value="'.$language.'" '.$checked.' > '.$language.' <br/>';
-                                    }
-                                    // getting the other arrayas that werent checked by the user
-                                    $newarr = array_diff( $values, $checked_arr);
-                                    foreach ($newarr as $value) {
-                                        echo  " <input type='checkbox' id='checkbox' name='ap_type[]' value='". $value."' style='margin-top: 10px'> $value<br> ";
-                                    }
+                                    //      $checked = "";
+                                    //      if(in_array($language,$checked_arr)){
+                                    //           $checked = "checked";
+                                    //      }
+                                    //      echo '<input type="checkbox" id="checkbox" name="ap_type[]" value="'.$language.'" '.$checked.' > '.$language.' <br/>';
+                                         
+                                    // }
+                                    // getting the other arrayas that werent checked by the used
+                                    // $newarr = array_diff( $values, $checked_arr);
+
+                                    // print_r($newarr);
+                                    // return;
+
+
+                                    // // print_r($newarr);
+                                    // foreach ($newarr as $value) {
+
+                                    //     print_r($value);
+                                    //     return;
+                                        
+                                    //     // echo  " <input type='checkbox' id='checkbox' name='ap_type[]' value='". $value."' style='margin-top: 10px'> $value<br> ";
+                                    // }
                                 ?>
                             </div>
                         </div>
@@ -211,9 +238,7 @@ if(isset($_GET['edit'])){
         </div>
     <script>
         // to create the load up animation for the table
-        $(function(){
-            $(".modal").css({"animation":"second-animation 1s forwards"});
-        });
+        
         //  greeting the user on top of the dashboad page
 
         const greeting = document.getElementById('greetings');
@@ -247,8 +272,13 @@ if(isset($_GET['edit'])){
         mm='0'+mm
         } 
 
+
         today = yyyy+'-'+mm+'-'+dd;
         document.getElementById("date").setAttribute("min", today);
+
+        $(function(){
+            $(".modal").css({"animation":"second-animation 1s forwards"});
+        });
 
         // checkbox validation
         function validateForm(form) {
