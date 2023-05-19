@@ -12,14 +12,17 @@
         $s = "select * from users where fullname = '$fullname' && phone = '$phone' && password = '$password'";
         $d = "select * from doctors where fullname = '$fullname' && phone = '$phone' && password = '$password'";
         $c = "select * from admin where fullname = '$fullname' && phone = '$phone' && password = '$password'";
+        $e = "select * from accountant where fullname = '$fullname' && phone = '$phone' && password = '$password'";
         // connecting the queery with the database
         $result = mysqli_query($conn, $s);
         $result2 = mysqli_query($conn, $d);
         $result3 = mysqli_query($conn, $c);
+        $result4 = mysqli_query($conn, $e);
         // getting the required rows from the database
         $num = mysqli_num_rows($result);
         $num2 = mysqli_num_rows($result2);
         $num3 = mysqli_num_rows($result3);
+        $num4 = mysqli_num_rows($result4);
         
     
         if($num > 0){
@@ -47,7 +50,15 @@
                 $_SESSION['phone'] = $phone;
                 header('location: dashboard/admin/superuser/dashboard.php');
        
-        }else{header('location: login-incorrect.php');}
+        }
+        elseif ($num4 > 0) {
+            
+                $_SESSION['name'] = $fullname;
+                $_SESSION['phone'] = $phone;
+                header('location: dashboard/accountant/dashboard.php');
+       
+        }
+        else{header('location: login-incorrect.php');}
     }
 ?>
 <!DOCTYPE html>

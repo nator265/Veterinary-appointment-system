@@ -18,18 +18,35 @@ if(isset($_GET['yes'])){
     $phoneassoc = mysqli_fetch_assoc($linkquery);
     $phone = $phoneassoc['phone']; 
     $message = 'We will reserve the date for you, thank you!';
-    $reg = "INSERT INTO notifications(sender, title, message1, phone, reciever) VALUES ('".$_SESSION['name']."', 'Appointment has been approved', '$message', '".$_SESSION['phone']."', '$phone')";
+    $reg = "INSERT INTO notifications(sender, title, message1, phone, reciever) VALUES ('".$_SESSION['name']."', 'The rejected appointment has been approved', '$message', '".$_SESSION['phone']."', '$phone')";
     $rest = mysqli_query($conn, $reg);
     checkSQL($conn, $rest);
 
     // to remove the appoitnment from the pending tab to the rejected tab.
     $removeqry = "UPDATE appointments 
-        SET approved = 'Approved' 
+        SET approved = 'approved' 
         WHERE ap_id = $approvedPhone";
     $removelink = mysqli_query($conn, $removeqry);
-    header('location:appointments.php');    
+    header('location:appointments-rejected.php');        
 }
 
+if(isset($_POST['re-submit'])){
+    $fullname = $_POST['fullname'];
+    $field = $_POST['field'];
+    $date = $_POST['ap_date'];
+    $animal = $_POST['animal'];
+    $ap_type = $_POST['ap_type'];
+    $_SESSION['field2'] = $field;
+
+    // converting the ap_type to string
+    $allaptype = implode(", ", $ap_type);
+    
+    // inserting data into the appointments table in the database
+    $update = "UPDATE appointments SET fullname = '$fullname', field = '$field', ap_date = '$date', animal = '$animal', ap_type = '$allaptype' where ap_id = '".$_SESSION['id']."' ";
+    mysqli_query($conn, $update);
+    // header('location:appointments.php');
+    
+}
 function time_elapsed_string($datetime, $full = false) {
     $now = new DateTime;
     $ago = new DateTime($datetime);
@@ -68,7 +85,7 @@ function time_elapsed_string($datetime, $full = false) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="check-appointments.css">
+    <link rel="stylesheet" href="appointments-rejected.css">
     <title>Appointments</title>
 </head>
 <body>
@@ -90,10 +107,10 @@ function time_elapsed_string($datetime, $full = false) {
                     <a href="dashboard.php"> <span id='link'> Dashboard </span> </a>
                 </div>
                 <div class="link">
-                    <a href="appointments.php"> <span id='link'> Appointments </span> </a>
+                    <span id='link'> Appointments </span>
                 </div>
                 <div class="link">
-                    <span id='link'> Check-off appointment </span>
+                    <a href="check-appointments.php"><span id='link'> Total Transactions </span> </a>
                 </div>
                 <div class="link">
                     <a href="notifications.php"><span id='link'> Notifications </span> </a>
@@ -105,8 +122,6 @@ function time_elapsed_string($datetime, $full = false) {
                 </div>
             </div>
         </div>
-
-        <!-- thi is the modal for the appointments registration -->
 
         <div class="column2">
             <div class="greetings-container">
@@ -120,11 +135,34 @@ function time_elapsed_string($datetime, $full = false) {
           
             <!-- 2.appointmets tab -->
             <div class="main-appointments-container" id="main-appointments-container">
-            <div class="search-container">
-                <input type="text" id="search" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
-                <img src="images/search.webp" height="30px" width="30px" alt=" search">
+                <div class="search-container">
+                    <input type="text" id="search" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+                    <img src="images/search.webp" height="30px" width="30px" alt=" search">
                 </div>
-                <div class="table-container">
+                <div class="table-container"> 
+                    <div class="sort-container">
+                        <div class="sort">
+                            <div class="recents-container">
+                                <a href="appointments.php">
+                                    <button class="sort-buttons" id="recents" name="recents">
+                                        Recents
+                                    </button>
+                                </a>
+                            </div>
+                            <div class="approved">
+                                <a href="appointments-approved.php">
+                                    <button class="sort-buttons" id="approved" name="approved">
+                                        Paid
+                                    </button>
+                                </a>
+                            </div>
+                            <div class="rejected">
+                                <button class="sort-buttons" id="rejected" name="rejected">
+                                    Halted Payments
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                     <div class="table" id="recents2">
                         <table id="myTable">
                             <tr class="first-row">
@@ -140,40 +178,42 @@ function time_elapsed_string($datetime, $full = false) {
                                 <th>
                                     Date
                                 </th>
-                                <!-- <th>
-                                    Approved
-                                </th>-->
-                                <th style="z-index:1">
-                                    Actions
+                                <th>
+                                    Session Status
+                                </th>
+                                <th>
+                                    Amount
+                                </th>
+                                <th colspan="2" style="z-index:1">
+                                   Actions
                                 </th>
                             </tr>
                             <div class="recents-tab">
                                 <?php
-                                    // retrieve data for the user matching the phone number
-                                    // if($fetch_rest2['phone'] == )
                                     // retrieving data from the database for the user to see
-                                    $retrieve = "SELECT * FROM appointments where approved = 'approved' && session_expiry = 'pending' ORDER BY ap_date desc";
-                                    $link = mysqli_query($conn, $retrieve);
-                                    checkSQL($conn, $link);
-                                    $row = mysqli_num_rows($link);
-                                    if (!$link){
-                                        die("Invalid query: " .$conn->error);
-                                    }
-                                   
-                                    // reading data contained in each row
-                                    while($row = $link->fetch_assoc()){
-                                            $ap_date2 = $row['ap_date'];
-                                            $phone = $row["phone"];
+                                    $query = "SELECT * from appointments where bill_status = 'Halted' and session_expiry='Attended' ORDER BY ap_date asc";
+                                        $approved_filter = mysqli_query($conn, $query);
+                                        checkSQL($conn, $approved_filter);
+                                        $row = mysqli_num_rows($approved_filter);
+                                        if (!$approved_filter){
+                                            die("Invalid query: " .$conn->error);
+                                        }
+                                        while($row = $approved_filter->fetch_assoc()){
+                                           
+                                            $ap_id = $row["ap_id"];
                                         ?>
                                         
                                         <tr>
                                         <td><?php echo $row["fullname"] ?></td>
                                         <td><?php echo $row["animal"] ?></td>
                                         <td><?php echo $row["ap_type"] ?></td>
-                                        <td><?php echo $ap_date2 ?></td>
-                                        <td style="z-index:2"><a href="check-off.php?check-off=<?php echo $row['ap_id'] ?>"> <button class="edit" style="float:none"> Check off</button></a></td>
+                                        <td><?php echo $row['ap_date'] ?></td>
+                                        <td><?php echo $row["session_expiry"] ?></td>
+                                        <td><?php echo "K".number_format($row["total"]) ?></td>
+                                        <td style="z-index:2"><a href="appointments-approve2.php?reject=<?php echo $row['ap_id'] ?>"> <button class="action-buttons" id="reject-button">Halt</button></a></td>
                                         </tr>
-                                    <?php }
+                                        
+                                    <?php } 
                                 ?>
                             </div>
                         </table>
@@ -185,13 +225,13 @@ function time_elapsed_string($datetime, $full = false) {
         <script src="jquery.js"></script>
         <script>
             $(function(){
+                $(".create").css({"animation":"second-animation 1s forwards"});
                 $(".table").css({"animation":"third-animation 1s forwards"});
-                $(".recents-container").css({"animation":"slide-animation2 0.5s forwards"});
+                $(".recents-container").css({"animation":"slide-animation 0.5s forwards"});
                 $(".approved").css({"animation":"slide-animation 1s forwards"});
-                $(".rejected").css({"animation":"slide-animation 1.5s forwards"});
-            });
-        </script>
-        <script>
+                $(".rejected").css({"animation":"slide-animation2 1.5s forwards"});
+            })
+            
         //  greeting the user on top of the dashboad page
 
         const greeting = document.getElementById('greetings');
@@ -267,7 +307,6 @@ function time_elapsed_string($datetime, $full = false) {
     }       
   }
 }
-    
         
     </script>
 </body>

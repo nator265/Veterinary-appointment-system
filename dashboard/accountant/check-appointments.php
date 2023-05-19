@@ -24,7 +24,7 @@ if(isset($_GET['yes'])){
 
     // to remove the appoitnment from the pending tab to the rejected tab.
     $removeqry = "UPDATE appointments 
-        SET approved = 'Approved' 
+        SET approved = 'approved' 
         WHERE ap_id = $approvedPhone";
     $removelink = mysqli_query($conn, $removeqry);
     header('location:appointments.php');    
@@ -93,7 +93,7 @@ function time_elapsed_string($datetime, $full = false) {
                     <a href="appointments.php"> <span id='link'> Appointments </span> </a>
                 </div>
                 <div class="link">
-                    <span id='link'> Check-off appointment </span>
+                    <span id='link'> Total Transactions </span>
                 </div>
                 <div class="link">
                     <a href="notifications.php"><span id='link'> Notifications </span> </a>

@@ -7,56 +7,28 @@ if(!isset($_SESSION['name'])){
     header('location:../../login.php');
 }
 
-if(isset($_GET['yes'])){
-    $_SESSION['ap_id'] = $_GET['yes'];
-    $approvedPhone = $_SESSION['ap_id'];
-
-     // sending the user a notification the appointment has been approved.
-    $query="SELECT * from appointments where ap_id = '$approvedPhone'";
-    $linkquery = mysqli_query($conn, $query);
-    checkSQL($conn, $linkquery);
-    $phoneassoc = mysqli_fetch_assoc($linkquery);
-    $phone = $phoneassoc['phone']; 
-    $message = 'We will reserve the date for you, thank you!';
-    $reg = "INSERT INTO notifications(sender, title, message1, phone, reciever) VALUES ('".$_SESSION['name']."', 'Appointment has been approved', '$message', '".$_SESSION['phone']."', '$phone')";
-    $rest = mysqli_query($conn, $reg);
-    checkSQL($conn, $rest);
-
-    // to remove the appoitnment from the pending tab to the rejected tab.
-    $removeqry = "UPDATE appointments 
-        SET approved = 'Approved' 
-        WHERE ap_id = $approvedPhone";
-    $removelink = mysqli_query($conn, $removeqry);
-    header('location:appointments.php');    
+if(isset($_GET['reject'])){
+$_SESSION['haltid'] = $_GET['reject'];
 }
 
-function time_elapsed_string($datetime, $full = false) {
-    $now = new DateTime;
-    $ago = new DateTime($datetime);
-    $diff = $now->diff($ago);
+if(isset($_GET['yes'])){
+    $ap_id  = $_GET['yes'];
+    $query = "UPDATE appointments
+            SET bill_status = 'Halted'
+            where ap_id = $ap_id ";
+    $linkquery = mysqli_query($conn, $query);
+    checkSQL($conn, $linkquery);   
 
-    $diff->w = floor($diff->d / 7);
-    $diff->d -= $diff->w * 7;
+    $insertqry = "SELECT * from appointments where ap_id = '$ap_id'";
+    $linkinsert = mysqli_query($conn, $insertqry);
+    $fetchphone = mysqli_fetch_assoc($linkinsert);
+    $phone = $fetchphone['phone'];
 
-    $string = array(
-        'y' => 'year',
-        'm' => 'month',
-        'w' => 'week',
-        'd' => 'day',
-        'h' => 'hour',
-        'i' => 'minute',
-        's' => 'second',
-    );
-    foreach ($string as $k => &$v) {
-        if ($diff->$k) {
-            $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
-        } else {
-            unset($string[$k]);
-        }
-    }
+    $insertqry2 = "INSERT into notifications(sender,title,message1,phone, reciever) values ('".$_SESSION['name']."', 'Payment','Your transaction has been halted an not paid for.','".$_SESSION['phone']."','$phone')";
+    $insertlink2 = mysqli_query($conn, $insertqry2);
+    checkSQL($conn, $insertlink2);
 
-    if (!$full) $string = array_slice($string, 0, 1);
-    return $string ? implode(', ', $string) . ' ago' : 'just now';
+    Header('location:appointments.php');
 }
 ?>
 
@@ -68,7 +40,7 @@ function time_elapsed_string($datetime, $full = false) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="check-appointments.css">
+    <link rel="stylesheet" href="appointments-reject2.css">
     <title>Appointments</title>
 </head>
 <body>
@@ -90,10 +62,10 @@ function time_elapsed_string($datetime, $full = false) {
                     <a href="dashboard.php"> <span id='link'> Dashboard </span> </a>
                 </div>
                 <div class="link">
-                    <a href="appointments.php"> <span id='link'> Appointments </span> </a>
+                    <span id='link'> Appointments </span>
                 </div>
                 <div class="link">
-                    <span id='link'> Check-off appointment </span>
+                    <a href="check-appointments.php"><span id='link'> Total Transactions </span> </a>
                 </div>
                 <div class="link">
                     <a href="notifications.php"><span id='link'> Notifications </span> </a>
@@ -105,8 +77,6 @@ function time_elapsed_string($datetime, $full = false) {
                 </div>
             </div>
         </div>
-
-        <!-- thi is the modal for the appointments registration -->
 
         <div class="column2">
             <div class="greetings-container">
@@ -120,12 +90,35 @@ function time_elapsed_string($datetime, $full = false) {
           
             <!-- 2.appointmets tab -->
             <div class="main-appointments-container" id="main-appointments-container">
-            <div class="search-container">
+                <div class="search-container">
                 <input type="text" id="search" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
                 <img src="images/search.webp" height="30px" width="30px" alt=" search">
                 </div>
-                <div class="table-container">
-                    <div class="table" id="recents2">
+                <div class="table-container"> 
+                <div class="sort-container">
+                        <div class="sort">
+                            <div class="recents-container">
+                                <button class="sort-buttons" id="recents" name="recents">
+                                    Recents
+                                </button>
+                            </div>
+                            <div class="approved">
+                                <a href="appointments-approved.php">
+                                    <button class="sort-buttons" id="approved" name="approved">
+                                        Paid
+                                    </button>
+                                </a>
+                            </div>
+                            <div class="rejected">
+                                <a href="appointments-rejected.php">
+                                    <button class="sort-buttons" id="rejected" name="rejected">
+                                        Halted Payments
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table" >
                         <table id="myTable">
                             <tr class="first-row">
                                 <th>
@@ -135,63 +128,92 @@ function time_elapsed_string($datetime, $full = false) {
                                     Animal Type
                                 </th>
                                 <th>
-                                    Appointment Type
+                                    Doctor
                                 </th>
+                                <th>
+                                    Appointment Type
+                                </th> 
                                 <th>
                                     Date
                                 </th>
-                                <!-- <th>
-                                    Approved
-                                </th>-->
-                                <th style="z-index:1">
-                                    Actions
+                                <th>
+                                    Session Status
+                                </th>
+                                <th>
+                                    Amount
+                                </th>
+                                <th colspan="2" style="z-index:1">
+                                   Actions
                                 </th>
                             </tr>
-                            <div class="recents-tab">
+                            <div class="approved-tab" style="display:none">
                                 <?php
                                     // retrieve data for the user matching the phone number
                                     // if($fetch_rest2['phone'] == )
                                     // retrieving data from the database for the user to see
-                                    $retrieve = "SELECT * FROM appointments where approved = 'approved' && session_expiry = 'pending' ORDER BY ap_date desc";
+                                    $approved = "yes";
+
+                                    $retrieve = "SELECT appointments.fullname, appointments.animal, appointments.ap_type, appointments.ap_id, appointments.ap_date, appointments.session_expiry, appointments.total, doctors.fullname as 'name'
+                                        from appointments INNER JOIN doctors on appointments.field = doctors.field  where appointments.session_expiry = 'Attended' and bill_status = 'Not paid' ORDER BY appointments.ap_date asc";
+
                                     $link = mysqli_query($conn, $retrieve);
                                     checkSQL($conn, $link);
                                     $row = mysqli_num_rows($link);
                                     if (!$link){
                                         die("Invalid query: " .$conn->error);
                                     }
-                                   
                                     // reading data contained in each row
                                     while($row = $link->fetch_assoc()){
-                                            $ap_date2 = $row['ap_date'];
-                                            $phone = $row["phone"];
+                                            $ap_date2 = date("d-m-Y", strtotime($row["ap_date"]));
+                                            // $ap_id = $row["ap_id"];
                                         ?>
-                                        
                                         <tr>
                                         <td><?php echo $row["fullname"] ?></td>
                                         <td><?php echo $row["animal"] ?></td>
+                                        <td><?php echo $row["name"] ?></td>
                                         <td><?php echo $row["ap_type"] ?></td>
                                         <td><?php echo $ap_date2 ?></td>
-                                        <td style="z-index:2"><a href="check-off.php?check-off=<?php echo $row['ap_id'] ?>"> <button class="edit" style="float:none"> Check off</button></a></td>
+                                        <td><?php echo $row["session_expiry"] ?></td>
+                                        <td><?php echo 'K'.number_format($row["total"]) ?></td>
+                                        <td style="z-index:2"><a href="appointments-approve.php?approve=<?php echo $row['ap_id'] ?>"> <button class="action-buttons" id="approve-button"> Paid</button></a></td>
+                                        <td style="z-index:2"><a href="appointments-reject2.php?reject=<?php echo $row['ap_id'] ?>"> <button class="action-buttons" id="reject-button">Halt</button></a></td>
                                         </tr>
-                                    <?php }
-                                ?>
-                            </div>
+                                        
+                                    <?php } ?>
+                            </div>        
                         </table>
+                    </div>
+                </div> 
+                <div class="alert-container" id="target">
+                    <div class="alert" id="alert">
+                        <div class="warning-container">
+                            <div class="warning-header">
+                                Halt
+                            </div>
+                            <div class="subtext">
+                                Are you sure you want to halt this transaction?
+                            </div>
+                            <form action="appointments.php" method="post">
+                                    <div class="buttonsection">
+                                        <a href="appointments-reject2.php?yes=<?php echo $_SESSION['haltid'] ?>">
+                                            <input type="button" class="edit2" value="Yes" name="yes">
+                                        </a>
+                                        <a href="appointments.php">
+                                            <input type="button" class="cancel2" value="No" name="no" id="noclearance">
+                                        </a>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div> 
             </div>
         </div>
         
-        <script src="jquery.js"></script>
         <script>
             $(function(){
-                $(".table").css({"animation":"third-animation 1s forwards"});
-                $(".recents-container").css({"animation":"slide-animation2 0.5s forwards"});
-                $(".approved").css({"animation":"slide-animation 1s forwards"});
-                $(".rejected").css({"animation":"slide-animation 1.5s forwards"});
+                $(".alert").css({"animation":"second-animation 1s forwards"});
             });
-        </script>
-        <script>
+            
         //  greeting the user on top of the dashboad page
 
         const greeting = document.getElementById('greetings');
@@ -249,7 +271,11 @@ function time_elapsed_string($datetime, $full = false) {
         }
         return true;
     }
-    function myFunction() {
+   
+    
+    
+    
+    function myFunctions() {
   var input, filter, table, tr, td, i, txtValue;
   input = document.getElementById("search");
   filter = input.value.toUpperCase();
@@ -267,8 +293,6 @@ function time_elapsed_string($datetime, $full = false) {
     }       
   }
 }
-    
-        
     </script>
 </body>
 </html>

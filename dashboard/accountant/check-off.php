@@ -7,27 +7,23 @@ if(!isset($_SESSION['name'])){
     header('location:../../login.php');
 }
 
-if(isset($_GET['yes'])){
-    $_SESSION['ap_id'] = $_GET['yes'];
-    $approvedPhone = $_SESSION['ap_id'];
-
-     // sending the user a notification the appointment has been approved.
-    $query="SELECT * from appointments where ap_id = '$approvedPhone'";
-    $linkquery = mysqli_query($conn, $query);
-    checkSQL($conn, $linkquery);
-    $phoneassoc = mysqli_fetch_assoc($linkquery);
-    $phone = $phoneassoc['phone']; 
-    $message = 'We will reserve the date for you, thank you!';
-    $reg = "INSERT INTO notifications(sender, title, message1, phone, reciever) VALUES ('".$_SESSION['name']."', 'Appointment has been approved', '$message', '".$_SESSION['phone']."', '$phone')";
-    $rest = mysqli_query($conn, $reg);
-    checkSQL($conn, $rest);
-
-    // to remove the appoitnment from the pending tab to the rejected tab.
-    $removeqry = "UPDATE appointments 
-        SET approved = 'Approved' 
-        WHERE ap_id = $approvedPhone";
-    $removelink = mysqli_query($conn, $removeqry);
-    header('location:appointments.php');    
+if(isset($_GET['check-off'])){
+    $_SESSION['$idk'] = $_GET['check-off'];
+    $query = "SELECT * FROM appointments where ap_id = '".$_SESSION['$idk']."'";
+    $link = mysqli_query($conn, $query);
+    checkSQL($conn, $link);
+    $fetchname = mysqli_fetch_assoc($link);
+    $_SESSION['checkname'] = $fetchname['fullname'];
+   
+}
+if(isset($_GET['checked'])){
+    $idk2 = $_GET['checked'];
+    $delete = "UPDATE appointments
+        SET session_expiry = 'attended'
+        where ap_id = $idk2";
+    $link2 = mysqli_query($conn, $delete);
+    checkSQL($conn, $link2);
+    header('location:check-appointments.php');
 }
 
 function time_elapsed_string($datetime, $full = false) {
@@ -68,7 +64,7 @@ function time_elapsed_string($datetime, $full = false) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="check-appointments.css">
+    <link rel="stylesheet" href="check-off.css">
     <title>Appointments</title>
 </head>
 <body>
@@ -152,7 +148,7 @@ function time_elapsed_string($datetime, $full = false) {
                                     // retrieve data for the user matching the phone number
                                     // if($fetch_rest2['phone'] == )
                                     // retrieving data from the database for the user to see
-                                    $retrieve = "SELECT * FROM appointments where approved = 'approved' && session_expiry = 'pending' ORDER BY ap_date desc";
+                                    $retrieve = "SELECT * FROM appointments ORDER BY ap_date desc";
                                     $link = mysqli_query($conn, $retrieve);
                                     checkSQL($conn, $link);
                                     $row = mysqli_num_rows($link);
@@ -167,11 +163,11 @@ function time_elapsed_string($datetime, $full = false) {
                                         ?>
                                         
                                         <tr>
-                                        <td><?php echo $row["fullname"] ?></td>
+                                        <td><?php echo $row["fullname"];?></td>
                                         <td><?php echo $row["animal"] ?></td>
                                         <td><?php echo $row["ap_type"] ?></td>
                                         <td><?php echo $ap_date2 ?></td>
-                                        <td style="z-index:2"><a href="check-off.php?check-off=<?php echo $row['ap_id'] ?>"> <button class="edit" style="float:none"> Check off</button></a></td>
+                                        <td style="z-index:2"><a href="check-off.php?approve=<?php echo $row['ap_id'] ?>"> <button class="edit" style="float:none"> Check off</button></a></td>
                                         </tr>
                                     <?php }
                                 ?>
@@ -179,16 +175,35 @@ function time_elapsed_string($datetime, $full = false) {
                         </table>
                     </div>
                 </div> 
+                <div class="alert-container" id="target">
+                    <div class="alert" id="alert">
+                        <div class="warning-container">
+                            <div class="warning-header">
+                                Check-Off
+                            </div>
+                            <div class="subtext">
+                                Are you sure you want to check-off appointment for <?php  echo $_SESSION['checkname']?>
+                            </div>
+                            <form action="appointments.php" method="post">
+                                    <div class="buttonsection">
+                                        <a href="check-off.php?checked=<?php echo $_SESSION['$idk'] ?>">
+                                            <input type="button" class="edit2" value="Yes" name="yes">
+                                        </a>
+                                        <a href="check-appointments.php">
+                                            <input type="button" class="cancel2" value="No" name="no" id="noclearance">
+                                        </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         
         <script src="jquery.js"></script>
         <script>
-            $(function(){
-                $(".table").css({"animation":"third-animation 1s forwards"});
-                $(".recents-container").css({"animation":"slide-animation2 0.5s forwards"});
-                $(".approved").css({"animation":"slide-animation 1s forwards"});
-                $(".rejected").css({"animation":"slide-animation 1.5s forwards"});
+             $(function(){
+                $(".alert").css({"animation":"second-animation 1s forwards"});
             });
         </script>
         <script>

@@ -8,41 +8,56 @@
         $password = $_POST['password'];       
         // to make sure that the input fields are not empty
     
-        // authenticating the user input to authorize login
-        $s = "select * from users where fullname = '$fullname' && phone = '$phone' && password = '$password'";
-        $d = "select * from doctors where fullname = '$fullname' && phone = '$phone' && password = '$password'";
-        $c = "select * from admin where fullname = '$fullname' && phone = '$phone' && password = '$password'";
-        // connecting the queery with the database
-        $result = mysqli_query($conn, $s);
-        $result2 = mysqli_query($conn, $d);
-        $result3 = mysqli_query($conn, $c);
-        // getting the required rows from the database
-        $num = mysqli_num_rows($result);
-        $num2 = mysqli_num_rows($result2);
-        $num3 = mysqli_num_rows($result3);
+         // authenticating the user input to authorize login
+         $s = "select * from users where fullname = '$fullname' && phone = '$phone' && password = '$password'";
+         $d = "select * from doctors where fullname = '$fullname' && phone = '$phone' && password = '$password'";
+         $c = "select * from admin where fullname = '$fullname' && phone = '$phone' && password = '$password'";
+         $e = "select * from accountant where fullname = '$fullname' && phone = '$phone' && password = '$password'";
+         // connecting the queery with the database
+         $result = mysqli_query($conn, $s);
+         $result2 = mysqli_query($conn, $d);
+         $result3 = mysqli_query($conn, $c);
+         $result4 = mysqli_query($conn, $e);
+         // getting the required rows from the database
+         $num = mysqli_num_rows($result);
+         $num2 = mysqli_num_rows($result2);
+         $num3 = mysqli_num_rows($result3);
+         $num4 = mysqli_num_rows($result4);
+         
+     
+         if($num > 0){
+         
+             $_SESSION['name'] = $fullname;
+             $_SESSION['phone'] = $phone;
+             header('location: dashboard/index.php');
+             
+         }elseif ($num2 > 0) {
+             // Loging in
+             $_SESSION['name'] = $fullname;
+             $_SESSION['phone'] = $phone;
+ 
+              // getting the doctors field of work
+              $field = "SELECT field from doctors where phone = '".$_SESSION['phone']."'";
+              $fieldlink = mysqli_query($conn, $field);
+              $field2 = mysqli_fetch_assoc($fieldlink);                               
+              $_SESSION['field3'] =  $field2["field"];
+              
+             header('location: dashboard/admin/dashboard.php');
+ 
+         }elseif ($num3 > 0) {
+             
+                 $_SESSION['name'] = $fullname;
+                 $_SESSION['phone'] = $phone;
+                 header('location: dashboard/admin/superuser/dashboard.php');
         
-        if(empty($fullname) || empty($phone) || empty($password)) {
-            header('location: login-error.php');
-        }
-    
-        if($num > 0){
+         }
+         elseif ($num4 > 0) {
+             
+                 $_SESSION['name'] = $fullname;
+                 $_SESSION['phone'] = $phone;
+                 header('location: dashboard/accountant/dashboard.php');
         
-            $_SESSION['name'] = $fullname;
-            $_SESSION['phone'] = $phone;
-            header('location: dashboard/index.php');
-            
-        }elseif ($num2 > 0) {
-
-            $_SESSION['name'] = $fullname;
-            $_SESSION['phone'] = $phone;
-            header('location: dashboard/admin/dashboard.php');
-
-        }elseif ($num3 > 0) {
-            
-                $_SESSION['name'] = $fullname;
-                $_SESSION['phone'] = $phone;
-                header('location: dashboard/admin/superuser/dashboard.php');
-        }
+         }
     }
 ?>
 <!DOCTYPE html>
