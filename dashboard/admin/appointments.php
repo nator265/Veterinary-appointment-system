@@ -58,6 +58,53 @@ function time_elapsed_string($datetime, $full = false) {
     if (!$full) $string = array_slice($string, 0, 1);
     return $string ? implode(', ', $string) . ' ago' : 'just now';
 }
+function sendNotification($userId, $message, $phone) {
+    include('../../connect.php');
+   
+
+    // Escape the message to prevent SQL injection
+    $escapedMessage = mysqli_real_escape_string($conn, $message);
+
+    // Insert the notification into the notifications table
+    $insertQuery = "INSERT INTO notifications (sender, message1, title, phone, reciever) VALUES ('GSV appointment sytem', '$escapedMessage', 'Appointment Expiry', '123', '$phone')";
+    $result = mysqli_query($conn, $insertQuery);
+
+    // Check if the insert was successful
+    if (!$result) {
+        // Handle database insert error
+        // You can display an error message or log the error
+        echo "Failed to insert notification: " . mysqli_error($conn);
+        return;
+    }
+
+    // Close the database connection
+    mysqli_close($conn);
+}
+$currentDate = date('Y-m-d'); // Get the current date
+
+// Retrieve appointments with the appointment date in the past and not already expired
+$query = "UPDATE appointments SET session_expiry = 'expired' WHERE ap_date < '$currentDate' AND session_expiry <> 'expired'";
+$result = mysqli_query($conn, $query);
+
+if ($result) {
+    $numExpiredAppointments = mysqli_affected_rows($conn);
+   
+    // Retrieve the details of the expired appointments
+    $expiredQuery = "SELECT fullname, ap_id, phone FROM appointments WHERE ap_date < '$currentDate' AND session_expiry = 'expired'";
+    $expiredResult = mysqli_query($conn, $expiredQuery);
+
+    while ($row = mysqli_fetch_assoc($expiredResult)) {
+        $fullname = $row['fullname'];
+        $ap_id = $row['ap_id'];
+        $phone = $row['phone'];
+
+        // Send notification to the user
+        sendNotification($fullname, "Your appointment has expired. Please reschedule.", $phone);
+
+    }
+} else {
+    echo "Failed to update expired appointments: " . mysqli_error($conn);
+}
 ?>
 
 <DOCTYPE html>
@@ -179,6 +226,9 @@ function time_elapsed_string($datetime, $full = false) {
                                     Appointment Type
                                 </th>
                                 <th>
+                                    Time
+                                </th>
+                                <th>
                                     Date
                                 </th>
                                 <!-- <th>
@@ -193,7 +243,7 @@ function time_elapsed_string($datetime, $full = false) {
                                     // retrieve data for the user matching the phone number
                                     // if($fetch_rest2['phone'] == )
                                     // retrieving data from the database for the user to see
-                                    $retrieve = "SELECT * FROM appointments where field = '".$_SESSION['field3']."' and approved='pending' ORDER BY ap_date asc";
+                                    $retrieve = "SELECT * FROM appointments where field = '".$_SESSION['field3']."' and approved='pending' ORDER BY ap_date ASC, ap_time ASC";
                                     $link = mysqli_query($conn, $retrieve);
                                     checkSQL($conn, $link);
                                     $row = mysqli_num_rows($link);
@@ -203,7 +253,9 @@ function time_elapsed_string($datetime, $full = false) {
                                    
                                     // reading data contained in each row
                                     while($row = $link->fetch_assoc()){
-                                            $ap_date2 = $row['ap_date'];
+                                            $dateString = $row["ap_date"]; // Your date in YYYY-MM-DD format
+                                            $date = strtotime($dateString); // Convert the string to a Unix timestamp
+                                            $ap_date2 = date("j F Y", $date); // Format the date
                                             $phone = $row["phone"];
                                         ?>
                                         
@@ -211,6 +263,7 @@ function time_elapsed_string($datetime, $full = false) {
                                         <td><?php echo $row["fullname"] ?></td>
                                         <td><?php echo $row["animal"] ?></td>
                                         <td><?php echo $row["ap_type"] ?></td>
+                                        <td><?php echo $row["ap_time"] ?></td>
                                         <td><?php echo $ap_date2 ?></td>
                                         <td style="z-index:2"><a href="appointments-approve.php?approve=<?php echo $row['ap_id'] ?>"> <button class="edit"> Approve</button></a></td>
                                         <td style="z-index:2"><a href="appointments-reject2.php?reject=<?php echo $row['ap_id'] ?>"> <button class="cancel">Reject</button></a></td>

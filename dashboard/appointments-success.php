@@ -24,7 +24,7 @@ if(isset($_POST['submit'])){
     checkSQL($conn, $rest);
 }
 
-header('refresh: 2; url=appointments.php');
+// header('refresh: 2; url=appointments.php');
 
 if(isset($_POST['re-submit'])){
     $fullname = $_POST['fullname'];
@@ -209,6 +209,15 @@ if(isset($_GET['yes'])){
 
                             <div class="warning-header">
                                 Appointment created successfully!
+                            </div>
+                            <div class="subtext">
+                                <?php
+                                    $dateString = $_SESSION['date12']; // Your date in YYYY-MM-DD format
+                                    $date = strtotime($dateString); // Convert the string to a Unix timestamp
+                                    $formattedDate = date("l, j F Y", $date); // Format the date
+                                    
+                                    echo "Appointment set for ".$formattedDate." at ".$_SESSION['time12'];
+                                ?>
                             </div>
                             <div class="subtext">
                                 Check your notifications recieved for the doctors approval

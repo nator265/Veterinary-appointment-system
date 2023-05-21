@@ -120,10 +120,6 @@ function time_elapsed_string($datetime, $full = false) {
           
             <!-- 2.appointmets tab -->
             <div class="main-appointments-container" id="main-appointments-container">
-            <div class="search-container">
-                <input type="text" id="search" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
-                <img src="images/search.webp" height="30px" width="30px" alt=" search">
-                </div>
                 <div class="table-container">
                     <div class="table" id="recents2">
                         <table id="myTable">
@@ -152,7 +148,7 @@ function time_elapsed_string($datetime, $full = false) {
                                     // retrieve data for the user matching the phone number
                                     // if($fetch_rest2['phone'] == )
                                     // retrieving data from the database for the user to see
-                                    $retrieve = "SELECT * FROM appointments where approved = 'approved' && session_expiry = 'pending' ORDER BY ap_date desc";
+                                    $retrieve = "SELECT date, amount FROM appointments WHERE MONTH(date) = MONTH(CURRENT_DATE())";
                                     $link = mysqli_query($conn, $retrieve);
                                     checkSQL($conn, $link);
                                     $row = mysqli_num_rows($link);

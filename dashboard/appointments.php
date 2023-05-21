@@ -14,36 +14,91 @@ if(isset($_POST['submit'])){
     $animal = $_POST['animal'];
     $selectedservices = $_POST['ap_type']; 
     $_SESSION['field2'] = $field;
+    $_SESSION['fullname1'] = $fullname;
+    $_SESSION['fdate'] = $date;
+    $_SESSION['fanimal'] = $animal;
     // converting the ap_type to string
     $allaptype = implode(", ", $selectedservices);
 
-     // inserting data into the appointments table in the database
-     $reg = "INSERT INTO appointments(fullname, field, animal, ap_date, ap_type, phone) VALUES ('$fullname', '$field', '$animal', '$date', '$allaptype', '".$_SESSION['phone']."')";
-                            
-     $rest = mysqli_query($conn, $reg);
-     
-     checkSQL($conn, $rest);
-
-     $ap_id = mysqli_insert_id($conn);
- 
-    // Get the total cost by comparing selected services with `service_costs` table
-    $total = 0;
-    foreach ($selectedservices as $service) {
-        $service = mysqli_real_escape_string($conn, $service); // Prevent SQL injection
-        $query = "SELECT service_cost FROM service_costs WHERE servicename = '$service'";
-        $result = mysqli_query($conn, $query);
-
-        if ($row = mysqli_fetch_assoc($result)) {
-            $serviceCost = intval($row['service_cost']); // Convert to integer
-            $total += $serviceCost;
+    // Check if the selected day is fully booked
+    $query = "SELECT COUNT(*) as count FROM appointments WHERE ap_date = '$date'";
+    $result = mysqli_query($conn, $query);
+    
+    if ($row = mysqli_fetch_assoc($result)) {
+        $appointmentCount = intval($row['count']);
+        
+        if ($appointmentCount >= 2) {
+            // The selected day is fully booked
+            echo "<script>alert('Sorry, the selected day is fully booked. Please choose a different day.');</script>";
+            echo "<script>window.location.href = 'javascript:history.go(-1)';</script>";
+            return;
         }
     }
 
-    $query2 = "UPDATE appointments SET total = '$total' WHERE ap_id = '$ap_id'";
-    mysqli_query($conn, $query2);
+     $ap_id = mysqli_insert_id($conn);
+
+  // Allocate time to the user automatically
+$availableTimeSlots = array(
+    '8:00 AM', '8:15 AM', '8:30 AM', '8:45 AM',
+    '9:00 AM', '9:15 AM', '9:30 AM', '9:45 AM',
+    '10:00 AM', '10:15 AM', '10:30 AM', '10:45 AM',
+    '11:00 AM', '11:15 AM', '11:30 AM', '11:45 AM',
+    '12:00 PM', '12:15 PM', '12:30 PM', '12:45 PM',
+    '1:00 PM', '1:15 PM', '1:30 PM', '1:45 PM',
+    '2:00 PM', '2:15 PM', '2:30 PM', '2:45 PM',
+    '3:00 PM', '3:15 PM', '3:30 PM', '3:45 PM',
+    '4:00 PM'
+    // ... add more time slots as needed
+);
+
+$selectedTimeSlot = null;
+foreach ($availableTimeSlots as $timeSlot) {
+    $query = "SELECT COUNT(*) as count FROM appointments WHERE ap_time = '$timeSlot' AND ap_date = '$date'";
+    $result = mysqli_query($conn, $query);
+    $row = mysqli_fetch_assoc($result);
+    $appointmentCount = intval($row['count']);
     
-    // Close the database connection
-    mysqli_close($conn);
+    if ($appointmentCount == 0) {
+        $selectedTimeSlot = $timeSlot;
+        break;
+    }
+}
+
+if ($selectedTimeSlot === null) {
+    // All time slots are taken, handle the case where no available time slot is found
+    echo "<script>alert('Sorry, no available time slots. Please choose a different day.');</script>";
+    echo "<script>window.location.href = 'javascript:history.go(-1)';</script>";
+    return;
+}
+
+// Remove the allocated time slot from the available time slots array
+$index = array_search($selectedTimeSlot, $availableTimeSlots);
+if ($index !== false) {
+    unset($availableTimeSlots[$index]);
+}
+
+$allocatedTime = $selectedTimeSlot;
+
+     // Get the total cost by comparing selected services with `service_costs` table
+     $total = 0;
+     foreach ($selectedservices as $service) {
+         $service = mysqli_real_escape_string($conn, $service); // Prevent SQL injection
+         $query = "SELECT service_cost FROM service_costs WHERE servicename = '$service'";
+         $result = mysqli_query($conn, $query);
+ 
+         if ($row = mysqli_fetch_assoc($result)) {
+             $serviceCost = intval($row['service_cost']); // Convert to integer
+             $total += $serviceCost;
+         }
+     }
+ 
+      // inserting data into the appointments table in the database
+      $reg = "INSERT INTO appointments(fullname, field, animal, ap_time, ap_date, ap_type, total, phone) VALUES ('$fullname', '$field', '$animal', '$allocatedTime', '$date', '$allaptype', '$total', '".$_SESSION['phone']."')";
+      $_SESSION['date12'] = $date;
+      $_SESSION['time12'] = $allocatedTime;
+      $rest = mysqli_query($conn, $reg);
+      
+      checkSQL($conn, $rest);
    
     header('location: appointments-success.php');   
 }
@@ -52,35 +107,91 @@ if(isset($_POST['re-submit'])){
     $field = $_POST['field'];
     $date = $_POST['ap_date'];
     $animal = $_POST['animal'];
-    $selectedservices = $_POST['ap_type'];
-    $_SESSION['field2'] = $field;
-    
+    $selectedservices = $_POST['ap_type']; 
+
     // converting the ap_type to string
     $allaptype = implode(", ", $selectedservices);
-    
-    // inserting data into the appointments table in the database
-    $update = "UPDATE appointments SET fullname = '$fullname', field = '$field', ap_date = '$date', animal = '$animal', ap_type = '$allaptype' where ap_id = '".$_SESSION['idforedit']."' ";
-    mysqli_query($conn, $update);
-    header('location:appointments.php');
 
-    $total = 0;
-    foreach ($selectedservices as $service) {
-        $service = mysqli_real_escape_string($conn, $service); // Prevent SQL injection
-        $query = "SELECT service_cost FROM service_costs WHERE servicename = '$service'";
+    // Check if the selected day is fully booked
+    $query = "SELECT COUNT(*) as count FROM appointments WHERE ap_date = '$date' AND ap_id != '".$_SESSION['idforedit']."'";
+$result = mysqli_query($conn, $query);
+$row = mysqli_fetch_assoc($result);
+$appointmentCount = intval($row['count']);
+
+if ($appointmentCount >= 2) {
+    // The selected day is fully booked
+    echo "<script>alert('Sorry, the selected day is fully booked. Please choose a different day.');</script>";
+    echo "<script>window.location.href = 'javascript:history.go(-1)';</script>";
+    return;
+}
+
+
+     $ap_id = mysqli_insert_id($conn);
+
+    // allocate time to the user automatically
+    $availableTimeSlots = array(
+        '8:00 AM', '8:15 AM', '8:30 AM', '8:45 AM',
+        '9:00 AM', '9:15 AM', '9:30 AM', '9:45 AM',
+        '10:00 AM', '10:15 AM', '10:30 AM', '10:45 AM',
+        '11:00 AM', '11:15 AM', '11:30 AM', '11:45 AM',
+        '12:00 PM', '12:15 PM', '12:30 PM', '12:45 PM',
+        '1:00 PM', '1:15 PM', '1:30 PM', '1:45 PM',
+        '2:00 PM', '2:15 PM', '2:30 PM', '2:45 PM',
+        '3:00 PM', '3:15 PM', '3:30 PM', '3:45 PM',
+        '4:00 PM'
+        // ... add more time slots as needed
+    );
+
+    $selectedTimeSlot = null;
+    foreach ($availableTimeSlots as $timeSlot) {
+        $query = "SELECT COUNT(*) as count FROM appointments WHERE ap_time = '$timeSlot' AND ap_date = '$date'";
         $result = mysqli_query($conn, $query);
-
-        if ($row = mysqli_fetch_assoc($result)) {
-            $serviceCost = intval($row['service_cost']); // Convert to integer
-            $total += $serviceCost;
+        $row = mysqli_fetch_assoc($result);
+        $appointmentCount = intval($row['count']);
+        
+        if ($appointmentCount == 0) {
+            $selectedTimeSlot = $timeSlot;
+            break;
         }
     }
 
-    $query2 = "UPDATE appointments SET total = '$total' WHERE ap_id = '".$_SESSION['idforedit']."'";
-    mysqli_query($conn, $query2);
-    
-    // Close the database connection
-    mysqli_close($conn);
-    
+    if ($selectedTimeSlot === null) {
+        // All time slots are taken, handle the case where no available time slot is found
+        echo "<script>alert('Sorry, no available time slots. Please choose a different day.');</script>";
+        echo "<script>window.location.href = 'javascript:history.go(-1)';</script>";
+        return;
+    }
+
+    // Remove the allocated time slot from the available time slots array
+    $index = array_search($selectedTimeSlot, $availableTimeSlots);
+    if ($index !== false) {
+        unset($availableTimeSlots[$index]);
+    }
+
+    $allocatedTime = $selectedTimeSlot;
+
+     // Get the total cost by comparing selected services with `service_costs` table
+     $total = 0;
+     foreach ($selectedservices as $service) {
+         $service = mysqli_real_escape_string($conn, $service); // Prevent SQL injection
+         $query = "SELECT service_cost FROM service_costs WHERE servicename = '$service'";
+         $result = mysqli_query($conn, $query);
+ 
+         if ($row = mysqli_fetch_assoc($result)) {
+             $serviceCost = intval($row['service_cost']); // Convert to integer
+             $total += $serviceCost;
+         }
+     }
+ 
+      // inserting data into the appointments table in the database
+      $reg = "UPDATE appointments
+                SET fullname = '$fullname', field = '$field', animal = '$animal', ap_time = '$allocatedTime', ap_date = '$date', ap_type = '$allaptype', total = '$total', phone = '".$_SESSION['phone']."'
+                WHERE ap_id = '".$_SESSION['idforedit']."'";
+                            
+      $rest = mysqli_query($conn, $reg);
+      
+      checkSQL($conn, $rest);
+    header('location:appointments.php');
 }
 
 
@@ -88,7 +199,9 @@ if(isset($_GET['yes'])){
     $id = $_GET['yes'];
     $delete = "DELETE FROM appointments where ap_id = $id ";
     mysqli_query($conn, $delete);
+    header('location: appointments.php');
 }
+
 ?>
 
 <DOCTYPE html>
@@ -228,8 +341,11 @@ if(isset($_GET['yes'])){
                                     Appointment Type
                                 </th>
                                 <th>
-                                    Date
+                                    Time
                                 </th>
+                                <th>
+                                    Date
+                                </th>                                
                                 <th>
                                     Total
                                 </th>
@@ -243,7 +359,7 @@ if(isset($_GET['yes'])){
                                 $fetch_rest2 = mysqli_fetch_assoc($rest2);
                                 
                                 // retrieve data for the user matching the phone number
-                                $retrieve = "SELECT doctors.fullname as name, appointments.animal, appointments.ap_type, appointments.ap_date, appointments.ap_id, appointments.total FROM doctors INNER JOIN appointments ON doctors.field = appointments.field where appointments.phone = '".$_SESSION['phone']."' ORDER BY appointments.ap_date asc";
+                                $retrieve = "SELECT doctors.fullname as name, appointments.animal, appointments.ap_type, appointments.ap_time, appointments.ap_date, appointments.ap_id, appointments.total FROM doctors INNER JOIN appointments ON doctors.field = appointments.field where appointments.phone = '".$_SESSION['phone']."' and appointments.session_expiry != 'expired' and appointments.session_expiry != 'attended' and appointments.bill_status = 'Not Paid' ORDER BY appointments.ap_date ASC, appointments.ap_time ASC";
                                 $link = mysqli_query($conn, $retrieve);
                                 checkSQL($conn, $link);
                                 $row = mysqli_num_rows($link);
@@ -253,13 +369,16 @@ if(isset($_GET['yes'])){
 
                                 // reading data contained in each row
                                 while($row = $link->fetch_assoc()){
-                                        $ap_date2 = date("d-m-Y", strtotime($row["ap_date"]));
-                                        $ap_id = $row["ap_id"];
+                                    $dateString = $row["ap_date"]; // Your date in YYYY-MM-DD format
+                                    $date = strtotime($dateString); // Convert the string to a Unix timestamp
+                                    $ap_date2 = date("j F Y", $date); // Format the date
+                                    $ap_id = $row["ap_id"];
                                     ?>
                                     <tr>
                                     <td><?php echo $row["name"] ?></td>
                                     <td><?php echo $row["animal"] ?></td>
                                     <td><?php echo $row["ap_type"] ?></td>
+                                    <td><?php echo $row["ap_time"] ?></td>
                                     <td><?php echo $ap_date2 ?></td>
                                     <td><?php echo "K".number_format($row["total"]) ?></td>
                                     <td style = "z-index: 1"><a href="appointments-edit.php?edit=<?php echo $ap_id ?>" class="edit">Edit</td>

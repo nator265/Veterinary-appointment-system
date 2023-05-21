@@ -66,21 +66,59 @@ if(isset($_GET['edit'])){
                     <form action="appointments.php" method="POST" onsubmit="return validateForm(this);">
                         <div class="pushcontainer">
                             <div class="pushleft">
-                                <input type="text" name="fullname" id="fullname" placeholder="Owner Name(Fullname)" value="<?php echo $_SESSION['fullname']?>" required>
+                                <input type="text" name="fullname" id="fullname" placeholder="Owner Name(Fullname)" value="<?php
+                                        $edit = "SELECT * from appointments where ap_id = '".$_SESSION['idforedit']."'";
+                                        $linkedit = mysqli_query($conn, $edit);
+                                        $fetchfullname = mysqli_fetch_assoc($linkedit);
+                                        $fullname = $fetchfullname['fullname'];
+                                        echo $fullname;
+                                    ?>
+                                        " required style="text-align: left;">
                                 <br>
                                 <br>
                                 <span style="color:white;"> Select Animal Type</span>
                                 <br>
                                 <div class="type">
-                                    <select name="field" id="field" required value="<?php echo $_SESSION['field'] ?>">
-                                        <option hidden><?php echo $_SESSION['field']?></option>
+                                    <select name="field" id="field" required value="<?php
+                                        $edit = "SELECT * from appointments where ap_id = '".$_SESSION['idforedit']."'";
+                                        $linkedit = mysqli_query($conn, $edit);
+                                        $fetchfullname = mysqli_fetch_assoc($linkedit);
+                                        $fullname = $fetchfullname['field'];
+                                        echo $fullname;
+                                            ?>
+                                        ">
+                                        <option hidden><?php
+                                        $edit = "SELECT * from appointments where ap_id = '".$_SESSION['idforedit']."'";
+                                        $linkedit = mysqli_query($conn, $edit);
+                                        $fetchfullname = mysqli_fetch_assoc($linkedit);
+                                        $fullname = $fetchfullname['field'];
+                                        echo $fullname;
+                                            ?>
+                                        </option>
                                         <option value="pet">Pet</option>
                                         <option value="livestock">Livestock</option>
                                     </select>                        
-                                    <input type="text" name="animal" id="animal" placeholder="Pet e.g. Dog | Livestock e.g. Cow" value="<?php echo $_SESSION['animal'] ?>" required>
+                                    <input type="text" name="animal" id="animal" placeholder="Pet e.g. Dog | Livestock e.g. Cow" value="<?php
+                                        $edit = "SELECT * from appointments where ap_id = '".$_SESSION['idforedit']."'";
+                                        $linkedit = mysqli_query($conn, $edit);
+                                        $fetchfullname = mysqli_fetch_assoc($linkedit);
+                                        $fullname = $fetchfullname['animal'];
+                                        echo $fullname;
+                                    ?>
+                                        " required>
                                 </div>
                                 <br>
-                                <input type="date" name="ap_date" id="date" required value="<?php echo $_SESSION['date']?>" required>
+                                <input type="date" name="ap_date" id="date" value="<?php
+                                    $edit = "SELECT * FROM appointments WHERE ap_id = '".$_SESSION['idforedit']."'";
+                                    $linkedit = mysqli_query($conn, $edit);
+                                    $fetchfullname = mysqli_fetch_assoc($linkedit);
+                                    $date = $fetchfullname['ap_date'];
+
+                                    // Format the date to "YYYY-MM-DD" format
+                                    $formattedDate = date('Y-m-d', strtotime($date));
+
+                                    echo $formattedDate;
+                                ?>" required>
                                 <br>
                             </div>
                             <div class="pushright">
@@ -122,34 +160,9 @@ if(isset($_GET['edit'])){
                                         else{
                                             echo "<input type='checkbox' id='checkbox' name='ap_type[]' value='". $value."' .style='margin-top: 10px'>   $value (K$formated) <br> ";
                                         }
-
-                                        // echo '<input type="checkbox" id="checkbox" name="ap_type[]" "'. echo in_array($value, $newarr)? "checked" : "".'" value="$value" style="margin-top: 10px"><br>';
                                     }
-                                    // foreach($checked_arr as $language){
-                           
-                                    //      $checked = "";
-                                    //      if(in_array($language,$checked_arr)){
-                                    //           $checked = "checked";
-                                    //      }
-                                    //      echo '<input type="checkbox" id="checkbox" name="ap_type[]" value="'.$language.'" '.$checked.' > '.$language.' <br/>';
-                                         
-                                    // }
-                                    // getting the other arrayas that werent checked by the used
-                                    // $newarr = array_diff( $values, $checked_arr);
-
-                                    // print_r($newarr);
-                                    // return;
-
-
-                                    // // print_r($newarr);
-                                    // foreach ($newarr as $value) {
-
-                                    //     print_r($value);
-                                    //     return;
-                                        
-                                    //     // echo  " <input type='checkbox' id='checkbox' name='ap_type[]' value='". $value."' style='margin-top: 10px'> $value<br> ";
-                                    // }
                                 ?>
+
                             </div>
                         </div>
                         <div class="bttn-container">

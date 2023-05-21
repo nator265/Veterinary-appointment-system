@@ -239,7 +239,9 @@ function time_elapsed_string($datetime, $full = false) {
                                             die("Invalid query: " .$conn->error);
                                         }
                                         while($row = $approved_filter->fetch_assoc()){
-                                            $ap_date2 = time_elapsed_string($row["ap_date"]);
+                                            $dateString = $row["ap_date"]; // Your date in YYYY-MM-DD format
+                                            $date = strtotime($dateString); // Convert the string to a Unix timestamp
+                                            $ap_date2 = date("j F Y", $date); // Format the date
                                             $ap_id = $row["ap_id"];
                                         ?>
                                         
@@ -247,7 +249,7 @@ function time_elapsed_string($datetime, $full = false) {
                                         <td><?php echo $row["fullname"] ?></td>
                                         <td><?php echo $row["animal"] ?></td>
                                         <td><?php echo $row["ap_type"] ?></td>
-                                        <td><?php echo $row['ap_date']?></td>
+                                        <td><?php echo $ap_date2?></td>
                                         <td><?php echo $row["session_expiry"] ?></td>
                                         <td><?php echo "K".number_format($row["total"]) ?></td>
                                         <td style="z-index:2"><a href="appointments-reject.php?reject=<?php echo $row['ap_id'] ?>"> <button class="action-buttons" id="reject-button">Reverse</button></a></td>
