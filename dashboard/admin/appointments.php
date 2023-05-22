@@ -127,11 +127,11 @@ if ($result) {
     <div class="shadow"></div>
 
         <div class="column1">
-        <div class="company-name-container">
-                    <div class="company-name">
-                        Veterinary
-                    </div>
+            <div class="company-name-container">
+                <div class="company-name" style="font-size:x-large">
+                    GSJ Animal Health & Production
                 </div>
+            </div>
             <div class="links-container">
                 <div class="link">
                     <a href="dashboard.php"> <span id='link'> Dashboard </span> </a>
@@ -243,7 +243,7 @@ if ($result) {
                                     // retrieve data for the user matching the phone number
                                     // if($fetch_rest2['phone'] == )
                                     // retrieving data from the database for the user to see
-                                    $retrieve = "SELECT * FROM appointments where field = '".$_SESSION['field3']."' and approved='pending' ORDER BY ap_date ASC, ap_time ASC";
+                                    $retrieve = "SELECT * FROM appointments where field = '".$_SESSION['field3']."' and approved='pending' and session_expiry = 'pending' ORDER BY ap_date ASC, ap_time ASC";
                                     $link = mysqli_query($conn, $retrieve);
                                     checkSQL($conn, $link);
                                     $row = mysqli_num_rows($link);

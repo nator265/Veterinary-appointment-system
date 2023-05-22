@@ -23,6 +23,8 @@ if(isset($_GET['yes'])){
     $fetchphone = mysqli_fetch_assoc($linkinsert);
     $phone = $fetchphone['phone'];
 
+    $removeamount = "DELETE FROM total_transactions WHERE ='Alfreds Futterkiste";
+
     $insertqry2 = "INSERT into notifications(sender,title,message1,phone, reciever) values ('".$_SESSION['name']."', 'Transaction has been paid for!','Your transaction has been Paid for successfully.','".$_SESSION['phone']."','$phone')";
     $insertlink2 = mysqli_query($conn, $insertqry2);
     checkSQL($conn, $insertlink2);

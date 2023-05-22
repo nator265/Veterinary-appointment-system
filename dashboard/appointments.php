@@ -34,16 +34,30 @@ if(isset($_POST['submit'])){
             return;
         }
     }
-
      $ap_id = mysqli_insert_id($conn);
+     
 
-  // Allocate time to the user automatically
+date_default_timezone_set("Africa/Harare");
+// Function to remove past time slots with an additional hour
+function removePastTimeSlots($timeSlots)
+{
+    $currentTime = strtotime('+1 hour'); // Current time minus 1 hour
+
+    // Filter out time slots that have already passed, including an extra hour
+    $filteredTimeSlots = array_filter($timeSlots, function ($timeSlot) use ($currentTime) {
+        $timeSlotTime = strtotime($timeSlot);
+        return $timeSlotTime > $currentTime;
+    });
+
+    return array_values($filteredTimeSlots); // Re-index the array
+}
+
+// Allocate time to the user automatically
 $availableTimeSlots = array(
     '8:00 AM', '8:15 AM', '8:30 AM', '8:45 AM',
     '9:00 AM', '9:15 AM', '9:30 AM', '9:45 AM',
     '10:00 AM', '10:15 AM', '10:30 AM', '10:45 AM',
     '11:00 AM', '11:15 AM', '11:30 AM', '11:45 AM',
-    '12:00 PM', '12:15 PM', '12:30 PM', '12:45 PM',
     '1:00 PM', '1:15 PM', '1:30 PM', '1:45 PM',
     '2:00 PM', '2:15 PM', '2:30 PM', '2:45 PM',
     '3:00 PM', '3:15 PM', '3:30 PM', '3:45 PM',
@@ -51,25 +65,19 @@ $availableTimeSlots = array(
     // ... add more time slots as needed
 );
 
-$selectedTimeSlot = null;
-foreach ($availableTimeSlots as $timeSlot) {
-    $query = "SELECT COUNT(*) as count FROM appointments WHERE ap_time = '$timeSlot' AND ap_date = '$date'";
-    $result = mysqli_query($conn, $query);
-    $row = mysqli_fetch_assoc($result);
-    $appointmentCount = intval($row['count']);
-    
-    if ($appointmentCount == 0) {
-        $selectedTimeSlot = $timeSlot;
-        break;
-    }
+// Remove past time slots with an additional hour if the selected date is today
+if ($date == date('Y-m-d')) {
+    $availableTimeSlots = removePastTimeSlots($availableTimeSlots);
 }
 
-if ($selectedTimeSlot === null) {
-    // All time slots are taken, handle the case where no available time slot is found
+if (empty($availableTimeSlots)) {
+    // No available time slots, handle the case where no time slot is available
     echo "<script>alert('Sorry, no available time slots. Please choose a different day.');</script>";
     echo "<script>window.location.href = 'javascript:history.go(-1)';</script>";
     return;
 }
+
+$selectedTimeSlot = $availableTimeSlots[0]; // Select the first available time slot
 
 // Remove the allocated time slot from the available time slots array
 $index = array_search($selectedTimeSlot, $availableTimeSlots);
@@ -78,6 +86,8 @@ if ($index !== false) {
 }
 
 $allocatedTime = $selectedTimeSlot;
+
+
 
      // Get the total cost by comparing selected services with `service_costs` table
      $total = 0;
@@ -128,47 +138,56 @@ if ($appointmentCount >= 2) {
 
      $ap_id = mysqli_insert_id($conn);
 
-    // allocate time to the user automatically
-    $availableTimeSlots = array(
-        '8:00 AM', '8:15 AM', '8:30 AM', '8:45 AM',
-        '9:00 AM', '9:15 AM', '9:30 AM', '9:45 AM',
-        '10:00 AM', '10:15 AM', '10:30 AM', '10:45 AM',
-        '11:00 AM', '11:15 AM', '11:30 AM', '11:45 AM',
-        '12:00 PM', '12:15 PM', '12:30 PM', '12:45 PM',
-        '1:00 PM', '1:15 PM', '1:30 PM', '1:45 PM',
-        '2:00 PM', '2:15 PM', '2:30 PM', '2:45 PM',
-        '3:00 PM', '3:15 PM', '3:30 PM', '3:45 PM',
-        '4:00 PM'
-        // ... add more time slots as needed
-    );
-
-    $selectedTimeSlot = null;
-    foreach ($availableTimeSlots as $timeSlot) {
-        $query = "SELECT COUNT(*) as count FROM appointments WHERE ap_time = '$timeSlot' AND ap_date = '$date'";
-        $result = mysqli_query($conn, $query);
-        $row = mysqli_fetch_assoc($result);
-        $appointmentCount = intval($row['count']);
-        
-        if ($appointmentCount == 0) {
-            $selectedTimeSlot = $timeSlot;
-            break;
-        }
-    }
-
-    if ($selectedTimeSlot === null) {
-        // All time slots are taken, handle the case where no available time slot is found
-        echo "<script>alert('Sorry, no available time slots. Please choose a different day.');</script>";
-        echo "<script>window.location.href = 'javascript:history.go(-1)';</script>";
-        return;
-    }
-
-    // Remove the allocated time slot from the available time slots array
-    $index = array_search($selectedTimeSlot, $availableTimeSlots);
-    if ($index !== false) {
-        unset($availableTimeSlots[$index]);
-    }
-
-    $allocatedTime = $selectedTimeSlot;
+     date_default_timezone_set("Africa/Harare");
+     // Function to remove past time slots with an additional hour
+     function removePastTimeSlots($timeSlots)
+     {
+         $currentTime = strtotime('+1 hour'); // Current time minus 1 hour
+     
+         // Filter out time slots that have already passed, including an extra hour
+         $filteredTimeSlots = array_filter($timeSlots, function ($timeSlot) use ($currentTime) {
+             $timeSlotTime = strtotime($timeSlot);
+             return $timeSlotTime > $currentTime;
+         });
+     
+         return array_values($filteredTimeSlots); // Re-index the array
+     }
+     
+     // Allocate time to the user automatically
+     $availableTimeSlots = array(
+         '8:00 AM', '8:15 AM', '8:30 AM', '8:45 AM',
+         '9:00 AM', '9:15 AM', '9:30 AM', '9:45 AM',
+         '10:00 AM', '10:15 AM', '10:30 AM', '10:45 AM',
+         '11:00 AM', '11:15 AM', '11:30 AM', '11:45 AM',
+         '1:00 PM', '1:15 PM', '1:30 PM', '1:45 PM',
+         '2:00 PM', '2:15 PM', '2:30 PM', '2:45 PM',
+         '3:00 PM', '3:15 PM', '3:30 PM', '3:45 PM',
+         '4:00 PM'
+         // ... add more time slots as needed
+     );
+     
+     // Remove past time slots with an additional hour if the selected date is today
+     if ($date == date('Y-m-d')) {
+         $availableTimeSlots = removePastTimeSlots($availableTimeSlots);
+     }
+     
+     if (empty($availableTimeSlots)) {
+         // No available time slots, handle the case where no time slot is available
+         echo "<script>alert('Sorry, no available time slots. Please choose a different day.');</script>";
+         echo "<script>window.location.href = 'javascript:history.go(-1)';</script>";
+         return;
+     }
+     
+     $selectedTimeSlot = $availableTimeSlots[0]; // Select the first available time slot
+     
+     // Remove the allocated time slot from the available time slots array
+     $index = array_search($selectedTimeSlot, $availableTimeSlots);
+     if ($index !== false) {
+         unset($availableTimeSlots[$index]);
+     }
+     
+     $allocatedTime = $selectedTimeSlot;
+     
 
      // Get the total cost by comparing selected services with `service_costs` table
      $total = 0;
@@ -225,8 +244,8 @@ if(isset($_GET['yes'])){
 
         <div class="column1">
         <div class="company-name-container">
-                    <div class="company-name">
-                        Veterinary
+                    <div class="company-name" style="font-size:x-large">
+                    GSJ Animal Health & Production
                     </div>
                 </div>
             <div class="links-container">

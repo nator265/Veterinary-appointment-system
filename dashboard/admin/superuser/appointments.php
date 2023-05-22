@@ -78,11 +78,11 @@ if(isset($_GET['delete'])){
     <div class="shadow"></div>
 
         <div class="column1">
-        <div class="company-name-container">
-                    <div class="company-name">
-                        Veterinary
-                    </div>
+            <div class="company-name-container">
+                <div class="company-name" style="font-size:x-large">
+                    GSJ Animal Health & Production
                 </div>
+            </div>
             <div class="links-container">
                 <div class="link">
                     <a href="dashboard.php"> <span id='link'> Dashboard </span> </a>

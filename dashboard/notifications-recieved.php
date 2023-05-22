@@ -30,6 +30,7 @@ if(isset($_GET['yes'])){
     mysqli_query($conn, $delete);
     header('location:notifications-recieved.php');
 }
+date_default_timezone_set("Africa/Harare");
 function time_elapsed_string($datetime, $full = false) {
     $now = new DateTime;
     $ago = new DateTime($datetime);

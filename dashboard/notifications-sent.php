@@ -41,6 +41,35 @@ if(isset($_GET['yes'])){
     mysqli_query($conn, $delete);
     header('location:notifications-sent.php');
 }
+date_default_timezone_set("Africa/Harare");
+function time_elapsed_string($datetime, $full = false) {
+    $now = new DateTime;
+    $ago = new DateTime($datetime);
+    $diff = $now->diff($ago);
+
+    $diff->w = floor($diff->d / 7);
+    $diff->d -= $diff->w * 7;
+
+    $string = array(
+        'y' => 'year',
+        'm' => 'month',
+        'w' => 'week',
+        'd' => 'day',
+        'h' => 'hour',
+        'i' => 'minute',
+        's' => 'second',
+    );
+    foreach ($string as $k => &$v) {
+        if ($diff->$k) {
+            $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+        } else {
+            unset($string[$k]);
+        }
+    }
+
+    if (!$full) $string = array_slice($string, 0, 1);
+    return $string ? implode(', ', $string) . ' ago' : 'just now';
+}
 ?>
 
 <DOCTYPE html>
@@ -62,8 +91,8 @@ if(isset($_GET['yes'])){
     
             <div class="column1">
                 <div class="company-name-container">
-                    <div class="company-name">
-                        Veterinary
+                    <div class="company-name" style="font-size: x-large">
+                    GSJ Animal Health & Production
                     </div>
                 </div>
                 <div class="links-container">
@@ -138,7 +167,7 @@ if(isset($_GET['yes'])){
                                     <tr>
                                     <td style="padding-left:10px"><?php echo $row["sender"] ?></td>
                                     <td><?php echo $row["title"] ?></td>
-                                    <td><?php echo $row["time"] ?></td>
+                                    <td><?php time_elapsed_string($row["time"]) ?></td>
                                     <td><a href="notifications-sent-reply.php?reply=<?php echo $row['notifications_id'] ?>" class="edit">View</a></td>
                                     <td><a href="notifications-sent-delete?delete=<?php echo $row['notifications_id']?>#" class="cancel" id="clearance">Delete</a></td>
                                     </tr>

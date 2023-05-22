@@ -95,11 +95,11 @@ function time_elapsed_string($datetime, $full = false) {
     <div class="shadow"></div>
 
         <div class="column1">
-        <div class="company-name-container">
-                    <div class="company-name">
-                        Veterinary
-                    </div>
+            <div class="company-name-container">
+                <div class="company-name" style="font-size:x-large">
+                    GSJ Animal Health & Production
                 </div>
+            </div>
             <div class="links-container">
                 <div class="link">
                     <a href="dashboard.php"> <span id='link'> Dashboard </span> </a>
@@ -211,6 +211,9 @@ function time_elapsed_string($datetime, $full = false) {
                                     Animal Type
                                 </th>
                                 <th>
+                                    Doctor
+                                </th>
+                                <th>
                                     Appointment Type
                                 </th>
                                 <th>
@@ -231,7 +234,8 @@ function time_elapsed_string($datetime, $full = false) {
                                     // retrieve data for the user matching the phone number
                                     // if($fetch_rest2['phone'] == )
                                     // retrieving data from the database for the user to see
-                                    $query = "SELECT * from appointments where bill_status = 'Paid' and session_expiry = 'Attended' ORDER BY ap_date asc";
+                                        $query = "SELECT appointments.fullname, appointments.animal, appointments.ap_type, appointments.ap_id, appointments.ap_date, appointments.session_expiry, appointments.total, doctors.fullname as 'name'
+                                        from appointments INNER JOIN doctors on appointments.field = doctors.field  where appointments.session_expiry = 'Attended' and approved = 'approved' and bill_status = 'paid' ORDER BY appointments.ap_date asc, appointments.ap_time asc";
                                         $approved_filter = mysqli_query($conn, $query);
                                         checkSQL($conn, $approved_filter);
                                         $row = mysqli_num_rows($approved_filter);
@@ -248,6 +252,7 @@ function time_elapsed_string($datetime, $full = false) {
                                         <tr>
                                         <td><?php echo $row["fullname"] ?></td>
                                         <td><?php echo $row["animal"] ?></td>
+                                        <td><?php echo $row["name"] ?></td>
                                         <td><?php echo $row["ap_type"] ?></td>
                                         <td><?php echo $ap_date2?></td>
                                         <td><?php echo $row["session_expiry"] ?></td>

@@ -76,16 +76,18 @@
 <body>
     <div class="body">
     <h1>
-        <span id="left-h1">Appointment Booking</span>
+        <div id="left-h1" style="position: fixed; top: 10; left: 10x; z-index: 2; display:inline-block">
+            <img src="images/gsj_logo.jpg" alt="Logo" height="100px" width="100px">
+        </div>
     </h1>
 
     <div class="form-container">
         <div class="form">
             <fieldset class="fieldset">
                 <legend class="legend">
-                    <h2>We are ready to help</h2> 
+                    <h2>GSJ Animal Health & Production Appointment System</h2> 
                 </legend>
-                <form method="POST" action="login-incorrect.php" name="form" onsubmit="return validated()">
+                <form method="POST" action="login-incorrect.php" name="form" onsubmit="return validated()" style="text-align:center;">
                     <input type="text" name="fullname" id="email" placeholder="Fullname" style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;"
                         onclick="document.getElementById('email').style.border = 'none'">
                     <br>

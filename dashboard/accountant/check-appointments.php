@@ -80,11 +80,11 @@ function time_elapsed_string($datetime, $full = false) {
     <div class="shadow"></div>
 
         <div class="column1">
-        <div class="company-name-container">
-                    <div class="company-name">
-                        Veterinary
-                    </div>
+            <div class="company-name-container">
+                <div class="company-name" style="font-size:x-large">
+                        GSJ Animal Health & Production
                 </div>
+            </div>
             <div class="links-container">
                 <div class="link">
                     <a href="dashboard.php"> <span id='link'> Dashboard </span> </a>
@@ -109,21 +109,9 @@ function time_elapsed_string($datetime, $full = false) {
         <!-- thi is the modal for the appointments registration -->
 
         <div class="column2">
-            <div class="greetings-container">
-                <span class="greetings" id="greetings"></span>
-                <?php 
-                    // this is to call the name of the user with the session variable
-                   
-                    echo ucwords($_SESSION['name']) . '.';
-                ?> 
-            </div>
           
             <!-- 2.appointmets tab -->
-            <div class="main-appointments-container" id="main-appointments-container">
-            <div class="search-container">
-                <input type="text" id="search" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
-                <img src="images/search.webp" height="30px" width="30px" alt=" search">
-                </div>
+            <div class="main-appointments-container" id="main-appointments-container">           
                 <div class="table-container">
                     <div class="table" id="recents2">
                         <table id="myTable">
@@ -135,16 +123,16 @@ function time_elapsed_string($datetime, $full = false) {
                                     Animal Type
                                 </th>
                                 <th>
+                                    Doctor
+                                </th>
+                                <th>
                                     Appointment Type
                                 </th>
                                 <th>
                                     Date
                                 </th>
-                                <!-- <th>
-                                    Approved
-                                </th>-->
-                                <th style="z-index:1">
-                                    Actions
+                                <th>
+                                    Total
                                 </th>
                             </tr>
                             <div class="recents-tab">
@@ -152,7 +140,8 @@ function time_elapsed_string($datetime, $full = false) {
                                     // retrieve data for the user matching the phone number
                                     // if($fetch_rest2['phone'] == )
                                     // retrieving data from the database for the user to see
-                                    $retrieve = "SELECT * FROM appointments where approved = 'approved' && session_expiry = 'pending' ORDER BY ap_date desc";
+                                    $retrieve = "SELECT appointments.fullname, appointments.animal, appointments.ap_type, appointments.ap_id, appointments.ap_date, appointments.session_expiry, appointments.total, doctors.fullname as 'name'
+                                        from appointments INNER JOIN doctors on appointments.field = doctors.field  where appointments.session_expiry = 'Attended' and bill_status = 'paid' ORDER BY appointments.ap_date asc, appointments.ap_time asc";
                                     $link = mysqli_query($conn, $retrieve);
                                     checkSQL($conn, $link);
                                     $row = mysqli_num_rows($link);
@@ -163,18 +152,33 @@ function time_elapsed_string($datetime, $full = false) {
                                     // reading data contained in each row
                                     while($row = $link->fetch_assoc()){
                                             $ap_date2 = $row['ap_date'];
-                                            $phone = $row["phone"];
                                         ?>
                                         
                                         <tr>
                                         <td><?php echo $row["fullname"] ?></td>
                                         <td><?php echo $row["animal"] ?></td>
+                                        <td><?php echo $row["name"] ?></td>
                                         <td><?php echo $row["ap_type"] ?></td>
                                         <td><?php echo $ap_date2 ?></td>
-                                        <td style="z-index:2"><a href="check-off.php?check-off=<?php echo $row['ap_id'] ?>"> <button class="edit" style="float:none"> Check off</button></a></td>
+                                        <td><?php echo "K", number_format($row["total"]) ?></td>
                                         </tr>
                                     <?php }
                                 ?>
+                                 <tfoot class="table-footer">
+                                    <tr style="background-color:#1a1a1a;">
+                                    <td style="background-color:#1a1a1a; float:left; padding-top: 25px">TOTAL OF ALL TRANSACTIONS SO FAR </td>
+                                    <td style="background-color:#1a1a1a; float:right; position:absolute; right: 30; top: 25"><?php 
+
+                                        $count = mysqli_query($conn, "SELECT total FROM total_transactions");
+                                        $total = 0;
+                                        while($row = mysqli_fetch_assoc($count)) {
+                                            $total += $row['total'];
+                                        }
+                                        echo "K". number_format($total);
+
+                                    ?></td>
+                                    </tr>
+                                </tfoot>
                             </div>
                         </table>
                     </div>

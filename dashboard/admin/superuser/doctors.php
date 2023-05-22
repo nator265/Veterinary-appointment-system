@@ -109,10 +109,10 @@ function time_elapsed_string($datetime, $full = false) {
 
         <div class="column1">
         <div class="company-name-container">
-                    <div class="company-name">
-                        Veterinary
-                    </div>
-                </div>
+            <div class="company-name" style="font-size:x-large">
+                GSJ Animal Health & Production
+            </div>
+        </div>
             <div class="links-container">
                 <div class="link">
                     <a href="dashboard.php"> <span id='link'> Dashboard </span> </a>

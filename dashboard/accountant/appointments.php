@@ -20,9 +20,6 @@ if(isset($_GET['yes'])){
     $message = 'Appointment successfully paid for, thank you!';
 
     // inserting the amount that was paid for into the total table
-    $amount = $phoneassoc['total'];
-    $amountqry = "INSERT into total_transactions(total) values ('$amount')";
-    $amountlink = mysqli_query($conn, $amountqry);
     $reg = "INSERT INTO notifications(sender, title, message1, phone, reciever) VALUES ('".$_SESSION['name']."', 'Payment', '$message', '".$_SESSION['phone']."', '$phone')";
     $rest = mysqli_query($conn, $reg);
     checkSQL($conn, $rest);
@@ -32,7 +29,19 @@ if(isset($_GET['yes'])){
         SET bill_status = 'Paid' 
         WHERE ap_id = $approvedPhone";
     $removelink = mysqli_query($conn, $removeqry);
-    header('location:appointments.php');    
+    header('location:appointments.php'); 
+
+    $query4 = "SELECT * from appointments where ap_id = '$approvedPhone'";
+    $linkquery4 = mysqli_query($conn, $query4);
+    checkSQL($conn, $linkquery4);
+    $phoneassoc2 = mysqli_fetch_assoc($linkquery4);
+    $date3 = $phoneassoc2['ap_date'];
+    $year = date('Y', strtotime($date3));
+    $month = date('F', strtotime($date3));
+    $amount = $phoneassoc2['total'];
+    $enteramount = "INSERT INTO total_transactions (total, month1, year1, ap_id)
+    VALUES ('$amount', '$month', '$year', '$approvedPhone')";
+    $amountlink = mysqli_query($conn, $enteramount);
 }
 
 function time_elapsed_string($datetime, $full = false) {
@@ -85,11 +94,11 @@ function time_elapsed_string($datetime, $full = false) {
     <div class="shadow"></div>
 
         <div class="column1">
-        <div class="company-name-container">
-                    <div class="company-name">
-                        Veterinary
-                    </div>
+            <div class="company-name-container">
+                <div class="company-name" style="font-size:x-large">
+                    GSJ Animal Health & Production
                 </div>
+            </div>
             <div class="links-container">
                 <div class="link">
                     <a href="dashboard.php"> <span id='link'> Dashboard </span> </a>
@@ -211,7 +220,7 @@ function time_elapsed_string($datetime, $full = false) {
                                     $approved = "yes";
 
                                     $retrieve = "SELECT appointments.fullname, appointments.animal, appointments.ap_type, appointments.ap_id, appointments.ap_date, appointments.session_expiry, appointments.total, doctors.fullname as 'name'
-                                        from appointments INNER JOIN doctors on appointments.field = doctors.field  where appointments.session_expiry = 'Attended' and bill_status = 'Not paid' ORDER BY appointments.ap_date asc";
+                                        from appointments INNER JOIN doctors on appointments.field = doctors.field  where appointments.session_expiry = 'attended' and bill_status = 'Not Paid' ORDER BY appointments.ap_date asc, appointments.ap_time asc";
 
                                     $link = mysqli_query($conn, $retrieve);
                                     checkSQL($conn, $link);

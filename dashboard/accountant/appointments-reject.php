@@ -25,6 +25,10 @@ if(isset($_GET['yes'])){
     $fetchphone = mysqli_fetch_assoc($linkinsert);
     $phone = $fetchphone['phone'];
 
+    $removeamount = "DELETE from total_transactions where ap_id = $ap_id";
+    $linkremove = mysqli_query($conn, $removeamount);
+    checkSQL($conn, $linkremove);
+
     $insertqry2 = "INSERT into notifications(sender,title,message1,phone, reciever) values ('".$_SESSION['name']."', 'transaction has been reversed!','Your transaction has been reversed by the accountant, reply to the accountant to know more.','".$_SESSION['phone']."','$phone')";
     $insertlink2 = mysqli_query($conn, $insertqry2);
     checkSQL($conn, $insertlink2);

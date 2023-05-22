@@ -3,7 +3,7 @@ session_start();
 include('../connect.php');
 include('../functions.php');
 
-if(!isset($_SESSION['name'])){
+if(!isset($_SESSION['name'], $_SESSION['phone'])){
     header('location:../login.php');
 }
 if(isset($_GET['reply'])){

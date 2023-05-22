@@ -94,11 +94,11 @@ function time_elapsed_string($datetime, $full = false) {
     <div class="shadow"></div>
 
         <div class="column1">
-        <div class="company-name-container">
-                    <div class="company-name">
-                        Veterinary
-                    </div>
+            <div class="company-name-container">
+                <div class="company-name" style="font-size:x-large">
+                    GSJ Animal Health & Production
                 </div>
+            </div>
             <div class="links-container">
                 <div class="link">
                     <a href="dashboard.php"> <span id='link'> Dashboard </span> </a>
@@ -223,7 +223,7 @@ function time_elapsed_string($datetime, $full = false) {
                                     // retrieve data for the user matching the phone number
                                     // if($fetch_rest2['phone'] == )
                                     // retrieving data from the database for the user to see
-                                    $query = "SELECT * from appointments where field = '".$_SESSION['field3']."' and approved='approved' and session_expiry = 'pending' ORDER BY ap_date asc";
+                                    $query = "SELECT * from appointments where field = '".$_SESSION['field3']."' and approved='approved' and session_expiry = 'pending' ORDER BY ap_date asc, ap_time ASC";
                                         $approved_filter = mysqli_query($conn, $query);
                                         checkSQL($conn, $approved_filter);
                                         $row = mysqli_num_rows($approved_filter);
@@ -231,7 +231,9 @@ function time_elapsed_string($datetime, $full = false) {
                                             die("Invalid query: " .$conn->error);
                                         }
                                         while($row = $approved_filter->fetch_assoc()){
-                                            $ap_date2 = time_elapsed_string($row["ap_date"]);
+                                            $dateString = $row["ap_date"]; // Your date in YYYY-MM-DD format
+                                            $date = strtotime($dateString); // Convert the string to a Unix timestamp
+                                            $ap_date2 = date("j F Y", $date); // Format the date
                                             $ap_id = $row["ap_id"];
                                         ?>
                                         
@@ -239,7 +241,7 @@ function time_elapsed_string($datetime, $full = false) {
                                         <td><?php echo $row["fullname"] ?></td>
                                         <td><?php echo $row["animal"] ?></td>
                                         <td><?php echo $row["ap_type"] ?></td>
-                                        <td><?php echo $row['ap_date']?></td>
+                                        <td><?php echo $ap_date2 ?></td>
                                         <td style="z-index:2"><a href="appointments-reject3.php?reject=<?php echo $row['ap_id']?>"><button class="action-buttons" id="reject-button" name="reject">Reject</button></a>
                                         </tr>
                                     <?php }
