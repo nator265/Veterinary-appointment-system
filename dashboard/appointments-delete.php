@@ -42,6 +42,7 @@ if(isset($_POST['re-submit'])){
 
 if(isset($_GET['delete'])){
     $_SESSION['forthisid'] = $_GET['delete'];
+    
 }
 ?>
 
