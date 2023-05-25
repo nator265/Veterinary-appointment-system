@@ -178,7 +178,7 @@ if(isset($_GET['yes'])){
                                 // retrieve data for the user matching the phone number
                                 // if($fetch_rest2['phone'] == )
                                 // retrieving data from the database for the user to see
-                                $retrieve = "SELECT doctors.fullname as name, appointments.animal, appointments.ap_type, appointments.ap_date, appointments.ap_id FROM doctors INNER JOIN appointments ON doctors.field = appointments.field where session_expiry = 'pending' appointments.phone = '".$_SESSION['phone']."'";
+                                $retrieve = "SELECT doctors.fullname as name, appointments.animal, appointments.ap_type, appointments.ap_date, appointments.ap_id FROM doctors INNER JOIN appointments ON doctors.field = appointments.field where session_expiry = 'pending' and appointments.phone = '".$_SESSION['phone']."'";
                                 $link = mysqli_query($conn, $retrieve);
                                 checkSQL($conn, $link);
                                 $row = mysqli_num_rows($link);

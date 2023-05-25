@@ -1,65 +1,79 @@
 <?php
     session_start();
     include 'connect.php';
-
+    header( "refresh:1.5; url = login.php" );
+    
     if(isset($_POST['login'])){ 
-        $fullname = $_POST['fullname'];
         $phone = $_POST['phone'];
         $password = $_POST['password'];       
         // to make sure that the input fields are not empty
     
         // authenticating the user input to authorize login
-         // authenticating the user input to authorize login
-         $s = "select * from users where fullname = '$fullname' && phone = '$phone' && password = '$password'";
-         $d = "select * from doctors where fullname = '$fullname' && phone = '$phone' && password = '$password'";
-         $c = "select * from admin where fullname = '$fullname' && phone = '$phone' && password = '$password'";
-         $e = "select * from accountant where fullname = '$fullname' && phone = '$phone' && password = '$password'";
-         // connecting the queery with the database
-         $result = mysqli_query($conn, $s);
-         $result2 = mysqli_query($conn, $d);
-         $result3 = mysqli_query($conn, $c);
-         $result4 = mysqli_query($conn, $e);
-         // getting the required rows from the database
-         $num = mysqli_num_rows($result);
-         $num2 = mysqli_num_rows($result2);
-         $num3 = mysqli_num_rows($result3);
-         $num4 = mysqli_num_rows($result4);
-         
-     
-         if($num > 0){
-         
-             $_SESSION['name'] = $fullname;
-             $_SESSION['phone'] = $phone;
-             header('location: dashboard/index.php');
-             
-         }elseif ($num2 > 0) {
-             // Loging in
-             $_SESSION['name'] = $fullname;
-             $_SESSION['phone'] = $phone;
- 
-              // getting the doctors field of work
-              $field = "SELECT field from doctors where phone = '".$_SESSION['phone']."'";
-              $fieldlink = mysqli_query($conn, $field);
-              $field2 = mysqli_fetch_assoc($fieldlink);                               
-              $_SESSION['field3'] =  $field2["field"];
-              
-             header('location: dashboard/admin/dashboard.php');
- 
-         }elseif ($num3 > 0) {
-             
-                 $_SESSION['name'] = $fullname;
-                 $_SESSION['phone'] = $phone;
-                 header('location: dashboard/admin/superuser/dashboard.php');
+        $s = "select * from users where phone = '$phone' && password = '$password'";
+        $d = "select * from doctors where phone = '$phone' && password = '$password'";
+        $c = "select * from admin where phone = '$phone' && password = '$password'";
+        $e = "select * from accountant where phone = '$phone' && password = '$password'";
+        // connecting the queery with the database
+        $result = mysqli_query($conn, $s);
+        $result2 = mysqli_query($conn, $d);
+        $result3 = mysqli_query($conn, $c);
+        $result4 = mysqli_query($conn, $e);
+        // getting the required rows from the database
+        $num = mysqli_num_rows($result);
+        $num2 = mysqli_num_rows($result2);
+        $num3 = mysqli_num_rows($result3);
+        $num4 = mysqli_num_rows($result4);
+        // getting the username for the users
+
         
-         }
-         elseif ($num4 > 0) {
+    
+        if($num > 0){
+            $query2 = "select * from users where phone = '$phone' && password = '$password'";
+            $link1 = mysqli_query($conn, $query2);
+            $fetchname = mysqli_fetch_assoc($link1);
+            $fullname = $fetchname['fullname'];
+            $_SESSION['name'] = $fullname;
+            $_SESSION['phone'] = $phone;
+            header('location: dashboard/index.php');
+            
+        }elseif ($num2 > 0) {
+            // Loging in
+            $query2 = "select * from doctors where phone = '$phone' && password = '$password'";
+            $link1 = mysqli_query($conn, $query2);
+            $fetchname = mysqli_fetch_assoc($link1);
+            $fullname = $fetchname['fullname'];
+            $_SESSION['name'] = $fullname;
+            $_SESSION['phone'] = $phone;
+
+             // getting the doctors field of work
+             $field = "SELECT field from doctors where phone = '".$_SESSION['phone']."'";
+             $fieldlink = mysqli_query($conn, $field);
+             $field2 = mysqli_fetch_assoc($fieldlink);                               
+             $_SESSION['field3'] =  $field2["field"];
              
-                 $_SESSION['name'] = $fullname;
-                 $_SESSION['phone'] = $phone;
-                 header('location: dashboard/accountant/dashboard.php');
-        
-         }else{
+            header('location: dashboard/admin/dashboard.php');
+
+        }elseif ($num3 > 0) {
+            $query2 = "select * from admin where phone = '$phone' && password = '$password'";
+            $link1 = mysqli_query($conn, $query2);
+            $fetchname = mysqli_fetch_assoc($link1);
+            $fullname = $fetchname['fullname'];
+            $_SESSION['name'] = $fullname;
+            $_SESSION['phone'] = $phone;
+            header('location: dashboard/admin/superuser/dashboard.php');
+       
         }
+        elseif ($num4 > 0) {
+            $query2 = "select * from accountant where phone = '$phone' && password = '$password'";
+            $link1 = mysqli_query($conn, $query2);
+            $fetchname = mysqli_fetch_assoc($link1);
+            $fullname = $fetchname['fullname'];
+            $_SESSION['name'] = $fullname;
+            $_SESSION['phone'] = $phone;
+            header('location: dashboard/accountant/dashboard.php');
+       
+        }
+        else{header('location: login-incorrect.php');}
     }
 ?>
 <!DOCTYPE html>
@@ -82,6 +96,9 @@
 
     <div class="form-container">
         <div class="form">
+            <div style="text-align:center">
+                <img src="images/gsj logo.png" alt="logo" height="200px" width="200px">
+            </div>
             <fieldset class="fieldset">
                 <legend class="legend">
                     <h2>We are ready to help</h2> 
@@ -122,7 +139,9 @@
         title: 'Error!',
         text: 'Please Fill In All Fields',
         icon: 'error',
-        confirmButtonText: 'Okay',
+        buttons: 'false',
+        showCancelButton: false,
+        showConfirmButton: false,
 })
     </script>
 </body>

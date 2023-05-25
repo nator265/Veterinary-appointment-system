@@ -3,16 +3,15 @@
     include 'connect.php';
 
     if(isset($_POST['login'])){ 
-        $fullname = $_POST['fullname'];
         $phone = $_POST['phone'];
         $password = $_POST['password'];       
         // to make sure that the input fields are not empty
     
         // authenticating the user input to authorize login
-        $s = "select * from users where fullname = '$fullname' && phone = '$phone' && password = '$password'";
-        $d = "select * from doctors where fullname = '$fullname' && phone = '$phone' && password = '$password'";
-        $c = "select * from admin where fullname = '$fullname' && phone = '$phone' && password = '$password'";
-        $e = "select * from accountant where fullname = '$fullname' && phone = '$phone' && password = '$password'";
+        $s = "select * from users where phone = '$phone' && password = '$password'";
+        $d = "select * from doctors where phone = '$phone' && password = '$password'";
+        $c = "select * from admin where phone = '$phone' && password = '$password'";
+        $e = "select * from accountant where phone = '$phone' && password = '$password'";
         // connecting the queery with the database
         $result = mysqli_query($conn, $s);
         $result2 = mysqli_query($conn, $d);
@@ -23,16 +22,25 @@
         $num2 = mysqli_num_rows($result2);
         $num3 = mysqli_num_rows($result3);
         $num4 = mysqli_num_rows($result4);
+        // getting the username for the users
+
         
     
         if($num > 0){
-        
+            $query2 = "select * from users where phone = '$phone' && password = '$password'";
+            $link1 = mysqli_query($conn, $query2);
+            $fetchname = mysqli_fetch_assoc($link1);
+            $fullname = $fetchname['fullname'];
             $_SESSION['name'] = $fullname;
             $_SESSION['phone'] = $phone;
             header('location: dashboard/index.php');
             
         }elseif ($num2 > 0) {
             // Loging in
+            $query2 = "select * from doctors where phone = '$phone' && password = '$password'";
+            $link1 = mysqli_query($conn, $query2);
+            $fetchname = mysqli_fetch_assoc($link1);
+            $fullname = $fetchname['fullname'];
             $_SESSION['name'] = $fullname;
             $_SESSION['phone'] = $phone;
 
@@ -45,20 +53,29 @@
             header('location: dashboard/admin/dashboard.php');
 
         }elseif ($num3 > 0) {
-            
-                $_SESSION['name'] = $fullname;
-                $_SESSION['phone'] = $phone;
-                header('location: dashboard/admin/superuser/dashboard.php');
+            $query2 = "select * from admin where phone = '$phone' && password = '$password'";
+            $link1 = mysqli_query($conn, $query2);
+            $fetchname = mysqli_fetch_assoc($link1);
+            $fullname = $fetchname['fullname'];
+            $_SESSION['name'] = $fullname;
+            $_SESSION['phone'] = $phone;
+            header('location: dashboard/admin/superuser/dashboard.php');
        
         }
         elseif ($num4 > 0) {
-            
-                $_SESSION['name'] = $fullname;
-                $_SESSION['phone'] = $phone;
-                header('location: dashboard/accountant/dashboard.php');
+            $query2 = "select * from accountant where phone = '$phone' && password = '$password'";
+            $link1 = mysqli_query($conn, $query2);
+            $fetchname = mysqli_fetch_assoc($link1);
+            $fullname = $fetchname['fullname'];
+            $_SESSION['name'] = $fullname;
+            $_SESSION['phone'] = $phone;
+            header('location: dashboard/accountant/dashboard.php');
        
         }
-        else{header('location: login-incorrect.php');}
+        elseif(empty($phone) or empty($password)){
+            header('location: login-error.php');
+        }
+        // else{header('location: login-incorrect.php');}
     }
 ?>
 <!DOCTYPE html>
@@ -75,22 +92,16 @@
 </head>
 <body>
     <div class="body">
-    <h1>
-        <div id="left-h1" style="position: fixed; top: 10; left: 10x; z-index: 2; display:inline-block">
-            <img src="images/gsj_logo.jpg" alt="Logo" height="100px" width="100px">
-        </div>
-    </h1>
-
     <div class="form-container">
-        <div class="form">
+        <div class="form" style="display:block">
+            <div style="text-align:center">
+                <img src="images/gsj logo.png" alt="logo" height="200px" width="200px">
+            </div>
             <fieldset class="fieldset">
-                <legend class="legend">
+                <legend class="legend" style="text-align: center">
                     <h2>GSJ Animal Health & Production Appointment System</h2> 
                 </legend>
                 <form method="POST" action="login-incorrect.php" name="form" onsubmit="return validated()" style="text-align:center;">
-                    <input type="text" name="fullname" id="email" placeholder="Fullname" style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;"
-                        onclick="document.getElementById('email').style.border = 'none'">
-                    <br>
                     <input type="text" name="phone" id="phone" placeholder="Phone" style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;"
                         onclick="document.getElementById('phone').style.border = 'none'">
                     <br>
@@ -105,7 +116,7 @@
                 <div class="fieldset-container" style="text-align: center;">
                     <fieldset class="fieldset2">
                         <legend class="legend2">
-                            <span style="color: white; font-size: large;">or</span>
+                            <span style="color: white; font-size: large;">Dont have an account?</span>
                         </legend>
                     </fieldset>
                 </div>

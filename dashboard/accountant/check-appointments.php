@@ -151,7 +151,9 @@ function time_elapsed_string($datetime, $full = false) {
                                    
                                     // reading data contained in each row
                                     while($row = $link->fetch_assoc()){
-                                            $ap_date2 = $row['ap_date'];
+                                        $dateString = $row["ap_date"]; // Your date in YYYY-MM-DD format
+                                        $date = strtotime($dateString); // Convert the string to a Unix timestamp
+                                        $ap_date2 = date("j F Y", $date); // Format the date
                                         ?>
                                         
                                         <tr>

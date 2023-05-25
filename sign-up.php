@@ -56,17 +56,16 @@ if(isset($_POST['signup'])){
     <link rel="stylesheet" href="sign-up.css">
 </head>
 <body>
-    <h1>
-        <span id="left-h1">Appointment Booking</span>
-    </h1>
-
     <div class="form-container">
-        <div class="form">
+        <div class="form" style="display:block">
+           <div style="text-align:center">
+                <img src="images/gsj logo.png" alt="logo" height="200px" width="200px">
+            </div>
             <fieldset class="fieldset">
-                <legend class="legend">
-                    <h2> Welcome</h2> 
+                <legend class="legend" style="text-align: center">
+                    <h2>GSJ Animal Health & Production Appointment System</h2> 
                 </legend>
-                <form method="POST" action="sign-up.php">
+                <form method="POST" action="sign-up.php" style="text-align:center;">
                     <input type="text" name="fullname" id="email" placeholder="Fullname" required style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;">
                     <br>
                     <input type="text" name="address" id="address" placeholder="District e.g. Lilongwe" required style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;">
@@ -82,7 +81,7 @@ if(isset($_POST['signup'])){
                 <div class="fieldset-container"  style="text-align: center;">
                     <fieldset class="fieldset2">
                         <legend class="legend2">
-                            <span style="color: white; font-size: large;">or</span>
+                            <span style="color: white; font-size: large;">Already have an account?</span>
                         </legend>
                     </fieldset>
                 </div>

@@ -47,15 +47,15 @@ h1{
 .form-container{
     display: flex;
     justify-content: center;
+    margin-top: 50px;
 }
 .form{
-    margin-top: 10px;
     display: flex;
     justify-content: center;
-    box-shadow: inset 0 0 2000px 0 rgba(8, 8, 8, 0.452);
+    box-shadow: inset 30px 500px 2000px 0 rgba(8, 8, 8, 0.521);
     backdrop-filter: saturate(110%) blur(5px); 
-    padding: 20px 0px;
     width: 80%;
+    padding-bottom: 20px;
 }
 .fieldset{
     border-radius: 5px;

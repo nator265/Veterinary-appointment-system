@@ -165,7 +165,7 @@ if(isset($_GET['yes'])){
                                         <td><?php echo $row['ap_date'] ?></td>
                                         <td><?php echo $row["session_expiry"] ?></td>
                                         <td><?php echo "K".number_format($row["total"]) ?></td>
-                                        <td style="z-index:2"><a href="appointments-approve2.php?reject=<?php echo $row['ap_id'] ?>"> <button class="action-buttons" id="reject-button">Halt</button></a></td>
+                                        <td style="z-index:2"><a href="appointments.php?yes=<?php echo $row['ap_id'] ?>"> <button class="action-buttons" id="reject-button">Halt</button></a></td>
                                         </tr>
                                         
                                     <?php } 
@@ -185,7 +185,7 @@ if(isset($_GET['yes'])){
                             </div>
                             <form action="appointments.php" method="post">
                                     <div class="buttonsection">
-                                        <a href="appointments-approve2.php?yes=<?php echo $_SESSION['thisap_id'] ?>">
+                                        <a href="appointments.php?yes=<?php echo $_SESSION['thisap_id'] ?>">
                                             <input type="button" class="edit2" value="Yes" name="yes">
                                         </a>
                                         <a href="appointments-rejected.php">

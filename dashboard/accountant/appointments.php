@@ -39,6 +39,7 @@ if(isset($_GET['yes'])){
     $year = date('Y', strtotime($date3));
     $month = date('F', strtotime($date3));
     $amount = $phoneassoc2['total'];
+    
     $enteramount = "INSERT INTO total_transactions (total, month1, year1, ap_id)
     VALUES ('$amount', '$month', '$year', '$approvedPhone')";
     $amountlink = mysqli_query($conn, $enteramount);

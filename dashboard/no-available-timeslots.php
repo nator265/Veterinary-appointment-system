@@ -2,7 +2,11 @@
 session_start();
 include('../connect.php');
 include('../functions.php');
-
+echo "<script>";
+echo "setTimeout(function() {";
+echo "    history.go(-1);";
+echo "}, 5000);"; // 1.5 seconds delay
+echo "</script>";
 if(!isset($_SESSION['name'])){
     header('location:../login.php');
 }
@@ -29,9 +33,8 @@ if(isset($_POST['submit'])){
         
         if ($appointmentCount >= 2) {
             // The selected day is fully booked
-            // echo "<script>alert('Sorry, the selected day is fully booked. Please choose a different day.');</script>";
-            // echo "<script>window.location.href = 'javascript:history.go(-1)';</script>";
-            header('location:no-available-timeslots.php');
+            echo "<script>alert('Sorry, the selected day is fully booked. Please choose a different day.');</script>";
+            echo "<script>window.location.href = 'javascript:history.go(-1)';</script>";
             return;
         }
     }
@@ -70,8 +73,8 @@ foreach ($availableTimeSlots as $timeSlot) {
 
 if ($selectedTimeSlot === null) {
     // All time slots are taken, handle the case where no available time slot is found
-    // echo "<script>alert('Sorry, no available time slots. Please choose a different day.');</script>";
-    // echo "<script>window.location.href = 'javascript:history.go(-1)';</script>";
+    echo "<script>alert('Sorry, no available time slots. Please choose a different day.');</script>";
+    echo "<script>window.location.href = 'javascript:history.go(-1)';</script>";
     header('location:no-available-timeslots.php');
     return;
 }
@@ -159,7 +162,12 @@ if ($allocatedTime3 <= $currentTime2 and $commonFormatDate2 == $commonFormatDate
     
     if ($selectedTimeSlot2 === null) {
         // All time slots are taken, handle the case where no available time slot is found
-        header('location:no-available-timeslots.php');
+        echo "<script>";
+        echo "alert('Sorry, no available time slots. Please choose a different day.');";
+        echo "</script>";
+        echo "<script>";
+        echo "window.history.back();"; // Go back to the previous page
+        echo "</script>";
         return;
     }
     
@@ -219,9 +227,8 @@ $appointmentCount = intval($row['count']);
 
 if ($appointmentCount >= 2) {
     // The selected day is fully booked
-    // echo "<script>alert('Sorry, the selected day is fully booked. Please choose a different day.');</script>";
-    // echo "<script>window.location.href = 'javascript:history.go(-1)';</script>";
-    header('location:no-available-timeslots.php');
+    echo "<script>alert('Sorry, the selected day is fully booked. Please choose a different day.');</script>";
+    echo "<script>window.location.href = 'javascript:history.go(-1)';</script>";
     return;
 }
 
@@ -260,7 +267,12 @@ if ($appointmentCount >= 2) {
      
      if ($selectedTimeSlot === null) {
         // All time slots are taken, handle the case where no available time slot is found
-        header('location:no-available-timeslots.php');
+        echo "<script>";
+        echo "alert('Sorry, no available time slots. Please choose a different day.');";
+        echo "</script>";
+        echo "<script>";
+        echo "window.history.back();"; // Go back to the previous page
+        echo "</script>";
         return;
     }
     
@@ -348,7 +360,12 @@ if ($appointmentCount >= 2) {
          
          if ($selectedTimeSlot2 === null) {
             // All time slots are taken, handle the case where no available time slot is found
-            header('location:no-available-timeslots.php');
+            echo "<script>";
+            echo "alert('Sorry, no available time slots. Please choose a different day.');";
+            echo "</script>";
+            echo "<script>";
+            echo "window.history.back();"; // Go back to the previous page
+            echo "</script>";
             return;
         }
         
@@ -404,7 +421,7 @@ if(isset($_GET['yes'])){
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="no-available-timeslots.css">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Appointments</title>
@@ -587,19 +604,11 @@ if(isset($_GET['yes'])){
                                         <div class="alert" id="alert">
                                             <div class="warning-container">
                                                 <div class="warning-header">
-                                                    CANCEL APPOINTMENT.
+                                                    No available timeslots.
                                                 </div>
                                                 <div class="subtext">
-                                                    Are you sure you want to cancel the appointment?
+                                                Sorry, no available time slots. Please choose a different day.
                                                 </div>
-                                                <form action="appointments.php" method="post">
-                                                     <div class="buttonsection">
-                                                        <a href="appointments.php?yes=<?php echo $ap_id ?>">
-                                                            <input type="button" class="edit2" value="Yes" name="yes">
-                                                        </a>
-                                                        <input type="button" class="cancel2" value="No" name="no" id="noclearance">
-                                                    </div>
-                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -611,31 +620,9 @@ if(isset($_GET['yes'])){
             $(".create").css({"animation":"second-animation 1s forwards"});
             $(".table").css({"animation":"third-animation 1s forwards"});
         })
-        // the alert for the delete function
-        $(document).ready(function(){
-            // to make the modal appear and animate it
-            $(".modal").fadeOut(0);
-            $(".create").click(function(){
-                $(".modal-container").css('display', 'flex');
-                $('.modal').fadeIn(1000);
-            })
-            $(".close").click(function(){
-                $(".modal").fadeOut(500, function(){
-                    $(".modal-container").css('display', 'none');
-                });
-                
-            })
-
-            // to make the alert box appear
-            $("#clearance").click(function(){
-                $('#target').fadeIn(100).css('display', 'flex');
-                $('#alert').slideDown(500).css('display', 'flex');
-            });
-            $("#noclearance").click(function(){
-                $('#alert').slideUp(400).css('display', 'none');
-                $("#target").fadeOut(600);
-
-            });
+        // the alert for the no time slots function
+        $(function(){
+                $(".alert").css({"animation":"second-animation 1s forwards"});
             });
 
         //  greeting the user on top of the dashboad page

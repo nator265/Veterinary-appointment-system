@@ -140,7 +140,7 @@ function time_elapsed_string($datetime, $full = false) {
                                     <tr id="srollfortr">
                                     <td style="padding-left: 15px";><?php
                                     $phonethis = $row['reciever'];
-                                    $querythis = "SELECT * FROM users where phone = $phonethis";
+                                    $querythis = "SELECT * FROM users where phone = '$phonethis'";
                                     $querylink = mysqli_query($conn, $querythis);
                                     checkSQL($conn, $querylink);
                                     $fetchthisnanme = mysqli_fetch_assoc($querylink);
