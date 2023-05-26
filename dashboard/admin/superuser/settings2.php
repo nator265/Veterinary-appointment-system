@@ -16,7 +16,7 @@ if(!isset($_SESSION['name'])){
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="appointments.css">
+    <link rel="stylesheet" href="dashboard.css">
     <title>Dashboard</title>
 </head>
 <body>
@@ -67,12 +67,12 @@ if(!isset($_SESSION['name'])){
 
             <!-- 1.Dashboard -->
             <div class="main-dashboard-container" id="main-dashboard-container">
-                <div class="dashboard" id="dashboard" style="padding-left: 80px;"> 
+                <div class="dashboard" id="dashboard"> 
                     <a href="add-doctor.php" class="appointments-container" id="link2">
                         <div class="appointments" onclick="document.getElementById('add-modal').style.display='block'">
                             <div class="count-container">
                                 <div class="count-info">
-                                    Add Profile
+                                    Add Doctor
                                 </div>
                                 <div class="count">
                                     +
@@ -85,7 +85,7 @@ if(!isset($_SESSION['name'])){
                             <div class="notifications">
                                 <div class="count-container">
                                     <div class="count-info">
-                                        Remove Profile
+                                        Remove Doctor
                                     </div>
                                 <!-- thi is the number badge for the counter -->
                                 <div class="count">

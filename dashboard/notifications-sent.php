@@ -153,8 +153,9 @@ function time_elapsed_string($datetime, $full = false) {
                                 
                                 // retrieve data for the user matching the phone number
                                 // retrieving data from the database for the user to see
-                                $retrieve = "SELECT * FROM notifications Where phone = '" .$_SESSION['phone']."'";
+                                $retrieve = "SELECT * FROM notifications Where phone = '" .$_SESSION['phone']."' ORDER BY time DESC";
                                 $link = mysqli_query($conn, $retrieve);
+
                                 checkSQL($conn, $link);
                                 $row = mysqli_num_rows($link);
                                 if (!$link){
@@ -165,9 +166,25 @@ function time_elapsed_string($datetime, $full = false) {
                                 while($row = $link->fetch_assoc()){
                                     ?>
                                     <tr>
-                                    <td style="padding-left:10px"><?php echo $row["sender"] ?></td>
+                                    <td style="padding-left:10px">
+                                        <?php 
+                                            $thereciever = $row['reciever'];
+                                            // to get the name of the reciever
+                                            $recievername = "SELECT * from notifications where phone = '$thereciever' and reciever = '".$_SESSION['phone']."'";
+                                            $linkreciever = mysqli_query($conn, $recievername);
+                                            if($result = $linkreciever -> num_rows > 0){
+
+                                                $fetchname = mysqli_fetch_assoc($linkreciever);
+                                                $reciever = $fetchname['sender'];
+                                                echo $reciever;
+                                            }
+                                            
+
+                                           
+                                        ?>
+                                    </td>
                                     <td><?php echo $row["title"] ?></td>
-                                    <td><?php time_elapsed_string($row["time"]) ?></td>
+                                    <td><?php echo time_elapsed_string($row["time"]) ?></td>
                                     <td><a href="notifications-sent-reply.php?reply=<?php echo $row['notifications_id'] ?>" class="edit">View</a></td>
                                     <td><a href="notifications-sent-delete?delete=<?php echo $row['notifications_id']?>#" class="cancel" id="clearance">Delete</a></td>
                                     </tr>

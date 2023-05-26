@@ -17,6 +17,13 @@ if(isset($_GET['reply'])){
     $message = $fetchmessage['message1'];
     $_SESSION['message-to-reply'] = $message;
 
+    // fetch number of the sender
+    $query3 = "SELECT * FROM notifications where notifications_id = $id";
+    $link3 = mysqli_query($conn, $query3);
+    $fetchnumber = mysqli_fetch_assoc($link3);
+    $number = $fetchnumber['phone'];
+    $_SESSION['phon2'] = $number;
+
     // getting the name of the sender from the database
     $query2 = "SELECT * from notifications where notifications_id = $id";
     $link2 = mysqli_query($conn, $query);
@@ -27,7 +34,7 @@ if(isset($_GET['reply'])){
 if(isset($_POST['submit'])){
     $message = $_POST['message'];
    
-    $reg = "INSERT INTO notifications(sender, title, message1, phone, reciever) VALUES ('".$_SESSION['name']."', 'Replying to: ".$_SESSION['message-title']."', '$message', '".$_SESSION['phone']."', '".$_SESSION['phone2']."')";
+    $reg = "INSERT INTO notifications(sender, title, message1, phone, reciever) VALUES ('".$_SESSION['name']."', 'Replying to: ".$_SESSION['message-title']."', '$message', '".$_SESSION['phone']."', '".$_SESSION['phon2']."')";
                             
     $rest = mysqli_query($conn, $reg);
     

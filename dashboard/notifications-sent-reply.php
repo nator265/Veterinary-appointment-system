@@ -17,11 +17,16 @@ if(isset($_GET['reply'])){
     checkSQL($conn, $link);
     $fetchphone = mysqli_fetch_assoc($link);
     $phone = $fetchphone['reciever'];
-    $query2 = "SELECT * from doctors where phone = $phone";
-    $link2 = mysqli_query($conn, $query2);
-    $fetchname = mysqli_fetch_assoc($link2);
-    $name = $fetchname['fullname'];
-    $_SESSION['recieversname'] = $name;
+    $thereciever = $fetchphone['reciever'];
+    // to get the name of the reciever
+    $recievername = "SELECT * from notifications where phone = '$thereciever' and reciever = '".$_SESSION['phone']."'";
+    $linkreciever = mysqli_query($conn, $recievername);
+    if($result = $linkreciever -> num_rows > 0){
+
+        $fetchname = mysqli_fetch_assoc($linkreciever);
+        $reciever = $fetchname['sender'];
+        $_SESSION['recieversname'] = $reciever;
+    }
 
     // getting the message for the reciever from the database
     $query3 = "SELECT * from notifications where notifications_id = $id";
@@ -101,7 +106,7 @@ if(isset($_POST['submit'])){
                         <div class="form-header">
                             <h1 style="text-align: center; color: white; font-weight:100; font-size:xx-large">
                                 <?php
-                                    echo 'Sent to', ' ', $_SESSION['recieversname']
+                                    echo 'Sent to', ' ', $_SESSION['recieversname'];
                                 ?>
                             </h1>
                             <div class="messagecontainer">

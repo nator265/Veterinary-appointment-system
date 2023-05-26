@@ -184,7 +184,7 @@ if(isset($_GET['approve'])){
                                         <a href="appointments.php?yes=<?php echo $_SESSION['thisap_id'] ?>">
                                             <input type="button" class="edit2" value="Yes" name="yes">
                                         </a>
-                                        <a href="check-appointments.php">
+                                        <a href="appointments.php">
                                             <input type="button" class="cancel2" value="No" name="no" id="noclearance">
                                         </a>
                                 </div>

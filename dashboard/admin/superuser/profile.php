@@ -89,26 +89,17 @@ if(isset($_POST['submit'])){
                 <div class="form-container">
                     <div class="form">
                         <form action="add-doctor-success.php" method="post">
-                            <input type="text" name="fullname" id="input" placeholder="Fullname">
-                            <input type="text" name="address" id="input" placeholder="Address">
+                            <input type="text" name="fullname" id="input" placeholder="Doctors Fullname">
+                            <input type="text" name="address" id="input" placeholder="Doctors Address">
                             <div class="col">
-                                <div class="col1"><input type="text" name="phone" id="input2" placeholder="Phone number"></div>
+                                <div class="col1"><input type="text" name="phone" id="input2" placeholder="Doctors Phone number"></div>
                                 <div class="col2"> 
-                                   <div class="docfield"> Role:</div>
+                                   <div class="docfield"> Doctors Field:</div>
                                     <div class="fieldbox">
                                     <select name="field" id="field" required>
-                                        <option value="doctor">Doctor</option>
-                                        <option value="accountant">Accountant</option>
+                                        <option value="pet">Pet</option>
+                                        <option value="livestock">Livestock</option>
                                     </select> 
-                                   </div>
-                                   <div style="display:none">
-                                    <div class="docfield"> Doctors Field:</div>
-                                        <div class="fieldbox">
-                                        <select name="field" id="field" required>
-                                            <option value="pet">Pet</option>
-                                            <option value="livestock">Livestock</option>
-                                        </select> 
-                                    </div>
                                    </div>
                             </div>
                             </div>    
