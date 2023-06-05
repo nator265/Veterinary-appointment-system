@@ -43,16 +43,14 @@ date_default_timezone_set("Africa/Harare");
 // Function to remove past time slots
  // allocate time to the user automatically
  $availableTimeSlots = array(
-    '8:00 AM', '8:15 AM', '8:30 AM', '8:45 AM',
-    '9:00 AM', '9:15 AM', '9:30 AM', '9:45 AM',
-    '10:00 AM', '10:15 AM', '10:30 AM', '10:45 AM',
-    '11:00 AM', '11:15 AM', '11:30 AM', '11:45 AM',
-    '12:00 PM', '12:15 PM', '12:30 PM', '12:45 PM',
-    '1:00 PM', '1:15 PM', '1:30 PM', '1:45 PM',
-    '2:00 PM', '2:15 PM', '2:30 PM', '2:45 PM',
-    '3:00 PM', '3:15 PM', '3:30 PM', '3:45 PM',
-    '4:00 PM'
-    // ... add more time slots as needed
+    '08:00 AM', '08:30 AM',
+    '09:00 AM', '09:30 AM',
+    '10:00 AM', '10:30 AM',
+    '11:00 AM', '11:30 AM',
+    '01:00 PM', '01:30 PM',
+    '02:00 PM', '02:30 PM',
+    '03:00 PM', '03:30 PM',
+    '04:00 PM'
 );
 
 $selectedTimeSlot = null;
@@ -69,9 +67,6 @@ foreach ($availableTimeSlots as $timeSlot) {
 }
 
 if ($selectedTimeSlot === null) {
-    // All time slots are taken, handle the case where no available time slot is found
-    // echo "<script>alert('Sorry, no available time slots. Please choose a different day.');</script>";
-    // echo "<script>window.location.href = 'javascript:history.go(-1)';</script>";
     header('location:no-available-timeslots.php');
     return;
 }
@@ -96,22 +91,20 @@ $commonFormatDate1 = $dateObj1->format('j F Y');
 $commonFormatDate2 = $dateObj2->format('j F Y');
 
 
-// ...
+// To set an appointment according to the current
 $allocatedTime3 = DateTime::createFromFormat('g:i A', $allocatedTime2);
 $currentTime2 = DateTime::createFromFormat('g:i A', $currentTime);
 if ($allocatedTime3 <= $currentTime2 and $commonFormatDate2 == $commonFormatDate1){
     date_default_timezone_set("Africa/Harare");
     $availableTimeSlots = array(
-        '8:00 AM', '8:15 AM', '8:30 AM', '8:45 AM',
-        '9:00 AM', '9:15 AM', '9:30 AM', '9:45 AM',
-        '10:00 AM', '10:15 AM', '10:30 AM', '10:45 AM',
-        '11:00 AM', '11:15 AM', '11:30 AM', '11:45 AM',
-        '12:00 PM', '12:15 PM', '12:30 PM', '12:45 PM',
-        '1:00 PM', '1:15 PM', '1:30 PM', '1:45 PM',
-        '2:00 PM', '2:15 PM', '2:30 PM', '2:45 PM',
-        '3:00 PM', '3:15 PM', '3:30 PM', '3:45 PM',
-        '4:00 PM'       
-        // ... add more time slots as needed
+        '08:00 AM', '08:30 AM',
+        '09:00 AM', '09:30 AM',
+        '10:00 AM', '10:30 AM',
+        '11:00 AM', '11:30 AM',
+        '01:00 PM', '01:30 PM',
+        '02:00 PM', '02:30 PM',
+        '03:00 PM', '03:30 PM',
+        '04:00 PM'
     );
     $currentDateTime = new DateTime();
     $currentDateTime->modify('+1 hour');
@@ -211,157 +204,161 @@ if(isset($_POST['re-submit'])){
     // converting the ap_type to string
     $allaptype = implode(", ", $selectedservices);
 
-    // Check if the selected day is fully booked
-    $query = "SELECT COUNT(*) as count FROM appointments WHERE ap_date = '$date' AND ap_id != '".$_SESSION['idforedit']."'";
-$result = mysqli_query($conn, $query);
-$row = mysqli_fetch_assoc($result);
-$appointmentCount = intval($row['count']);
+    $timedate = "SELECT * from appointments where ap_id = '".$_SESSION['idforedit']."'";
+    $linktime = mysqli_query($conn, $timedate);
+    $fetchtime = mysqli_fetch_assoc($linktime);
+    $time = $fetchtime['ap_time'];
 
-if ($appointmentCount >= 2) {
-    // The selected day is fully booked
-    // echo "<script>alert('Sorry, the selected day is fully booked. Please choose a different day.');</script>";
-    // echo "<script>window.location.href = 'javascript:history.go(-1)';</script>";
-    header('location:no-available-timeslots.php');
-    return;
-}
+    $datetime = "SELECT * from appointments where ap_id = '".$_SESSION['idforedit']."'";
+    $linkdate = mysqli_query($conn, $datetime);
+    $fetchdate = mysqli_fetch_assoc($linkdate);
+    $date2 = $fetchtime['ap_date'];
 
+    if($date == $date2){
+        $allocatedTime = $time;
+     }else{
+        // Check if the selected day is fully booked
+        $query = "SELECT COUNT(*) as count FROM appointments WHERE ap_date = '$date'";
+        $result = mysqli_query($conn, $query);
+        $row = mysqli_fetch_assoc($result);
+        $appointmentCount = intval($row['count']);
 
-     $ap_id = mysqli_insert_id($conn);
-
-     date_default_timezone_set("Africa/Harare");
-     // Function to remove past time slots with an additional hour
-     // Function to remove past time slots
-      // allocate time to the user automatically
-      $availableTimeSlots = array(
-         '8:00 AM', '8:15 AM', '8:30 AM', '8:45 AM',
-         '9:00 AM', '9:15 AM', '9:30 AM', '9:45 AM',
-         '10:00 AM', '10:15 AM', '10:30 AM', '10:45 AM',
-         '11:00 AM', '11:15 AM', '11:30 AM', '11:45 AM',
-         '12:00 PM', '12:15 PM', '12:30 PM', '12:45 PM',
-         '1:00 PM', '1:15 PM', '1:30 PM', '1:45 PM',
-         '2:00 PM', '2:15 PM', '2:30 PM', '2:45 PM',
-         '3:00 PM', '3:15 PM', '3:30 PM', '3:45 PM',
-         '4:00 PM'
-         // ... add more time slots as needed
-     );
-     
-     $selectedTimeSlot = null;
-     foreach ($availableTimeSlots as $timeSlot) {
-         $query = "SELECT COUNT(*) as count FROM appointments WHERE ap_time = '$timeSlot' AND ap_date = '$date'";
-         $result = mysqli_query($conn, $query);
-         $row = mysqli_fetch_assoc($result);
-         $appointmentCount = intval($row['count']);
-         
-         if ($appointmentCount == 0) {
-             $selectedTimeSlot = $timeSlot;
-             break;
-         }
-     }
-     
-     if ($selectedTimeSlot === null) {
-        // All time slots are taken, handle the case where no available time slot is found
+    if ($appointmentCount >= 2) {
         header('location:no-available-timeslots.php');
         return;
     }
-    
+        $ap_id = mysqli_insert_id($conn);
+
+        date_default_timezone_set("Africa/Harare");
+
+        $availableTimeSlots = array(
+            '08:00 AM', '08:30 AM',
+            '09:00 AM', '09:30 AM',
+            '10:00 AM', '10:30 AM',
+            '11:00 AM', '11:30 AM',
+            '01:00 PM', '01:30 PM',
+            '02:00 PM', '02:30 PM',
+            '03:00 PM', '03:30 PM',
+            '04:00 PM'
+        );
+
+        $selectedTimeSlot = null;
      
-     // Remove the allocated time slot from the available time slots array
-     $index = array_search($selectedTimeSlot, $availableTimeSlots);
-     if ($index !== false) {
-         unset($availableTimeSlots[$index]);
-     }
-     
-     $allocatedTime2 = $selectedTimeSlot;
-     
-     $currentTime = date('g:i A'); // Get current time in 12-hour format with AM/PM (e.g., 2:30 PM)
-     $currentDate = date('j F Y');  // Get current date in the format: Day Month Year (e.g., 23 May 2023)
-     $date1 = $currentDate;
-     $date2 = $date;
-     
-     $dateObj1 = new DateTime($date1);
-     $dateObj2 = new DateTime($date2);
-     
-     $commonFormatDate1 = $dateObj1->format('j F Y');
-     $commonFormatDate2 = $dateObj2->format('j F Y');
-     
-     
-     // ...
-     $allocatedTime3 = DateTime::createFromFormat('g:i A', $allocatedTime2);
-     $currentTime2 = DateTime::createFromFormat('g:i A', $currentTime);
-     if ($allocatedTime3 <= $currentTime2 and $commonFormatDate2 == $commonFormatDate1){
-         date_default_timezone_set("Africa/Harare");
-         $availableTimeSlots = array(
-             '8:00 AM', '8:15 AM', '8:30 AM', '8:45 AM',
-             '9:00 AM', '9:15 AM', '9:30 AM', '9:45 AM',
-             '10:00 AM', '10:15 AM', '10:30 AM', '10:45 AM',
-             '11:00 AM', '11:15 AM', '11:30 AM', '11:45 AM',
-             '12:00 PM', '12:15 PM', '12:30 PM', '12:45 PM',
-             '1:00 PM', '1:15 PM', '1:30 PM', '1:45 PM',
-             '2:00 PM', '2:15 PM', '2:30 PM', '2:45 PM',
-             '3:00 PM', '3:15 PM', '3:30 PM', '3:45 PM',
-             '4:00 PM'       
-             // ... add more time slots as needed
-         );
-         $currentDateTime = new DateTime();
-         $currentDateTime->modify('+1 hour');
-         $oneHourAfterCurrentTime = $currentDateTime->format('g:i A');
-     
-         $targetTime = $oneHourAfterCurrentTime; // Specify the target time
-         $closestTimeSlot = null;
-         $closestTimeDifference = null;
-         
-         foreach ($availableTimeSlots as $timeSlot) {
-             $difference = strtotime($timeSlot) - strtotime($targetTime);
-             $difference = abs($difference);
-         
-             if ($closestTimeDifference === null || $difference < $closestTimeDifference) {
-                 $closestTimeDifference = $difference;
-                 $closestTimeSlot = $timeSlot;
-             }
-         }
-         
-         $foundStartingPoint = false;
-         $availableTimeSlotsFromStartingPoint = array();
-         
-         foreach ($availableTimeSlots as $timeSlot) {
-             if ($foundStartingPoint) {
-                 $availableTimeSlotsFromStartingPoint[] = $timeSlot;
-             }
-         
-             if ($timeSlot === $closestTimeSlot) {
-                 $foundStartingPoint = true;
-             }
-         }
-         $selectedTimeSlot2 = null;
-         // Output the available time slots from the starting point
-         foreach ($availableTimeSlotsFromStartingPoint as $timeSlot) {
-             $query = "SELECT COUNT(*) as count FROM appointments WHERE ap_time = '$timeSlot' AND ap_date = '$date'";
-             $result = mysqli_query($conn, $query);
-             $row = mysqli_fetch_assoc($result);
-             $appointmentCount = intval($row['count']);
-             
-             if ($appointmentCount == 0) {
-                 $selectedTimeSlot2 = $timeSlot;
-                 break;
-             }
-         }
-         
-         if ($selectedTimeSlot2 === null) {
+        foreach ($availableTimeSlots as $timeSlot) {
+            $query = "SELECT COUNT(*) as count FROM appointments WHERE ap_time = '$timeSlot' AND ap_date = '$date'";
+            $result = mysqli_query($conn, $query);
+            $row = mysqli_fetch_assoc($result);
+            $appointmentCount = intval($row['count']);
+            
+            if ($appointmentCount == 0) {
+                $selectedTimeSlot = $timeSlot;
+                break;
+            }
+        }
+        
+        if ($selectedTimeSlot === null) {
             // All time slots are taken, handle the case where no available time slot is found
             header('location:no-available-timeslots.php');
             return;
         }
         
-         
-         // Remove the allocated time slot from the available time slots array
-         $index = array_search($selectedTimeSlot2, $availableTimeSlots);
-         if ($index !== false) {
-             unset($availableTimeSlots[$index]);
-         }
-         $allocatedTime = $selectedTimeSlot2;
-     }else{
-         $allocatedTime = $allocatedTime2;
-     }
+        
+        // Remove the allocated time slot from the available time slots array
+        $index = array_search($selectedTimeSlot, $availableTimeSlots);
+        if ($index !== false) {
+            unset($availableTimeSlots[$index]);
+        }
+        
+        $allocatedTime2 = $selectedTimeSlot;
+        
+        $currentTime = date('g:i A'); // Get current time in 12-hour format with AM/PM (e.g., 2:30 PM)
+        $currentDate = date('j F Y');  // Get current date in the format: Day Month Year (e.g., 23 May 2023)
+        $date1 = $currentDate;
+        $date2 = $date;
+        
+        $dateObj1 = new DateTime($date1);
+        $dateObj2 = new DateTime($date2);
+        
+        $commonFormatDate1 = $dateObj1->format('j F Y');
+        $commonFormatDate2 = $dateObj2->format('j F Y');
+        
+        
+        // ...
+        $allocatedTime3 = DateTime::createFromFormat('g:i A', $allocatedTime2);
+        $currentTime2 = DateTime::createFromFormat('g:i A', $currentTime);
+        if ($allocatedTime3 <= $currentTime2 and $commonFormatDate2 == $commonFormatDate1){
+            date_default_timezone_set("Africa/Harare");
+            $availableTimeSlots = array(
+                '08:00 AM', '08:30 AM',
+                '09:00 AM', '09:30 AM',
+                '10:00 AM', '10:30 AM',
+                '11:00 AM', '11:30 AM',
+                '01:00 PM', '01:30 PM',
+                '02:00 PM', '02:30 PM',
+                '03:00 PM', '03:30 PM',
+                '04:00 PM'
+            );
+            $currentDateTime = new DateTime();
+            $currentDateTime->modify('+1 hour');
+            $oneHourAfterCurrentTime = $currentDateTime->format('g:i A');
+        
+            $targetTime = $oneHourAfterCurrentTime; // Specify the target time
+            $closestTimeSlot = null;
+            $closestTimeDifference = null;
+            
+            foreach ($availableTimeSlots as $timeSlot) {
+                $difference = strtotime($timeSlot) - strtotime($targetTime);
+                $difference = abs($difference);
+            
+                if ($closestTimeDifference === null || $difference < $closestTimeDifference) {
+                    $closestTimeDifference = $difference;
+                    $closestTimeSlot = $timeSlot;
+                }
+            }
+            
+            $foundStartingPoint = false;
+            $availableTimeSlotsFromStartingPoint = array();
+            
+            foreach ($availableTimeSlots as $timeSlot) {
+                if ($foundStartingPoint) {
+                    $availableTimeSlotsFromStartingPoint[] = $timeSlot;
+                }
+            
+                if ($timeSlot === $closestTimeSlot) {
+                    $foundStartingPoint = true;
+                }
+            }
+            $selectedTimeSlot2 = $time;
+            // Output the available time slots from the starting point
+            foreach ($availableTimeSlotsFromStartingPoint as $timeSlot) {
+                $query = "SELECT COUNT(*) as count FROM appointments WHERE ap_time = '$timeSlot' AND ap_date = '$date'";
+                $result = mysqli_query($conn, $query);
+                $row = mysqli_fetch_assoc($result);
+                $appointmentCount = intval($row['count']);
+                
+                if ($appointmentCount == 0) {
+                    $selectedTimeSlot2 = $timeSlot;
+                    break;
+                }
+            }
+            
+            if ($selectedTimeSlot2 === null) {
+                // All time slots are taken, handle the case where no available time slot is found
+                header('location:no-available-timeslots.php');
+                return;
+            }
+            
+            
+            // Remove the allocated time slot from the available time slots array
+            $index = array_search($selectedTimeSlot2, $availableTimeSlots);
+            if ($index !== false) {
+                unset($availableTimeSlots[$index]);
+            }
+            $allocatedTime = $selectedTimeSlot2;
+        }else{
+            $allocatedTime = $allocatedTime2;
+        }
+    }
      
 
      // Get the total cost by comparing selected services with `service_costs` table

@@ -132,11 +132,46 @@ body{
     padding-top: 30px;
 }
 .dashboard{
-    display: flex;
+    display: block;
     justify-content: center;
     height: 100%;
     padding: 70px 20px;
     opacity:0;
+}
+.top{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    float: right;
+    height: 50%;
+}
+.bottom{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 40%;
+}
+.bottomcontainer{
+    display: flex;
+    padding: 20px;
+    border-radius: 5px;
+    margin-top: 50px;
+    color: black;
+    background-color: rgb(218, 218, 218);
+    width: 80%;
+}
+.textforbottom{
+    font-size: xx-large;
+    font-weight: 100;
+    margin-right: 60px;
+}
+.nextapp{
+    padding: 20px;
+    font-size: x-large;
+}
+.nextdate{
+    padding: 40px;
+    font-size: x-large;
 }
 @keyframes my-animation {
     0% {
@@ -149,7 +184,7 @@ body{
 .appointments-container, .notifications-container{
     border-radius: 5px;
     border: 1px solid rgba(110, 104, 104, 0.432);
-    height: 50%;
+    height: 100%;
     width: 30%;
 }
 .appointments-container:hover{

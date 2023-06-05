@@ -7,27 +7,52 @@ if(!isset($_SESSION['name'])){
     header('location:../../../login.php');
 }
 
-if(isset($_POST['edit'])){
-
+if(isset($_POST['submit'])){
     $fullname = $_POST['fullname'];
-    $address = $_POST['address'];
-    $phone = $_POST['phone'];
     $field = $_POST['field'];
-    $password = $_POST['password'];
+    $date = $_POST['ap_date'];
+    $animal = $_POST['animal'];
+    $ap_type = $_POST['ap_type'];
+    $_SESSION['field2'] = $field;
+    // converting the ap_type to string
+    $allaptype = implode(", ", $ap_type);
+    // inserting data into the appointments table in the database
+    $reg = "INSERT INTO appointments(fullname, field, animal, ap_date, ap_type, phone) VALUES ('$fullname', '$field', '$animal', '$date', '$allaptype', '".$_SESSION['phone']."')";
+                            
+    $rest = mysqli_query($conn, $reg);
+    
+    checkSQL($conn, $rest);
+}
+if(isset($_POST['re-submit'])){
+    $fullname = $_POST['fullname'];
+    $field = $_POST['field'];
+    $date = $_POST['ap_date'];
+    $animal = $_POST['animal'];
+    $ap_type = $_POST['ap_type'];
+    $_SESSION['field2'] = $field;
+
+    // converting the ap_type to string
+    $allaptype = implode(", ", $ap_type);
     
     // inserting data into the appointments table in the database
-    $update = "UPDATE doctors SET address = '$address', password='$password', fullname = '$fullname', field = '$field', phone = '$phone' where phone = '".$_SESSION['values']."' ";
+    $update = "UPDATE appointments SET fullname = '$fullname', field = '$field', ap_date = '$date', animal = '$animal', ap_type = '$allaptype' where ap_id = '".$_SESSION['id']."' ";
     mysqli_query($conn, $update);
-    // header('location:edit-doctor.php');
+    // header('location:appointments.php');
     
 }
-if(isset($_GET['yes'])){
-    $phone = $_GET['yes'];
-    $delete = "DELETE FROM doctors where phone = $phone";
-    mysqli_query($conn, $delete);
-    header('location: doctors.php');
+// if(isset($_GET['approve'])){
+//     $id = $_GET['approve'];
+//     $approved = 'yes';
+//     // inserting approval status into the database
+//     $entry = "UPDATE appointments SET approved = '$approved' WHERE appointments.ap_id = '$id'";
+//     $link = mysqli_query($conn, $entry);
+//     // header('location: appointments.php');
+// }
+
+
+if(isset($_GET['delete'])){
+    $_SESSION['accountantdelete'] = $_GET['delete'];
 }
-// this is the test date function for the one i found on youtube
 date_default_timezone_set("Africa/Harare");
 function time_elapsed_string($datetime, $full = false) {
     $now = new DateTime;
@@ -67,7 +92,7 @@ function time_elapsed_string($datetime, $full = false) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="doctors.css">
+    <link rel="stylesheet" href="doctor-delete.css">
     <title>Doctors</title>
 </head>
 <body>
@@ -106,26 +131,28 @@ function time_elapsed_string($datetime, $full = false) {
         </div>
 
         <div class="column2">
-            <div class="greetings-container" style="padding-right: 20px">
-                <a href="profiles.php" style="text-decoration:underline"> <-- Previous Page </a>
+            <div class="greetings-container">
+                <span class="greetings" id="greetings"></span>
+                <?php 
+                    // this is to call the name of the user with the session variable
+                   
+                    echo ucwords($_SESSION['name']) . '.';
+                ?> 
             </div>
           
             <!-- 2.appointmets tab -->
             <div class="main-appointments-container" id="main-appointments-container">
                  <div class="create">
-                    <a href="add-doctor.php">
-                        <button class="create" id="bttn" onclick="document.getElementById('modal-container').style.display='flex'" style="border-radius: 5px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;"> Add doctor </button>
+                    <a href="add-accountant.php">
+                        <button class="create" id="bttn" onclick="document.getElementById('modal-container').style.display='flex'" style="border-radius: 5px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;"> Add an accountant </button>
                     </a>                
                 </div>
                 <div class="table-container"> 
                     <div class="table">
                         <table>
                             <tr class="first-row">
-                                <th>
-                                    Doctors Name
-                                </th>
-                                <th>
-                                    Field
+                                <th style="width:200px">
+                                    Accountants Name
                                 </th>
                                 <th>
                                     Phone
@@ -136,7 +163,7 @@ function time_elapsed_string($datetime, $full = false) {
                                 <th>
                                     Date joined
                                 </th>
-                                <th style="z-index: 2;" colspan="2">
+                                <th style="z-index: 2;">
                                     Actions
                                 </th>
                             </tr>
@@ -145,7 +172,7 @@ function time_elapsed_string($datetime, $full = false) {
                                     // retrieve data for the user matching the phone number
                                     // if($fetch_rest2['phone'] == )
                                     // retrieving data from the database for the user to see
-                                    $retrieve = "SELECT * FROM `doctors` ORDER BY date_joined DESC";
+                                    $retrieve = "SELECT * FROM accountant ORDER BY date_joined DESC";
                                     $link = mysqli_query($conn, $retrieve);
                                     checkSQL($conn, $link);
                                     $row = mysqli_num_rows($link);
@@ -161,17 +188,13 @@ function time_elapsed_string($datetime, $full = false) {
                                            
                                         ?>
                                         <tr>
-                                        <td><?php echo $row["fullname"] ?></td>
-                                        <td><?php echo $row["field"] ?></td>
+                                        <td><?php echo $row["fullname"] ?></td>                                        
                                         <td><?php echo $row["phone"] ?></td>
                                         <td><?php echo $row["address"] ?></td>
                                         <td><?php echo time_elapsed_string($row["date_joined"]) ?></td>
-                                        <td style="display:flex; justify-content:right; padding-top: 14px"><a href="edit-doctor3.php?edit=<?php echo $row['phone']?>">
-                                            <button class="action-buttons" id="approve-button" name="change">Edit</button>
-                                        </a></td>
-                                        <td><a href="doctor-delete.php?delete=<?php echo $row['phone']?>">
+                                        <td><a href="accountant-delete.php?delete=<?php echo $row['phone']?>">
                                             <button class="action-buttons" id="reject-button" name="reject">Remove</button>
-                                        </a></td>
+                                            </a>
                                         </tr>
                                         
                                     <?php } ?>
@@ -179,15 +202,36 @@ function time_elapsed_string($datetime, $full = false) {
                         </table>
                     </div>
                 </div> 
+                <div class="alert-container" id="target">
+                    <div class="alert" id="alert">
+                        <div class="warning-container">
+                            <div class="warning-header">
+                                Delete.
+                            </div>
+                            <div class="subtext">
+                                Are you sure you want to remove the accountant from the records?
+                            </div>
+                            <form action="appointments.php" method="post">
+                                    <div class="buttonsection">
+                                    <a href="accountants.php?yes=<?php echo $_SESSION['accountantdelete'] ?>">
+                                        <input type="button" class="edit2" value="Yes" name="yes">
+                                    </a>
+                                    <a href="javascript:history.go(-1).php">
+                                        <input type="button" class="cancel2" value="No" name="no" id="noclearance">
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         
         <script src="jquery.js"></script>
         <script>
             $(function(){
-            $(".create").css({"animation":"second-animation 1s forwards"});
-            $(".table").css({"animation":"third-animation 1s forwards"});
-        })
+                $(".alert").css({"animation":"opacity-foralert 1s forwards"});
+            });
         
         //  greeting the user on top of the dashboad page
 

@@ -9,10 +9,16 @@ if(!isset($_SESSION['name'])){
 
 if(isset($_GET['reject'])){
     $_SESSION['apid'] = $_GET['reject'];
+    
 }
 if(isset($_POST['submit'])){
+    $getphone = "SELECT * FROM appointments where ap_id = '".$_SESSION['apid']."'";
+    $phonelink = mysqli_query($conn, $getphone);
+    $fetchphone = mysqli_fetch_assoc($phonelink);
+    $valuephone = $fetchphone['phone'];
+
     $message = $_POST['message'];       
-    $reg = "INSERT INTO notifications(sender, title, message1, phone, reciever) VALUES ('".$_SESSION['name']."', 'Appointment has been rejected', '$message', '".$_SESSION['phone']."', '".$_SESSION['userPhone']."')";
+    $reg = "INSERT INTO notifications(sender, title, message1, phone, reciever) VALUES ('".$_SESSION['name']."', 'Appointment has been rejected', '$message', '".$_SESSION['phone']."', '$valuephone')";
     checkSQL($conn, $reg);
     $rest = mysqli_query($conn, $reg);
     checkSQL($conn, $rest);

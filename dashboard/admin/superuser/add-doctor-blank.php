@@ -6,6 +6,7 @@ include('../../../functions.php');
 if(!isset($_SESSION['name'])){
     header('location:../../../login.php');
 }
+
 if(isset($_POST['submit'])){
     
     $fullname = $_POST['fullname'];
@@ -28,7 +29,7 @@ if(isset($_POST['submit'])){
          else{
              $reg = "insert into doctors(fullname, address, phone, field, password) values ('$fullname', '$address', '$phone', '$field', '$password')";
              mysqli_query($conn, $reg);
-             header('location: add-doctor.php');
+             header('location: add-doctor-success.php');
          }
     }
 }
@@ -88,7 +89,7 @@ if(isset($_POST['submit'])){
                 <div class="header">
                    <div class="pagetitle">  ADD A DOCTOR.</div>
                    <a href="settings.php">
-                        <div class="backarrow"><- Previous Page</div>
+                        <div class="backarrow" style="color:white"><- Previous Page</div>
                     </a>
                 </div>
                 <div class="form-container">

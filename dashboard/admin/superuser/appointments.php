@@ -88,7 +88,7 @@ if(isset($_GET['delete'])){
                     <a href="dashboard.php"> <span id='link'> Dashboard </span> </a>
                 </div>
                 <div class="link">
-                    <a href="doctors.php"><span id='link'> Doctors </span></a>
+                    <a href="profiles.php"><span id='link'> Profiles </span></a>
                 </div>
                 <div class="link">
                     <span id='link'> Appointments </span>

@@ -16,10 +16,7 @@ if(!isset($_SESSION['name'])){
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="dashboard.css">
-    <link rel="stylesheet" href="calendar.css">
-    <script language="javascript" type="text/javascript" >
-</script>
+    <link rel="stylesheet" href="add-profile.css">
     <title>Dashboard</title>
 </head>
 <body>
@@ -38,16 +35,16 @@ if(!isset($_SESSION['name'])){
             </div>
             <div class="links-container">
                 <div class="link">
-                    <span id='link'> Dashboard
+                     <a href="dashboard.php"><span id='link'> Dashboard </span> </a>
                 </div>
                 <div class="link">
-                    <a href="profiles.php"><span id='link'> Profiles </span></a>
+                    <a href="profiles.php"><span id='link'> Profiles <img src="images/user-small.png" alt="" height="20px"></span></a>
                 </div>
                 <div class="link">
-                    <a href="appointments.php"><span id='link'> Appointments </span></a>
+                    <a href="appointments.php"><span id='link'> Appointments <img src="images/appointments.png" alt="" height="20px"></span></a>
                 </div>
                 <div class="link">
-                    <a href="settings.php"><span id='link'> Settings </span> </a>
+                    <a href="settings.php"><span id='link'> Settings <img src="images/settings.png" alt="" height="20px"></span></a>
                 </div>
                 <div class="link">
                     <a href="../../logout.php" style="text-decoration: none; color: white">
@@ -59,61 +56,50 @@ if(!isset($_SESSION['name'])){
 
         <!-- this is the second column -->
         <div class="column2">
-            <div class="greetings-container" style="padding-right: 20px;">
-                <span class="greetings" id="greetings"></span>
-                <?php 
-                    // this is to call the name of the user with the session variable
-                   
-                    echo ucwords($_SESSION['name']) . '.';
-                ?> 
+            <div class="greetings-container" style="padding-right: 20px">
+               <a href="javascript:history.go(-1)" style="text-decoration:underline"> <-- Previous Page </a>
             </div>
 
             <!-- 1.Dashboard -->
             <div class="main-dashboard-container" id="main-dashboard-container">
-                <div class="dashboard" id="dashboard"> 
-                    <a href="appointments.php" class="appointments-container" id="link2">
-                        <div class="appointments">
+                <div class="dashboard" id="dashboard" style="padding-left: 80px;"> 
+                    <a href="edit-doctor.php" class="appointments-container" id="link2">
+                        <div class="appointments" onclick="document.getElementById('add-modal').style.display='block'">
                             <div class="count-container">
                                 <div class="count-info">
-                                    Appointments
+                                    Edit Doctor
                                 </div>
                                 <div class="count">
-                                    <?php
-                                        $appointments = "SELECT * from appointments";
-                                        $link_appointments = mysqli_query($conn, $appointments);
-                                        $appointments_num = mysqli_num_rows($link_appointments);
-                                        echo $appointments_num;
-                                    ?>
+                                    <img src="images/doctor.png" alt="edit doctor" height="150px" style='padding-top:20px; filter:saturate(80%)'>
                                 </div>
                             </div>
                         </div>
                     </a>
-                    
                     <div class="notifications-container" id="link2">
-                        <a href="profiles.php">
+                        <a href="edit-accountant.php">
                             <div class="notifications">
                                 <div class="count-container">
                                     <div class="count-info">
-                                        Profiles
+                                        Edit Accountant
                                     </div>
                                 <!-- thi is the number badge for the counter -->
                                 <div class="count">
-                                   <img src="images/user-icon.png" alt="profiles" height="150px" style="padding-top:20px">
+                                    <img src="images/accountant.png" alt="edit accountant" height="150px" style='padding-top:20px; filter:saturate(80%)'>
                                 </div>
                             </div>
                             </div>
                         </a>
                     </div>
                     <div class="notifications-container" id="link2">
-                        <a href="settings.php">
+                        <a href="my-profile2.php">
                             <div class="notifications">
                                 <div class="count-container">
                                     <div class="count-info">
-                                        Settings
+                                        Edit My Profile
                                     </div>
                                 <!-- thi is the number badge for the counter -->
                                 <div class="count">
-                                    <img src="images/settings.png" height="120px" width="100px" alt="Settings" style="padding-top: 20px;">
+                                    <img src="images/user-icon.png" alt="edit my profile" height="150px" style='padding-top:20px; filter:saturate(80%)'>
                                 </div>
                             </div>
                             </div>
@@ -146,11 +132,11 @@ if(!isset($_SESSION['name'])){
 
         greeting.innerHTML = welcomeText;
 
+        // to add an animation effect
         $(function(){
             $("#dashboard").animate({opacity:'1', transform: 'translate("0px, 0px")'}, 1500, 'swing');
             $('#dashboard').css({"animation":"my-animation 2s forwards"});
         });
-        
     </script>
 </body>
 </html>

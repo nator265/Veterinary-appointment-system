@@ -3,10 +3,21 @@ session_start();
 include('../../connect.php');
 include('../../functions.php');
 
+if(isset($_POST['submit'])){
+    if($_SESSION['selectedYear'] = date('Y')){
+        $_SESSION['selectedYear'] = $_POST['selectedYear'];
+    }
+    $_SESSION['selectedYear'] = $_POST['selectedYear'];
+    header('location:check-appointments.php');
+}
+if(empty($_POST['selectedYear'])){
+    $_SESSION['selectedYear'] = date('Y');
+}else{
+    $_SESSION['selectedYear'] = $_POST['selectedYear'];
+}
 if(!isset($_SESSION['name'])){
     header('location:../../login.php');
 }
-
 if(isset($_GET['yes'])){
     $_SESSION['ap_id'] = $_GET['yes'];
     $approvedPhone = $_SESSION['ap_id'];
@@ -109,82 +120,128 @@ function time_elapsed_string($datetime, $full = false) {
         <!-- thi is the modal for the appointments registration -->
 
         <div class="column2">
-          
-            <!-- 2.appointmets tab -->
-            <div class="main-appointments-container" id="main-appointments-container">           
-                <div class="table-container">
-                    <div class="table" id="recents2">
-                        <table id="myTable">
-                            <tr class="first-row">
-                                <th>
-                                    Owner
-                                </th>
-                                <th>
-                                    Animal Type
-                                </th>
-                                <th>
-                                    Doctor
-                                </th>
-                                <th>
-                                    Appointment Type
-                                </th>
-                                <th>
-                                    Date
-                                </th>
-                                <th>
-                                    Total
-                                </th>
-                            </tr>
-                            <div class="recents-tab">
-                                <?php
-                                    // retrieve data for the user matching the phone number
-                                    // if($fetch_rest2['phone'] == )
-                                    // retrieving data from the database for the user to see
-                                    $retrieve = "SELECT appointments.fullname, appointments.animal, appointments.ap_type, appointments.ap_id, appointments.ap_date, appointments.session_expiry, appointments.total, doctors.fullname as 'name'
-                                        from appointments INNER JOIN doctors on appointments.field = doctors.field  where appointments.session_expiry = 'Attended' and bill_status = 'paid' ORDER BY appointments.ap_date asc, appointments.ap_time asc";
-                                    $link = mysqli_query($conn, $retrieve);
-                                    checkSQL($conn, $link);
-                                    $row = mysqli_num_rows($link);
-                                    if (!$link){
-                                        die("Invalid query: " .$conn->error);
-                                    }
-                                   
-                                    // reading data contained in each row
-                                    while($row = $link->fetch_assoc()){
-                                        $dateString = $row["ap_date"]; // Your date in YYYY-MM-DD format
-                                        $date = strtotime($dateString); // Convert the string to a Unix timestamp
-                                        $ap_date2 = date("j F Y", $date); // Format the date
-                                        ?>
-                                        
-                                        <tr>
-                                        <td><?php echo $row["fullname"] ?></td>
-                                        <td><?php echo $row["animal"] ?></td>
-                                        <td><?php echo $row["name"] ?></td>
-                                        <td><?php echo $row["ap_type"] ?></td>
-                                        <td><?php echo $ap_date2 ?></td>
-                                        <td><?php echo "K", number_format($row["total"]) ?></td>
-                                        </tr>
-                                    <?php }
-                                ?>
-                                 <tfoot class="table-footer">
-                                    <tr style="background-color:#1a1a1a;">
-                                    <td style="background-color:#1a1a1a; float:left; padding-top: 25px">TOTAL OF ALL TRANSACTIONS SO FAR </td>
-                                    <td style="background-color:#1a1a1a; float:right; position:absolute; right: 30; top: 25"><?php 
+            <div class="header">
+                <div class="pagetitle">
+                    TOTAL TRANSACTIONS
+                </div>
+                <form action="check-appointments.php" method="post">
+                    <div class="year">
+                        <select id="yearDropdown" name="selectedYear">
+                            <div class="drop">
+                                <div class="dropdown">
+                                    <?php
+                                        // Query to retrieve the smallest year value from the database
+                                        $query = "SELECT MIN(year1) AS min_year FROM total_transactions";
+                                        $result = mysqli_query($conn, $query);
 
-                                        $count = mysqli_query($conn, "SELECT total FROM total_transactions");
-                                        $total = 0;
-                                        while($row = mysqli_fetch_assoc($count)) {
-                                            $total += $row['total'];
+                                        if ($result && mysqli_num_rows($result) > 0) {
+                                            $row = mysqli_fetch_assoc($result);
+                                            $smallestYear = $row['min_year'];
+                                        } else {
+                                            // Fallback to a default value if no data is found
+                                            $smallestYear = date('Y');
                                         }
-                                        echo "K". number_format($total);
-
-                                    ?></td>
-                                    </tr>
-                                </tfoot>
+                                        $currentYear = date('Y');
+                                        $pastYears = array();
+                                        
+                                        // Check if the current year has passed
+                                        if ($currentYear > $smallestYear) {
+                                            for ($year = $smallestYear; $year < $currentYear; $year++) {
+                                                $pastYears[] = $year;
+                                            }
+                                        }
+                                        
+                                        // Display the current year as the first option
+                                        echo "<option value=\"$currentYear\">$currentYear</option>";
+                                        
+                                        // Display the past years as options
+                                        foreach ($pastYears as $year) {
+                                            echo "<option value=\"$year\">$year</option>";
+                                        }
+                                
+                                    ?>
+                                </div>
                             </div>
-                        </table>
+                            <input type="submit" value="Sort" class="sortbtn">                       
+                        </select>
                     </div>
-                </div> 
+                </form>
+            </div>
+            <div class="secondtab">
+                <div class="wholetotal">
+                    <div class="thistext">
+                        Total Transactions So Far
+                    </div>
+                    <div class="thisfigure">
+                        <?php
+                            $figure = "SELECT * from total_transactions";
+                            $linkfigure = mysqli_query($conn, $figure);
+                            $total = 0;
+                            while($row = mysqli_fetch_assoc($linkfigure)) {
+                                $total += $row['total'];
+                            }
+                            echo "K". number_format($total);
+                        ?>
+                    </div>
+                </div>
+                <div class="thismonth">
+                    <div class="thistext">
+                        This Month
+                    </div>
+                    <div class="thisfigure" style="color:green">
+                        <?php
+                            $currentmonth = date('F');
+                            $currentyear = date('Y');
+                            $figure = "SELECT * from total_transactions where month1 = '$currentmonth' and year1 = '$currentyear'";
+                            $linkfigure = mysqli_query($conn, $figure);
+                            $total = 0;
+                            while($row = mysqli_fetch_assoc($linkfigure)) {
+                                $total += $row['total'];
+                            }
+                            echo "K". number_format($total);
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="monthlist">
+                <div class="list">
+                    <table>
+                        <tr>
+                            <th>Month</th>
+                            <th>Amount</th>
+                        </tr>
+                        <?php
+                            $retrieve = "SELECT * from total_transactions where year1 = '".$_SESSION['selectedYear']."' ORDER BY month1 DESC";
+                            $link = mysqli_query($conn, $retrieve);
+                            checkSQL($conn, $link);
+                            $row = mysqli_num_rows($link);
+                            if (!$link){
+                                die("Invalid query: " .$conn->error);
+                            }
+                            
+                            // reading data contained in each row
+                            while($row = $link->fetch_assoc()){
+                                
+                                ?>
+                                
+                            <tr>
+                                <td style="text-align:left; padding-left: 20px; padding-top:11px;">
+                                    <span style="padding-left:20px; font-size:large; font-family:sans-serif; font-weight: 500px">
+                                        <?php echo ucfirst($row["month1"])?>
+                                    </span>
+                                    <hr style="margin-top:5px">
+                                </td>
+                                <td style="text-align:right; padding-right: 20px; font-size:large; font-family:sans-serif; font-weight: 600px">
+                                    <span style="padding-right:20px;">
+                                        <?php echo "K".number_format($row["total"])?>
+                                    </span>
+                                    <hr style="margin-top:5px">
+                                </td>
+                            </tr>
+                            <?php }
+                        ?>
+                    </table>
+                </div>
             </div>
         </div>
         
@@ -197,7 +254,33 @@ function time_elapsed_string($datetime, $full = false) {
                 $(".rejected").css({"animation":"slide-animation 1.5s forwards"});
             });
         </script>
+
         <script>
+            var selectedYear; // Variable to store the selected value
+            
+            var yearDropdown = document.getElementById('yearDropdown');
+            
+            yearDropdown.addEventListener('change', function() {
+                selectedYear = this.value; // Update the selectedYear variable with the new value
+                
+                // Send the selectedYear value to the server using AJAX
+                // Or submit a form to send the value to the server
+                // Here, I'm using AJAX as an example
+                
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'process_year.php', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // Response received from the server
+                    console.log(xhr.responseText); // Optional: Print the server response to the console
+                }
+                };
+                xhr.send('selectedYear=' + selectedYear);
+            });
+        </script>
+        <script>
+        
         //  greeting the user on top of the dashboad page
 
         const greeting = document.getElementById('greetings');

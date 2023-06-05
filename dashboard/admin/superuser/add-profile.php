@@ -6,33 +6,7 @@ include('../../../functions.php');
 if(!isset($_SESSION['name'])){
     header('location:../../../login.php');
 }
-if(isset($_POST['submit'])){
-    
-    $fullname = $_POST['fullname'];
-    $address = $_POST['address'];
-    $phone = $_POST['phone'];
-    $field = $_POST['field'];
-    $password = $_POST['password'];
-    
-    $s = "select * from doctors where phone = '$phone'";
-    $result = mysqli_query($conn, $s);
-    $num = mysqli_num_rows($result);
 
-    if (empty($fullname) || empty($address) || empty($phone) || empty($field) || empty($password)) {
-        header('location: add-doctor-blank.php');
-    }else{
-        if($num == 1){
-        
-            header('location: add-doctor-error.php');
-       
-         }
-         else{
-             $reg = "insert into doctors(fullname, address, phone, field, password) values ('$fullname', '$address', '$phone', '$field', '$password')";
-             mysqli_query($conn, $reg);
-         }
-    }
-    header('location: add-doctor-success.php');
-}
 ?>
 
 <DOCTYPE html>
@@ -41,7 +15,8 @@ if(isset($_POST['submit'])){
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="add-doctor.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="add-profile.css">
     <title>Dashboard</title>
 </head>
 <body>
@@ -54,7 +29,7 @@ if(isset($_POST['submit'])){
 
         <div class="column1">
             <div class="company-name-container">
-            <div class="company-name" style="font-size:x-large">
+                <div class="company-name" style="font-size:x-large">
                     GSJ Animal Health & Production
                 </div>
             </div>
@@ -63,7 +38,7 @@ if(isset($_POST['submit'])){
                      <a href="dashboard.php"><span id='link'> Dashboard </span> </a>
                 </div>
                 <div class="link">
-                    <a href="profiles.php"><span id="link"> Profiles </span></a>
+                    <a href="profiles.php"><span id='link'> Profiles </span></a>
                 </div>
                 <div class="link">
                     <a href="appointments.php"><span id='link'> Appointments </span></a>
@@ -84,31 +59,36 @@ if(isset($_POST['submit'])){
             <div class="greetings-container" style="padding-right: 20px">
                <a href="javascript:history.go(-1)" style="text-decoration:underline"> <-- Previous Page </a>
             </div>
-            <!-- the form that will allow the admin to add a doctor -->
+
+            <!-- 1.Dashboard -->
             <div class="main-dashboard-container" id="main-dashboard-container">
-                <div class="header">
-                   <div class="pagetitle">  ADD DOCTOR.</div>
-                </div>
-                <div class="form-container">
-                    <div class="form">
-                        <form action="add-doctor-success.php" method="post">
-                            <input type="text" name="fullname" id="input" placeholder="Fullname">
-                            <input type="text" name="address" id="input" placeholder="Address">
-                            <div class="col">
-                                <div class="col1"><input type="text" name="phone" id="input2" placeholder="Phone number"></div>
-                                <div class="col2"> 
-                                    <div class="docfield"> Doctors Field:</div>
-                                        <div class="fieldbox">
-                                        <select name="field" id="field" required>
-                                            <option value="pet">Pet</option>
-                                            <option value="livestock">Livestock</option>
-                                        </select> 
-                                    </div>
+                <div class="dashboard" id="dashboard" style="padding-left: 80px;"> 
+                    <a href="add-doctor.php" class="appointments-container" id="link2">
+                        <div class="appointments" onclick="document.getElementById('add-modal').style.display='block'">
+                            <div class="count-container">
+                                <div class="count-info">
+                                    Add Doctor
                                 </div>
-                            </div>    
-                            <input type="password" name="password" id="input" placeholder="Password">
-                            <input type="submit" value="Add Doctor" name="submit" id="bttn" class="submit">
-                        </form>
+                                <div class="count">
+                                    <img src="images/doctor.png" alt="add doctor" height="150px" style='padding-top:20px; filter:saturate(80%)'>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="notifications-container" id="link2">
+                        <a href="add-accountant.php">
+                            <div class="notifications">
+                                <div class="count-container">
+                                    <div class="count-info">
+                                        Add Accountant
+                                    </div>
+                                <!-- thi is the number badge for the counter -->
+                                <div class="count">
+                                    <img src="images/accountant.png" alt="add accountant" height="150px" style='padding-top:20px;'>
+                                </div>
+                            </div>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -137,8 +117,11 @@ if(isset($_POST['submit'])){
 
         greeting.innerHTML = welcomeText;
 
-        // this is to close the modal
-        
+        // to add an animation effect
+        $(function(){
+            $("#dashboard").animate({opacity:'1', transform: 'translate("0px, 0px")'}, 1500, 'swing');
+            $('#dashboard').css({"animation":"my-animation 2s forwards"});
+        });
     </script>
 </body>
 </html>

@@ -38,13 +38,13 @@ if(!isset($_SESSION['name'])){
                      <a href="dashboard.php"><span id='link'> Dashboard </span> </a>
                 </div>
                 <div class="link">
-                    <a href="doctors.php"><span id='link'> Doctors </span></a>
+                    <a href="profiles.php"><span id='link'> Profiles <img src="images/user-small.png" alt="" height="20px"></span></a>
                 </div>
                 <div class="link">
-                    <a href="appointments.php"><span id='link'> Appointments </span></a>
+                    <a href="appointments.php"><span id='link'> Appointments <img src="images/appointments.png" alt="" height="20px"></span></a>
                 </div>
                 <div class="link">
-                    <span id='link'> Settings </span>
+                    <span id='link'> Settings  <img src="images/settings.png" alt="" height="20px"></span>
                 </div>
                 <div class="link">
                     <a href="../../logout.php" style="text-decoration: none; color: white">
@@ -68,20 +68,20 @@ if(!isset($_SESSION['name'])){
             <!-- 1.Dashboard -->
             <div class="main-dashboard-container" id="main-dashboard-container">
                 <div class="dashboard" id="dashboard" style="padding-left: 80px;"> 
-                    <a href="add-doctor.php" class="appointments-container" id="link2">
+                    <a href="add-profile.php" class="appointments-container" id="link2">
                         <div class="appointments" onclick="document.getElementById('add-modal').style.display='block'">
                             <div class="count-container">
                                 <div class="count-info">
                                     Add Profile
                                 </div>
                                 <div class="count">
-                                    +
+                                    <img src="images/adduser.png" alt="add user" height="150px" style='padding-top:20px; filter:saturate(80%)' >
                                 </div>
                             </div>
                         </div>
                     </a>
                     <div class="notifications-container" id="link2">
-                        <a href="doctors.php">
+                        <a href="remove-profile.php">
                             <div class="notifications">
                                 <div class="count-container">
                                     <div class="count-info">
@@ -89,22 +89,22 @@ if(!isset($_SESSION['name'])){
                                     </div>
                                 <!-- thi is the number badge for the counter -->
                                 <div class="count">
-                                    -
+                                    <img src="images/userminus.png" alt="remove user" height="150px" style='padding-top:20px; filter:saturate(80%)'>
                                 </div>
                             </div>
                             </div>
                         </a>
                     </div>
                     <div class="notifications-container" id="link2">
-                        <a href="change-password.php">
+                        <a href="edit-profiles.php">
                             <div class="notifications">
                                 <div class="count-container">
                                     <div class="count-info">
-                                        Change Password
+                                        Edit Profiles
                                     </div>
                                 <!-- thi is the number badge for the counter -->
                                 <div class="count">
-                                    ***
+                                    <img src="images/user-icon.png" alt="Profile" height="150px" style="padding-top:20px; filter:saturate(80%)">
                                 </div>
                             </div>
                             </div>

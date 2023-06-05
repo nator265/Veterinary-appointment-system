@@ -134,7 +134,7 @@ function time_elapsed_string($datetime, $full = false) {
                                 
                                 // retrieve data for the user matching the phone number
                                 // retrieving data from the database for the user to see
-                                $retrieve = "SELECT * FROM notifications Where reciever = '" .$_SESSION['phone']."'";
+                                $retrieve = "SELECT * FROM notifications Where reciever = '" .$_SESSION['phone']."' ORDER BY time DESC";
                                 $link = mysqli_query($conn, $retrieve);
                                 checkSQL($conn, $link);
                                 $row = mysqli_num_rows($link);

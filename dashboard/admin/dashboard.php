@@ -69,49 +69,94 @@ if(!isset($_SESSION['name'])){
             <!-- 1.Dashboard -->
             <div class="main-dashboard-container" id="main-dashboard-container">
                 <div class="dashboard" id="dashboard"> 
-                    <a href="appointments.php" class="appointments-container" id="link2">
-                        <div class="appointments">
-                            <div class="count-container">
-                                <div class="count-info">
-                                    Appointments
-                                </div>
-                                <div class="count">
-                                    <?php
-
-                                        $field = "SELECT field from doctors where phone = '".$_SESSION['phone']."'";
-                                        $fieldlink = mysqli_query($conn, $field);
-                                        $field2 = mysqli_fetch_assoc($fieldlink);                               
-                                        $_SESSION['field3'] =  $field2["field"];
-                                        // showing the number of appointments that the doctor has
-                                        $count1 = "SELECT * FROM appointments Where field = '".$_SESSION['field3']."'";
-                                        $countlink = mysqli_query($conn, $count1);
-                                        $count = mysqli_num_rows($countlink);
-                                        echo $count;
-  
-                                    ?>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                    <div class="notifications-container" id="link2">
-                        <a href="notifications.php">
-                            <div class="notifications">
+                    <div class="top">
+                        <a href="appointments.php" class="appointments-container" id="link2">
+                            <div class="appointments">
                                 <div class="count-container">
                                     <div class="count-info">
-                                        Notifications
+                                        Appointments
                                     </div>
-                                <!-- thi is the number badge for the counter -->
-                                <div class="count">
-                                    <?php
-                                        $count1 = "SELECT * FROM notifications Where reciever = '" .$_SESSION['phone']."'";
-                                        $countlink = mysqli_query($conn, $count1);
-                                        $count = mysqli_num_rows($countlink);
-                                        echo $count;
-                                    ?>
+                                    <div class="count">
+                                        <?php
+
+                                            $field = "SELECT field from doctors where phone = '".$_SESSION['phone']."'";
+                                            $fieldlink = mysqli_query($conn, $field);
+                                            $field2 = mysqli_fetch_assoc($fieldlink);                               
+                                            $_SESSION['field3'] =  $field2["field"];
+                                            // showing the number of appointments that the doctor has
+                                            $count1 = "SELECT * FROM appointments Where session_expiry = 'pending' and field = '".$_SESSION['field3']."'";
+                                            $countlink = mysqli_query($conn, $count1);
+                                            $count = mysqli_num_rows($countlink);
+                                            echo $count;
+    
+                                        ?>
+                                    </div>
                                 </div>
                             </div>
-                            </div>
                         </a>
+                        <div class="notifications-container" id="link2">
+                            <a href="notifications.php">
+                                <div class="notifications">
+                                    <div class="count-container">
+                                        <div class="count-info">
+                                            Notifications
+                                        </div>
+                                    <!-- thi is the number badge for the counter -->
+                                    <div class="count">
+                                        <?php
+                                            $count1 = "SELECT * FROM notifications Where reciever = '" .$_SESSION['phone']."'";
+                                            $countlink = mysqli_query($conn, $count1);
+                                            $count = mysqli_num_rows($countlink);
+                                            echo $count;
+                                        ?>
+                                    </div>
+                                </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="bottom">
+                        <div class="bottomcontainer">
+                            <div class="textforbottom">
+                                Your Next appointment is at 
+                            </div>
+                            <div class="nextapp">
+                                <?php
+                                    $field = "SELECT field from doctors where phone = '".$_SESSION['phone']."'";
+                                    $fieldlink = mysqli_query($conn, $field);
+                                    $field2 = mysqli_fetch_assoc($fieldlink);                               
+                                    $_SESSION['field3'] =  $field2["field"];
+                                    // showing the number of appointments that the doctor has
+                                    $count1 = "SELECT * FROM appointments Where session_expiry = 'pending' and approved = 'approved' and field = '".$_SESSION['field3']."'";
+                                    $countlink = mysqli_query($conn, $count1);
+                                    if(mysqli_num_rows($countlink) == 0){
+                                        echo 'N/A';
+                                    }else{
+                                        $fetchtime = mysqli_fetch_assoc($countlink);
+                                        $thistime = $fetchtime['ap_time'];
+                                        echo $thistime;
+                                    }
+                                ?>
+                            </div>
+                            <div class="nextdate">
+                            <?php
+                                    $field = "SELECT field from doctors where phone = '".$_SESSION['phone']."'";
+                                    $fieldlink = mysqli_query($conn, $field);
+                                    $field2 = mysqli_fetch_assoc($fieldlink);                               
+                                    $_SESSION['field3'] =  $field2["field"];
+                                    // showing the number of appointments that the doctor has
+                                    $count1 = "SELECT * FROM appointments Where session_expiry = 'pending' and approved = 'approved' and field = '".$_SESSION['field3']."'";
+                                    $countlink = mysqli_query($conn, $count1);
+                                    if(mysqli_num_rows($countlink) == 0){
+                                        echo 'N/A';
+                                    }else{
+                                        $fetchdate = mysqli_fetch_assoc($countlink);
+                                        $thisdate = $fetchdate['ap_date'];
+                                        echo $thisdate;
+                                    }
+                                ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

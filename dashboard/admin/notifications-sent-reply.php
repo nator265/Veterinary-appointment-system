@@ -117,8 +117,13 @@ if(isset($_POST['submit'])){
                         <div id="thisform">
                         <form action="notifications-sent-reply.php" method="POST">
                             
-                                <textarea type="text" name="message" id="fullname" placeholder="Type message here..." cols="67" rows="4" style="padding:10px" required></textarea>
-                                <br>
+                                <input type="text" name="message" id="fullname" value="<?php
+                                    $thismess = "SELECT * FROM notifications where notifications_id='".$_SESSION['notifications_id']."'";
+                                    $linkmess = mysqli_query($conn, $thismess);
+                                    $fetchmess = mysqli_fetch_assoc($linkmess);
+                                    $thismessage2 = $fetchmess['message1'];
+                                    echo $thismessage2;
+                                ?>" cols="67" rows="4" style="padding:10px" required>
                                 <br>
                                 <div class="bttn-container">
                                     <input type="submit" value="Send" name="submit"  class="edit" style="font-size:large; margin-right:5px;">

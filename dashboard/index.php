@@ -102,7 +102,7 @@ if(isset($_GET['delete'])){
                                     </div>
                                     <div class="count">
                                         <?php
-                                            $count1 = "SELECT * FROM appointments Where session_expiry = 'pending' and phone = '" .$_SESSION['phone']."'";
+                                            $count1 = "SELECT * FROM appointments Where session_expiry = 'pending' and approved != 'rejected' and phone = '" .$_SESSION['phone']."'";
                                             $countlink = mysqli_query($conn, $count1);
                                             $count = mysqli_num_rows($countlink);
                                             echo $count;

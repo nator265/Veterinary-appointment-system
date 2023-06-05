@@ -6,7 +6,6 @@ include('../../../functions.php');
 if(!isset($_SESSION['name'])){
     header('location:../../../login.php');
 }
-
 if(isset($_POST['edit'])){
 
     $fullname = $_POST['fullname'];
@@ -21,6 +20,8 @@ if(isset($_POST['edit'])){
     // header('location:edit-doctor.php');
     
 }
+
+
 if(isset($_GET['yes'])){
     $phone = $_GET['yes'];
     $delete = "DELETE FROM doctors where phone = $phone";
@@ -107,7 +108,7 @@ function time_elapsed_string($datetime, $full = false) {
 
         <div class="column2">
             <div class="greetings-container" style="padding-right: 20px">
-                <a href="profiles.php" style="text-decoration:underline"> <-- Previous Page </a>
+               <a href="javascript:history.go(-1)" style="text-decoration:underline"> <-- Previous Page </a>
             </div>
           
             <!-- 2.appointmets tab -->
@@ -136,7 +137,7 @@ function time_elapsed_string($datetime, $full = false) {
                                 <th>
                                     Date joined
                                 </th>
-                                <th style="z-index: 2;" colspan="2">
+                                <th style="z-index: 2;">
                                     Actions
                                 </th>
                             </tr>
@@ -166,12 +167,9 @@ function time_elapsed_string($datetime, $full = false) {
                                         <td><?php echo $row["phone"] ?></td>
                                         <td><?php echo $row["address"] ?></td>
                                         <td><?php echo time_elapsed_string($row["date_joined"]) ?></td>
-                                        <td style="display:flex; justify-content:right; padding-top: 14px"><a href="edit-doctor3.php?edit=<?php echo $row['phone']?>">
+                                        <td><a href="edit-doctor2.php?edit=<?php echo $row['phone']?>">
                                             <button class="action-buttons" id="approve-button" name="change">Edit</button>
-                                        </a></td>
-                                        <td><a href="doctor-delete.php?delete=<?php echo $row['phone']?>">
-                                            <button class="action-buttons" id="reject-button" name="reject">Remove</button>
-                                        </a></td>
+                                        </a></td>                                        
                                         </tr>
                                         
                                     <?php } ?>

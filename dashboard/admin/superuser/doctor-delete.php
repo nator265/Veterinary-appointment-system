@@ -76,22 +76,19 @@ if(isset($_GET['delete'])){
 
         <div class="column1">
         <div class="company-name-container">
-                    <div class="company-name">
-                        Veterinary
-                    </div>
-                </div>
+            <div class="company-name" style="font-size:x-large">
+                    GSJ Animal Health & Production
+            </div>
+        </div>
             <div class="links-container">
                 <div class="link">
                     <a href="dashboard.php"> <span id='link'> Dashboard </span> </a>
                 </div>
                 <div class="link">
-                    <span id='link'> Doctors </span>
+                    <a href="profiles.php"><span id='link'> profiles </span></a>
                 </div>
                 <div class="link">
                     <a href="appointments.php"><span id='link'> Appointments </span></a>
-                </div>
-                <div class="link">
-                    <a href="notifications.php"><span id='link'> Notifications </span> </a>
                 </div>
                 <div class="link">
                     <a href="settings.php"><span id='link'> Settings </span> </a>
@@ -189,7 +186,7 @@ if(isset($_GET['delete'])){
                                     <a href="doctors.php?yes=<?php echo $_SESSION['doctordelete'] ?>">
                                         <input type="button" class="edit2" value="Yes" name="yes">
                                     </a>
-                                    <a href="doctors.php">
+                                    <a href="javascript:history.go(-1).php">
                                         <input type="button" class="cancel2" value="No" name="no" id="noclearance">
                                     </a>
                                 </div>

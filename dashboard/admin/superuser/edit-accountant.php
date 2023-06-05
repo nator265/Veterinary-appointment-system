@@ -7,25 +7,33 @@ if(!isset($_SESSION['name'])){
     header('location:../../../login.php');
 }
 
+if(isset($_POST['submit'])){
+    $fullname = $_POST['fullname'];
+    $field = $_POST['field'];
+    $date = $_POST['ap_date'];
+    $animal = $_POST['animal'];
+    $ap_type = $_POST['ap_type'];
+    $_SESSION['field2'] = $field;
+    // converting the ap_type to string
+    $allaptype = implode(", ", $ap_type);
+    // inserting data into the appointments table in the database
+    $reg = "INSERT INTO appointments(fullname, field, animal, ap_date, ap_type, phone) VALUES ('$fullname', '$field', '$animal', '$date', '$allaptype', '".$_SESSION['phone']."')";
+                            
+    $rest = mysqli_query($conn, $reg);
+    
+    checkSQL($conn, $rest);
+}
 if(isset($_POST['edit'])){
 
     $fullname = $_POST['fullname'];
     $address = $_POST['address'];
     $phone = $_POST['phone'];
-    $field = $_POST['field'];
     $password = $_POST['password'];
     
     // inserting data into the appointments table in the database
-    $update = "UPDATE doctors SET address = '$address', password='$password', fullname = '$fullname', field = '$field', phone = '$phone' where phone = '".$_SESSION['values']."' ";
+    $update = "UPDATE accountant SET address = '$address', password='$password', fullname = '$fullname', phone = '$phone' where phone = '".$_SESSION['values2']."' ";
     mysqli_query($conn, $update);
-    // header('location:edit-doctor.php');
-    
-}
-if(isset($_GET['yes'])){
-    $phone = $_GET['yes'];
-    $delete = "DELETE FROM doctors where phone = $phone";
-    mysqli_query($conn, $delete);
-    header('location: doctors.php');
+    // header('location:edit-doctor.php');   
 }
 // this is the test date function for the one i found on youtube
 date_default_timezone_set("Africa/Harare");
@@ -107,25 +115,22 @@ function time_elapsed_string($datetime, $full = false) {
 
         <div class="column2">
             <div class="greetings-container" style="padding-right: 20px">
-                <a href="profiles.php" style="text-decoration:underline"> <-- Previous Page </a>
+               <a href="edit-profiles.php" style="text-decoration:underline"> <-- Previous Page </a>
             </div>
           
             <!-- 2.appointmets tab -->
             <div class="main-appointments-container" id="main-appointments-container">
                  <div class="create">
-                    <a href="add-doctor.php">
-                        <button class="create" id="bttn" onclick="document.getElementById('modal-container').style.display='flex'" style="border-radius: 5px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;"> Add doctor </button>
+                    <a href="add-accountant.php">
+                        <button class="create" id="bttn" onclick="document.getElementById('modal-container').style.display='flex'" style="border-radius: 5px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;"> Add an accountant </button>
                     </a>                
                 </div>
                 <div class="table-container"> 
                     <div class="table">
                         <table>
                             <tr class="first-row">
-                                <th>
-                                    Doctors Name
-                                </th>
-                                <th>
-                                    Field
+                                <th style="width:200px">
+                                    Accountants Name
                                 </th>
                                 <th>
                                     Phone
@@ -136,7 +141,7 @@ function time_elapsed_string($datetime, $full = false) {
                                 <th>
                                     Date joined
                                 </th>
-                                <th style="z-index: 2;" colspan="2">
+                                <th colspan=2 style="z-index: 2;">
                                     Actions
                                 </th>
                             </tr>
@@ -145,7 +150,7 @@ function time_elapsed_string($datetime, $full = false) {
                                     // retrieve data for the user matching the phone number
                                     // if($fetch_rest2['phone'] == )
                                     // retrieving data from the database for the user to see
-                                    $retrieve = "SELECT * FROM `doctors` ORDER BY date_joined DESC";
+                                    $retrieve = "SELECT * FROM accountant ORDER BY date_joined DESC";
                                     $link = mysqli_query($conn, $retrieve);
                                     checkSQL($conn, $link);
                                     $row = mysqli_num_rows($link);
@@ -161,17 +166,15 @@ function time_elapsed_string($datetime, $full = false) {
                                            
                                         ?>
                                         <tr>
-                                        <td><?php echo $row["fullname"] ?></td>
-                                        <td><?php echo $row["field"] ?></td>
+                                        <td><?php echo $row["fullname"] ?></td>                                        
                                         <td><?php echo $row["phone"] ?></td>
                                         <td><?php echo $row["address"] ?></td>
                                         <td><?php echo time_elapsed_string($row["date_joined"]) ?></td>
-                                        <td style="display:flex; justify-content:right; padding-top: 14px"><a href="edit-doctor3.php?edit=<?php echo $row['phone']?>">
-                                            <button class="action-buttons" id="approve-button" name="change">Edit</button>
-                                        </a></td>
-                                        <td><a href="doctor-delete.php?delete=<?php echo $row['phone']?>">
-                                            <button class="action-buttons" id="reject-button" name="reject">Remove</button>
-                                        </a></td>
+                                        <td>
+                                            <a href="edit-accountant2.php?edit=<?php echo $row['phone']?>">
+                                                <button class="action-buttons" id="approve-button" name="reject">Edit</button>
+                                            </a>
+                                        </td>
                                         </tr>
                                         
                                     <?php } ?>

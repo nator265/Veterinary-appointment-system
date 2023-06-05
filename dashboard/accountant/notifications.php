@@ -40,7 +40,7 @@ if(!isset($_SESSION['name'])){
                         <a href="appointments.php"><span id='link'> Appointments </span></a>
                     </div>
                     <div class="link">
-                        <a href="check-appointments.php"><span id='link'> Check-off appointment </span> </a>
+                        <a href="check-appointments.php"><span id='link'> Total Transactions </span> </a>
                     </div>
                     <div class="link">
                         <span id='link'> Notifications </span>

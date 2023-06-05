@@ -6,34 +6,37 @@ include('../../../functions.php');
 if(!isset($_SESSION['name'])){
     header('location:../../../login.php');
 }
-
+header('refresh: 2; url=accountants.php');
 if(isset($_POST['submit'])){
     
     $fullname = $_POST['fullname'];
     $address = $_POST['address'];
     $phone = $_POST['phone'];
-    $field = $_POST['field'];
-    $password = $_POST['password'];    
-    $s = "select * from doctors where phone = '$phone'";
-
+    $password = $_POST['password'];
+    
+    $s = "select * from accountant where phone = '$phone'";
     $result = mysqli_query($conn, $s);
     $num = mysqli_num_rows($result);
 
-    if (empty($fullname) || empty($address) || empty($phone) || empty($field) || empty($password)) {
-        header('location: add-doctor-blank.php');
+    if (empty($fullname) || empty($address) || empty($phone) || empty($password)) {
+        header('location: add-accountant-blank.php');
+        exit;
     }else{
         if($num == 1){
         
-            header('location: add-doctor-error.php');
+            header('location: add-accountant-error.php');
+            exit;
        
          }
          else{
-             $reg = "insert into doctors(fullname, address, phone, field, password) values ('$fullname', '$address', '$phone', '$field', '$password')";
+             $reg = "INSERT into accountant(fullname, address, phone, password) values ('$fullname', '$address', '$phone', '$password')";
              mysqli_query($conn, $reg);
-             header('location: add-doctor-success.php');
+             header("location:add-accountant-success.php");
+             exit;
          }
     }
 }
+
 ?>
 
 <DOCTYPE html>
@@ -42,10 +45,8 @@ if(isset($_POST['submit'])){
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.all.js"></script>
-    <script src="sweetalert2.all.min.js"></script>
-    <link rel="stylesheet" href="add-doctor.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="add-doctor-success.css">
     <title>Dashboard</title>
 </head>
 <body>
@@ -67,10 +68,10 @@ if(isset($_POST['submit'])){
                      <a href="dashboard.php"><span id='link'> Dashboard </span> </a>
                 </div>
                 <div class="link">
-                    <a href="appointments.php"><span id='link'> Appointments </span></a>
+                    <a href="doctors.php"><span id="link"> Doctors </span></a>
                 </div>
                 <div class="link">
-                    <a href="notifications.php"><span id='link'> Notifications </span> </a>
+                    <a href="appointments.php"><span id='link'> Appointments </span></a>
                 </div>
                 <div class="link">
                     <a href="settings.php"><span id='link'> Settings </span></a>
@@ -87,35 +88,38 @@ if(isset($_POST['submit'])){
         <div class="column2">
             <!-- the form that will allow the admin to add a doctor -->
             <div class="main-dashboard-container" id="main-dashboard-container">
-                <div class="header">
-                   <div class="pagetitle">  ADD A DOCTOR.</div>
-                   <a href="settings.php">
-                        <div class="backarrow" style="color:white"><- Previous Page</div>
-                    </a>
+            <div class="header">
+                   <div class="pagetitle">  ADD ACCOUNTANT.</div>
                 </div>
-                <div class="form-container">
-                    <div class="form">
-                    <form action="add-doctor-success.php" method="post">
-                            <input type="text" name="fullname" id="input" placeholder="Fullname">
-                            <input type="text" name="address" id="input" placeholder="Address">
-                            <div class="col">
-                                <div class="col1"><input type="text" name="phone" id="input2" placeholder="Phone number"></div>
-                                <div class="col2"> 
-                                    <div class="docfield"> Doctors Field:</div>
-                                        <div class="fieldbox">
-                                        <select name="field" id="field" required>
-                                            <option value="pet">Pet</option>
-                                            <option value="livestock">Livestock</option>
-                                        </select> 
-                                    </div>
-                                </div>
-                            </div>    
-                            <input type="password" name="password" id="input" placeholder="Password">
-                            <input type="submit" value="Add Doctor" name="submit" id="bttn" class="submit">
-                        </form>
+                <div class="anothercontainer">
+                    <div class="form-container">
+                        <div class="form">
+                            <form action="add-accountant-success.php" method="POST">
+                                <input type="text" name="fullname" id="input" placeholder="Fullname">
+                                <input type="text" name="address" id="input" placeholder="Address">
+                                <input type="phone" name="phone" id="input" placeholder="Phone number">   
+                                <input type="password" name="password" id="input" placeholder="Password">
+                                <input type="submit" value="Add Accountant" name="submit" id="bttn" class="submit">
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="alert-container" id="target">
+                    <div class="alert" id="alert">
+                        <div class="warning-container">
+
+                            <div class="warning-header">
+                                Accountant added successfully!
+                            </div>
+                            <div class="buttonsection">
+                                <a href="add-doctor.php">
+                                    <input type="button" class="edit2" value="Okay">
+                                </a>     
+                            </div>
+                        </div>
+                    </div>
+                </div>
         </div>
     <script>
 
@@ -141,16 +145,12 @@ if(isset($_POST['submit'])){
 
         greeting.innerHTML = welcomeText;
 
-        // this is to close the modal
+        // this is to open the modal
+        $(function(){
+        $(".alert-container").css({"animation":"opacity-animation2 1s forwards"});
+        $(".alert").css({"animation":" opacity-foralert 1s forwards"});
+    });
         
-    </script>
-     <script>
-        Swal.fire({
-        title: 'Error!',
-        text: 'Doctor phone number already exists, please enter a different one',
-        icon: 'error',
-        confirmButtonText: 'Okay'
-})
     </script>
 </body>
 </html>

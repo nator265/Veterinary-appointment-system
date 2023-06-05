@@ -6,6 +6,9 @@ include('../../../functions.php');
 if(!isset($_SESSION['name'])){
     header('location:../../../login.php');
 }
+
+header('refresh: 2; url=doctors.php');
+
 if(isset($_POST['submit'])){
     
     $fullname = $_POST['fullname'];
@@ -18,22 +21,25 @@ if(isset($_POST['submit'])){
     $result = mysqli_query($conn, $s);
     $num = mysqli_num_rows($result);
 
-    if (empty($fullname) || empty($address) || empty($phone) || empty($field) || empty($password)) {
+    if (empty($fullname) || empty($address) || empty($field)|| empty($phone) || empty($password)) {
         header('location: add-doctor-blank.php');
+        exit;
     }else{
         if($num == 1){
         
             header('location: add-doctor-error.php');
+            exit;
        
          }
          else{
-             $reg = "insert into doctors(fullname, address, phone, field, password) values ('$fullname', '$address', '$phone', '$field', '$password')";
+             $reg = "INSERT into accountant(fullname, address, phone, password) values ('$fullname', '$address', '$phone', '$password')";
              mysqli_query($conn, $reg);
+             header("location:add-accountant-success.php");
+             exit;
          }
     }
-    header('location: add-doctor-success.php');
 }
-header('refresh: 2; url=add-doctor.php');
+
 ?>
 
 <DOCTYPE html>
