@@ -28,22 +28,22 @@ if(!isset($_SESSION['name'])){
     
             <div class="column1">
                 <div class="company-name-container">
-                <div class="company-name" style="font-size:x-large">
-                    GSJ Animal Health & Production
+                    <div class="company-name" style="font-size:x-large">
+                        GSJ Animal Health & Production
                     </div>
                 </div>
                 <div class="links-container">
                     <div class="link">
-                       <a href="dashboard.php"> <span id='link'> Dashboard </span> </a>
+                        <a href="dashboard.php"><span id='link'> Dashboard <img src="images/dashboard.png" alt="" height="20px"></span></a>
                     </div>
                     <div class="link">
-                        <a href="appointments.php"><span id='link'> Appointments </span></a>
+                    <a href="appointments.php"><span id='link'> Appointments <img src="images/appointments.png" alt="" height="20px"> </a>
                     </div>
                     <div class="link">
-                        <a href="check-appointments.php"><span id='link'> Check-off appointment </span> </a>
+                    <a href="check-appointments.php"><span id='link'> Checkoff Appointments <img src="images/total.png" alt="" height="20px"></span> </a>
                     </div>
                     <div class="link">
-                        <span id='link'> Notifications </span>
+                       <a href="notifications.php"><span id='link'> Notifications <img src="images/notifications.png" alt="" height="20px"></span> </a>
                     </div>
                     <div class="link">
                         <a href="../logout.php" style="text-decoration: none; color: white">
@@ -73,12 +73,17 @@ if(!isset($_SESSION['name'])){
                                         Sent
                                     </div>
                                     <div class="count">
-                                        <?php
-                                            $count1 = "SELECT * FROM notifications Where phone = '" .$_SESSION['phone']."'";
-                                            $countlink = mysqli_query($conn, $count1);
-                                            $count = mysqli_num_rows($countlink);
-                                            echo $count;
-                                        ?>
+                                        <div class="fig">
+                                            <?php
+                                                $count1 = "SELECT * FROM notifications Where phone = '" .$_SESSION['phone']."'";
+                                                $countlink = mysqli_query($conn, $count1);
+                                                $count = mysqli_num_rows($countlink);
+                                                echo $count;
+                                            ?>
+                                        </div>  
+                                        <div class="recimage">
+                                            <img src="images/sent.png" alt="Sent" height="130px"  id="image1">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -92,12 +97,17 @@ if(!isset($_SESSION['name'])){
                                         </div>
                                         <!-- this is the number badge for the counter -->
                                         <div class="count">
-                                            <?php
-                                                $count1 = "SELECT * FROM notifications Where reciever = '" .$_SESSION['phone']."'";
-                                                $countlink = mysqli_query($conn, $count1);
-                                                $count = mysqli_num_rows($countlink);
-                                                echo $count;
-                                            ?>
+                                            <div class="fig">
+                                                <?php
+                                                    $count1 = "SELECT * FROM notifications Where reciever = '" .$_SESSION['phone']."'";
+                                                    $countlink = mysqli_query($conn, $count1);
+                                                    $count = mysqli_num_rows($countlink);
+                                                    echo $count;
+                                                ?>
+                                            </div>
+                                            <div class="recimage">
+                                                <img src="images/received.png" alt="Received" height="135px" style="padding-top:10px" id="image3">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

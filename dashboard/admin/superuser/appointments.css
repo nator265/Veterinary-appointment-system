@@ -169,6 +169,30 @@ body{
     transition: all ease-in-out 0.5s;
     transition-delay: 10ms;
 }
+#image3{
+    filter: contrast(20%);
+}
+#image2{
+    filter: contrast(20%);
+}
+#image1{
+    filter: contrast(20%);
+}
+.appointments-container:hover #image1{
+    filter:contrast(100%);
+    transition: all ease-in-out 0.5s;
+    transition-delay: 10ms;
+}
+.notifications-container:hover #image2{
+    filter:contrast(100%);
+    transition: all ease-in-out 0.5s;
+    transition-delay: 10ms;
+}
+.notifications-container:hover #image3{
+    filter:contrast(100%);
+    transition: all ease-in-out 0.5s;
+    transition-delay: 10ms;
+}
 #link2{
     display: inline-block;
     position: relative;
@@ -191,6 +215,9 @@ body{
 #link2:hover:after{
     transform: scaleX(1);
     transform-origin: bottom center;
+}
+img:hover{
+    filter: contrast(100%);
 }
 
 .appointments-container{

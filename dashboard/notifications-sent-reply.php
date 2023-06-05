@@ -80,13 +80,13 @@ if(isset($_POST['submit'])){
                 </div>
                 <div class="links-container">
                     <div class="link">
-                       <a href="index.php"> <span id='link'> Dashboard </span> </a>
+                       <a href="index.php"> <span id='link'> Dashboard <img src="images/dashboard.png" alt="" height="20px"></span> </a>
                     </div>
                     <div class="link">
-                        <a href="appointments.php"><span id='link'> Appointments </span></a>
+                        <a href="appointments.php"><span id='link'> Appointments <img src="images/appointments.png" alt="" height="20px"></span></a>
                     </div>
                     <div class="link">
-                       <a href="notifications.php"> <span id='link'> Notifications </span> </a> 
+                        <span id='link'> Notifications <img src="images/notifications.png" alt="" height="20px"></span>
                     </div>
                     <div class="link">
                         <a href="logout.php" style="text-decoration: none; color: white">

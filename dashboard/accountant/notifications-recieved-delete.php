@@ -55,16 +55,19 @@ if(isset($_GET['delete'])){
                 </div>
                 <div class="links-container">
                     <div class="link">
-                       <a href="index.php"> <span id='link'> Dashboard </span> </a>
+                        <a href="dashboard.php"><span id='link'> Dashboard <img src="images/dashboard.png" alt="" height="20px"></span> </a>
                     </div>
                     <div class="link">
-                        <a href="appointments.php"><span id='link'> Appointments </span></a>
+                        <a href="appointments.php"><span id='link'> Appointments <img src="images/appointments.png" alt="" height="20px"></a>
                     </div>
                     <div class="link">
-                       <a href="notifications.php"> <span id='link'> Notifications </span> </a> 
+                        <a href="check-appointments.php"><span id='link'> Total Transactions <img src="images/total.png" alt="" height="20px"></span> </a>
                     </div>
                     <div class="link">
-                        <a href="logout.php" style="text-decoration: none; color: white">
+                        <span id='link'> Notifications <img src="images/notifications.png" alt="" height="20px"></span> 
+                    </div>
+                    <div class="link">
+                        <a href="../logout.php" style="text-decoration: none; color: white">
                             <button class="logout" id="bttn">Logout</button>
                         </a>
                     </div>

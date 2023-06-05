@@ -176,6 +176,36 @@ body{
     transition: all ease-in-out 0.5s;
     transition-delay: 10ms;
 }
+.fig{
+    height: 20px;
+    text-align: right;
+    padding-right: 50px;
+    font-size: 50px;
+}
+#image3{
+    filter: contrast(20%);
+}
+#image2{
+    filter: contrast(20%);
+}
+#image1{
+    filter: contrast(20%);
+}
+.appointments-container:hover #image1{
+    filter:contrast(100%);
+    transition: all ease-in-out 0.5s;
+    transition-delay: 10ms;
+}
+.notifications-container:hover #image2{
+    filter:contrast(100%);
+    transition: all ease-in-out 0.5s;
+    transition-delay: 10ms;
+}
+.notifications-container:hover #image3{
+    filter:contrast(100%);
+    transition: all ease-in-out 0.5s;
+    transition-delay: 10ms;
+}
 #link2{
     display: inline-block;
     position: relative;

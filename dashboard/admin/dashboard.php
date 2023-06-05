@@ -36,16 +36,16 @@ if(!isset($_SESSION['name'])){
             </div>
             <div class="links-container">
                 <div class="link">
-                    <span id='link'> Dashboard
+                    <span id='link'> Dashboard <img src="images/dashboard.png" alt="" height="20px"></span>
                 </div>
                 <div class="link">
-                    <a href="appointments.php"><span id='link'> Appointments </span></a>
+                    <a href="appointments.php"><span id='link'> Appointments <img src="images/appointments.png" alt="" height="20px"></a>
                 </div>
                 <div class="link">
-                    <a href="check-appointments.php"><span id='link'> Check-off appointment </span> </a>
+                    <a href="check-appointments.php"><span id='link'> Checkoff Appointments <img src="images/total.png" alt="" height="20px"></span> </a>
                 </div>
                 <div class="link">
-                    <a href="notifications.php"><span id='link'> Notifications </span> </a>
+                    <a href="notifications.php"><span id='link'> Notifications <img src="images/notifications.png" alt="" height="20px"></span> </a>
                 </div>
                 <div class="link">
                     <a href="../logout.php" style="text-decoration: none; color: white">
@@ -77,19 +77,24 @@ if(!isset($_SESSION['name'])){
                                         Appointments
                                     </div>
                                     <div class="count">
-                                        <?php
+                                        <div class="fig">
+                                            <?php
 
-                                            $field = "SELECT field from doctors where phone = '".$_SESSION['phone']."'";
-                                            $fieldlink = mysqli_query($conn, $field);
-                                            $field2 = mysqli_fetch_assoc($fieldlink);                               
-                                            $_SESSION['field3'] =  $field2["field"];
-                                            // showing the number of appointments that the doctor has
-                                            $count1 = "SELECT * FROM appointments Where session_expiry = 'pending' and field = '".$_SESSION['field3']."'";
-                                            $countlink = mysqli_query($conn, $count1);
-                                            $count = mysqli_num_rows($countlink);
-                                            echo $count;
-    
-                                        ?>
+                                                $field = "SELECT field from doctors where phone = '".$_SESSION['phone']."'";
+                                                $fieldlink = mysqli_query($conn, $field);
+                                                $field2 = mysqli_fetch_assoc($fieldlink);                               
+                                                $_SESSION['field3'] =  $field2["field"];
+                                                // showing the number of appointments that the doctor has
+                                                $count1 = "SELECT * FROM appointments Where session_expiry = 'pending' and field = '".$_SESSION['field3']."'";
+                                                $countlink = mysqli_query($conn, $count1);
+                                                $count = mysqli_num_rows($countlink);
+                                                echo $count;
+        
+                                            ?>
+                                        </div>
+                                        <div class="recimage">
+                                            <img src="images/appoint.png" alt="appointments" height="150px" style="padding-top:10px" id="image1">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -103,12 +108,17 @@ if(!isset($_SESSION['name'])){
                                         </div>
                                     <!-- thi is the number badge for the counter -->
                                     <div class="count">
-                                        <?php
-                                            $count1 = "SELECT * FROM notifications Where reciever = '" .$_SESSION['phone']."'";
-                                            $countlink = mysqli_query($conn, $count1);
-                                            $count = mysqli_num_rows($countlink);
-                                            echo $count;
-                                        ?>
+                                        <div class="fig">
+                                            <?php
+                                                $count1 = "SELECT * FROM notifications Where reciever = '" .$_SESSION['phone']."'";
+                                                $countlink = mysqli_query($conn, $count1);
+                                                $count = mysqli_num_rows($countlink);
+                                                echo $count;
+                                            ?>
+                                        </div>
+                                        <div class="recimage">
+                                            <img src="images/sent.png" alt="Sent" height="135px" style="padding-top:10px" id="image3">
+                                        </div>
                                     </div>
                                 </div>
                                 </div>

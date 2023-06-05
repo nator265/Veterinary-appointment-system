@@ -36,15 +36,15 @@ if(isset($_GET['edit'])){
             </div>
             <div class="links-container">
                 <div class="link">
-                    <a href="index.php"> <span id='link'> Dashboard </span> </a>
+                    <a href="index.php"> <span id='link'> Dashboard <img src="images/dashboard.png" alt="" height="20px"></span> </a>
                 </div>
                 <div class="link">
-                    <span id='link'> Appointments </span>
+                    <span id='link'> Appointments <img src="images/appointments.png" alt="" height="20px"></span>
                 </div>
                 <div class="link">
-                    <a href="notifications.php"><span id='link'> Notifications </span> </a>
+                    <a href="notifications.php"><span id='link'> Notifications <img src="images/notifications.png" alt="" height="20px"></span> </a>
                 </div>
-                <div class="link">
+                <div class="button-position">
                     <a href="logout.php" style="text-decoration: none; color: white">
                         <button class="logout" id="bttn">Logout</button>
                     </a>

@@ -35,16 +35,16 @@ if(!isset($_SESSION['name'])){
             </div>
             <div class="links-container">
                 <div class="link">
-                     <a href="dashboard.php"><span id='link'> Dashboard </span> </a>
+                     <a href="dashboard.php"><span id='link'> Dashboard <img src="images/dashboard.png" alt="" height="20px"> </span> </a>
                 </div>
                 <div class="link">
-                    <a href="profiles.php"><span id='link'> Profiles </span></a>
+                    <a href="profiles.php"><span id='link'> Profiles <img src="images/user-small.png" alt="" height="20px"></span></a>
                 </div>
                 <div class="link">
-                    <a href="appointments.php"><span id='link'> Appointments </span></a>
+                    <a href="appointments.php"><span id='link'> Appointments <img src="images/appointments.png" alt="" height="20px"></span></a>
                 </div>
                 <div class="link">
-                    <a href="settings.php"><span id='link'> Settings </span></a>
+                    <a href="settings.php"><span id='link'> Settings <img src="images/settings.png" alt="" height="20px"></span></a>
                 </div>
                 <div class="link">
                     <a href="../../logout.php" style="text-decoration: none; color: white">
@@ -70,7 +70,7 @@ if(!isset($_SESSION['name'])){
                                     Remove Doctor
                                 </div>
                                 <div class="count">
-                                    <img src="images/doctor.png" alt="remove doctor" height="150px" style='padding-top:20px; filter:saturate(80%)'>
+                                    <img src="images/doctor.png" alt="remove doctor" height="150px" style='padding-top:20px;' id="image1">
                                 </div>
                             </div>
                         </div>
@@ -84,7 +84,7 @@ if(!isset($_SESSION['name'])){
                                     </div>
                                 <!-- thi is the number badge for the counter -->
                                 <div class="count">
-                                    <img src="images/accountant.png" alt="remove acccountant" height="150px" style='padding-top:20px; filter:saturate(80%)'>
+                                    <img src="images/accountant.png" alt="remove acccountant" height="150px" style='padding-top:20px;' id="image2">
                                 </div>
                             </div>
                             </div>

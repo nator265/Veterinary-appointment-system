@@ -135,6 +135,7 @@ body{
     display: flex;
     justify-content: center;
     height: 100%;
+    margin-left: 50px;
     padding: 70px 20px;
     opacity:0;
 }
@@ -177,6 +178,36 @@ body{
     color: rgba(74, 74, 248, 0.596);
     transition: all ease-out 1s;
     transition-delay: 0.2ms;
+}
+.fig{
+    height: 20px;
+    text-align: right;
+    padding-right: 40px;
+    font-size: 50px;
+}
+#image3{
+    filter: contrast(20%);
+}
+#image2{
+    filter: contrast(20%);
+}
+#image1{
+    filter: contrast(20%);
+}
+.appointments-container:hover #image1{
+    filter:contrast(100%);
+    transition: all ease-in-out 0.5s;
+    transition-delay: 10ms;
+}
+.notifications-container:hover #image2{
+    filter:contrast(100%);
+    transition: all ease-in-out 0.5s;
+    transition-delay: 10ms;
+}
+.notifications-container:hover #image3{
+    filter:contrast(100%);
+    transition: all ease-in-out 0.5s;
+    transition-delay: 10ms;
 }
 #link2{
     display: inline-block;

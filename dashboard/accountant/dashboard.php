@@ -36,16 +36,16 @@ if(!isset($_SESSION['name'])){
             </div>
             <div class="links-container">
                 <div class="link">
-                    <span id='link'> Dashboard
+                    <span id='link'> Dashboard <img src="images/dashboard.png" alt="" height="20px"></span>
                 </div>
                 <div class="link">
-                    <a href="appointments.php"><span id='link'> Appointments </span></a>
+                    <a href="appointments.php"><span id='link'> Appointments <img src="images/appointments.png" alt="" height="20px"></a>
                 </div>
                 <div class="link">
-                    <a href="check-appointments.php"><span id='link'> Total Transactions </span> </a>
+                    <a href="check-appointments.php"><span id='link'> Total Transactions <img src="images/total.png" alt="" height="20px"></span> </a>
                 </div>
                 <div class="link">
-                    <a href="notifications.php"><span id='link'> Notifications </span> </a>
+                    <a href="notifications.php"><span id='link'> Notifications <img src="images/notifications.png" alt="" height="20px"></span> </a>
                 </div>
                 <div class="link">
                     <a href="../logout.php" style="text-decoration: none; color: white">
@@ -76,20 +76,39 @@ if(!isset($_SESSION['name'])){
                                     Appointments
                                 </div>
                                 <div class="count">
-                                    <?php
-
-                                        
-                                        // showing the number of appointments that the doctor has
-                                        $count1 = "SELECT * FROM appointments where session_expiry = 'Attended' and bill_status = 'Not paid' "; 
-                                        $countlink = mysqli_query($conn, $count1);
-                                        $count = mysqli_num_rows($countlink);
-                                        echo $count;
-  
-                                    ?>
+                                    <div class="fig">
+                                        <?php
+                                            // showing the number of appointments that the doctor has
+                                            $count1 = "SELECT * FROM appointments where session_expiry = 'Attended' and bill_status = 'Not paid' "; 
+                                            $countlink = mysqli_query($conn, $count1);
+                                            $count = mysqli_num_rows($countlink);
+                                            echo $count;
+                                        ?>
+                                    </div>
+                                   <div class="recimage">
+                                        <img src="images/appoint.png" alt="appointments" height="150px" style="padding-top:10px;" id="image1">
+                                   </div>
                                 </div>
                             </div>
                         </div>
                     </a>
+                    <div class="notifications-container" id="link2">
+                        <a href="check-appointments.php">
+                            <div class="notifications">
+                                <div class="count-container">
+                                    <div class="count-info">
+                                        Total Transactions
+                                    </div>
+                                <!-- thi is the number badge for the counter -->
+                                <div class="count">
+                                    <div class="recimage">
+                                        <img src="images/transaction.png" alt="received" height="140px" style="padding-top:20px" id="image3">
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        </a>
+                    </div>
                     <div class="notifications-container" id="link2">
                         <a href="notifications.php">
                             <div class="notifications">
@@ -99,12 +118,17 @@ if(!isset($_SESSION['name'])){
                                     </div>
                                 <!-- thi is the number badge for the counter -->
                                 <div class="count">
-                                    <?php
-                                        $count1 = "SELECT * FROM notifications Where reciever = '" .$_SESSION['phone']."'";
-                                        $countlink = mysqli_query($conn, $count1);
-                                        $count = mysqli_num_rows($countlink);
-                                        echo $count;
-                                    ?>
+                                    <div class="fig">
+                                        <?php
+                                            $count1 = "SELECT * FROM notifications Where reciever = '" .$_SESSION['phone']."'";
+                                            $countlink = mysqli_query($conn, $count1);
+                                            $count = mysqli_num_rows($countlink);
+                                            echo $count;
+                                        ?>
+                                    </div>
+                                    <div class="recimage">
+                                        <img src="images/received.png" alt="received" height="130px" style="padding-top:10px" id="image3">
+                                    </div>
                                 </div>
                             </div>
                             </div>

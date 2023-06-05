@@ -34,13 +34,13 @@ if(!isset($_SESSION['name'])){
                 </div>
                 <div class="links-container">
                     <div class="link">
-                       <a href="index.php"> <span id='link'> Dashboard </span> </a>
+                       <a href="index.php"> <span id='link'> Dashboard <img src="images/dashboard.png" alt="" height="20px"></span> </a>
                     </div>
                     <div class="link">
-                        <a href="appointments.php"><span id='link'> Appointments </span></a>
+                        <a href="appointments.php"><span id='link'> Appointments <img src="images/appointments.png" alt="" height="20px"></span></a>
                     </div>
                     <div class="link">
-                        <span id='link'> Notifications </span>
+                        <span id='link'> Notifications <img src="images/notifications.png" alt="" height="20px"></span>
                     </div>
                     <div class="link">
                         <a href="logout.php" style="text-decoration: none; color: white">
@@ -70,12 +70,17 @@ if(!isset($_SESSION['name'])){
                                         Sent
                                     </div>
                                     <div class="count">
-                                        <?php
-                                            $count1 = "SELECT * FROM notifications Where phone = '" .$_SESSION['phone']."'";
-                                            $countlink = mysqli_query($conn, $count1);
-                                            $count = mysqli_num_rows($countlink);
-                                            echo $count;
-                                        ?>
+                                        <div class="fig">
+                                            <?php
+                                                $count1 = "SELECT * FROM notifications Where phone = '" .$_SESSION['phone']."'";
+                                                $countlink = mysqli_query($conn, $count1);
+                                                $count = mysqli_num_rows($countlink);
+                                                echo $count;
+                                            ?>
+                                        </div>
+                                        <div class="recimage">
+                                            <img src="images/sent.png" alt="sent" height="130px" id="image1">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -89,12 +94,17 @@ if(!isset($_SESSION['name'])){
                                         </div>
                                         <!-- this is the number badge for the counter -->
                                         <div class="count">
-                                            <?php
-                                                $count1 = "SELECT * FROM notifications Where reciever = '" .$_SESSION['phone']."'";
-                                                $countlink = mysqli_query($conn, $count1);
-                                                $count = mysqli_num_rows($countlink);
-                                                echo $count;
-                                            ?>
+                                            <div class="fig">
+                                                <?php
+                                                    $count1 = "SELECT * FROM notifications Where reciever = '" .$_SESSION['phone']."'";
+                                                    $countlink = mysqli_query($conn, $count1);
+                                                    $count = mysqli_num_rows($countlink);
+                                                    echo $count;
+                                                ?>
+                                            </div>
+                                            <div class="recimage">
+                                                <img src="images/received.png" alt="received" height="140px" id="image3" style="padding-top:10px">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

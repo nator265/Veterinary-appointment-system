@@ -35,7 +35,7 @@ if(!isset($_SESSION['name'])){
             </div>
             <div class="links-container">
                 <div class="link">
-                     <a href="dashboard.php"><span id='link'> Dashboard </span> </a>
+                     <a href="dashboard.php"><span id='link'> Dashboard <img src="images/dashboard.png" alt="" height="20px"></span> </a>
                 </div>
                 <div class="link">
                     <a href="profiles.php"><span id='link'> Profiles <img src="images/user-small.png" alt="" height="20px"></span></a>
@@ -70,7 +70,7 @@ if(!isset($_SESSION['name'])){
                                     Edit Doctor
                                 </div>
                                 <div class="count">
-                                    <img src="images/doctor.png" alt="edit doctor" height="150px" style='padding-top:20px; filter:saturate(80%)'>
+                                    <img src="images/doctor.png" alt="edit doctor" height="150px" style='padding-top:20px;' id="image1">
                                 </div>
                             </div>
                         </div>
@@ -84,7 +84,7 @@ if(!isset($_SESSION['name'])){
                                     </div>
                                 <!-- thi is the number badge for the counter -->
                                 <div class="count">
-                                    <img src="images/accountant.png" alt="edit accountant" height="150px" style='padding-top:20px; filter:saturate(80%)'>
+                                    <img src="images/accountant.png" alt="edit accountant" height="150px" style='padding-top:20px;' id="image2">
                                 </div>
                             </div>
                             </div>
@@ -99,7 +99,7 @@ if(!isset($_SESSION['name'])){
                                     </div>
                                 <!-- thi is the number badge for the counter -->
                                 <div class="count">
-                                    <img src="images/user-icon.png" alt="edit my profile" height="150px" style='padding-top:20px; filter:saturate(80%)'>
+                                    <img src="images/admin.png" alt="edit my profile" height="150px" style='padding-top:20px;' id="image3">
                                 </div>
                             </div>
                             </div>
