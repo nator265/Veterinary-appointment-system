@@ -6,50 +6,8 @@ include('../../../functions.php');
 if(!isset($_SESSION['name'])){
     header('location:../../../login.php');
 }
-if(isset($_POST['edit'])){
-    
-    $fullname = $_POST['fullname'];
-    $address = $_POST['address'];
-    $phone = $_POST['phone'];
-    $password = $_POST['password'];
-    
-    $s = "SELECT phone FROM doctors WHERE phone = '$phone'
-    UNION
-    SELECT phone FROM users WHERE phone = '$phone'
-    UNION
-    SELECT phone FROM admin WHERE phone = '$phone'
-    UNION
-    SELECT phone FROM accountant WHERE phone = '$phone'";
-    $result = mysqli_query($conn, $s);
-    $num = mysqli_num_rows($result);
+header('refresh: 2; url=my-profile2.php');
 
-    if (empty($fullname) || empty($address) || empty($phone) || empty($password)) {
-        header('location: add-admin-blank2.php');
-    }else{
-        if($num == 1 and $phone != $_SESSION['values3']){
-        
-            header('location: add-admin-error2.php');
-       
-         }
-         else{
-            if(isset($_POST['edit'])){
-
-                $fullname = $_POST['fullname'];
-                $address = $_POST['address'];
-                $phone = $_POST['phone'];
-                $password = $_POST['password'];
-                
-                // inserting data into the appointments table in the database
-                $update = "UPDATE admin SET address = '$address', password='$password', fullname = '$fullname', phone = '$phone' where phone = '".$_SESSION['values3']."' ";
-                mysqli_query($conn, $update);
-                header('location: add-admin-success2.php');   
-            }
-         }
-    }
-}
-if(isset($_GET['edit'])){
-    $_SESSION['values3'] = $_GET['edit'];
-}
 ?>
 
 <DOCTYPE html>
@@ -58,6 +16,9 @@ if(isset($_GET['edit'])){
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.all.js"></script>
+    <script src="sweetalert2.all.min.js"></script>
     <link rel="stylesheet" href="add-accountant.css">
     <title>Dashboard</title>
 </head>
@@ -109,35 +70,16 @@ if(isset($_GET['edit'])){
                 <div class="anothercontainer">
                     <div class="form-container">
                         <div class="form">
-                            <form action="profile-edit2.php" method="post">
+                            <form action="profile-edit2.php" method="post" >
 
-                            <input type="text" name="fullname" id="input" value="<?php
-                                $namevalue = "SELECT * from admin where phone = '".$_SESSION['values3']."'";
-                                $namelink = mysqli_query($conn, $namevalue);
-                                $fetchname = mysqli_fetch_assoc($namelink);
-                                echo $fetchname['fullname']
-                                ?>">
+                            <input type="text" name="fullname" id="input"placeholder="Fullname">
 
-                            <input type="text" name="address" id="input"value="<?php
-                                $addressvalue = "SELECT * from admin where phone = '".$_SESSION['values3']."'";
-                                $addresslink = mysqli_query($conn, $addressvalue);
-                                $fetchaddress = mysqli_fetch_assoc($addresslink);
-                                echo $fetchaddress['address']
-                                ?>">
+                            <input type="text" name="address" id="input" placeholder="Adress">
 
-                            <input type="text" name="phone" id="input" value="<?php
-                                $phonevalue = "SELECT * from admin where phone = '".$_SESSION['values3']."'";
-                                $phonelink = mysqli_query($conn, $phonevalue);
-                                $fetchphone = mysqli_fetch_assoc($phonelink);
-                                echo $fetchphone['phone']
-                                ?>">    
+                            <input type="text" name="phone" id="input" placeholder="Phone">
 
-                            <input type="passoword" name="password" id="input" value="<?php
-                                $passwordvalue = "SELECT * from admin where phone = '".$_SESSION['values3']."'";
-                                $passwordlink = mysqli_query($conn, $passwordvalue);
-                                $fetchpassword = mysqli_fetch_assoc($passwordlink);
-                                echo  str_replace('*', '', $fetchpassword['password']);
-                                ?>">
+                            <input type="passoword" name="password" id="input"placeholder="Password">
+                            
                             <input type="submit" value="Edit" name="edit" id="bttn" class="submit">
                             </form>
                         </div>
@@ -169,8 +111,20 @@ if(isset($_GET['edit'])){
 
         greeting.innerHTML = welcomeText;
 
-        // this is to close the modal
+        // this is to open the modal
+        $(function(){
+        $(".alert-container").css({"animation":"opacity-animation2 1s forwards"});
+        $(".alert").css({"animation":" opacity-foralert 1s forwards"});
+    });
         
+    </script>
+    <script>
+        Swal.fire({
+        title: 'success!',
+        text: 'changes made successfully',
+        icon: 'success',
+        confirmButtonText: 'Okay'
+})
     </script>
 </body>
 </html>

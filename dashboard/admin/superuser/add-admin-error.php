@@ -13,6 +13,7 @@ if(isset($_POST['edit'])){
     $phone = $_POST['phone'];
     $password = $_POST['password'];
     
+    
     $s = "SELECT phone FROM doctors WHERE phone = '$phone'
     UNION
     SELECT phone FROM users WHERE phone = '$phone'
@@ -109,7 +110,7 @@ if(isset($_GET['edit'])){
                 <div class="anothercontainer">
                     <div class="form-container">
                         <div class="form">
-                            <form action="profile-edit3.php" method="post">
+                            <form action="profile-edit2.php" method="post">
 
                             <input type="text" name="fullname" id="input" value="<?php
                                 $namevalue = "SELECT * from admin where phone = '".$_SESSION['values3']."'";
@@ -171,6 +172,14 @@ if(isset($_GET['edit'])){
 
         // this is to close the modal
         
+    </script>
+     <script>
+        Swal.fire({
+        title: 'Error!',
+        text: 'Check your phone number',
+        icon: 'error',
+        confirmButtonText: 'Okay'
+})
     </script>
 </body>
 </html>

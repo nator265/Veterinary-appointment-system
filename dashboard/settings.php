@@ -62,7 +62,7 @@ if(isset($_GET['delete'])){
                 </div>
                 <div class="links-container">
                     <div class="link">
-                        <span class="link1"> Dashboard <img src="images/dashboard.png" alt="" height="20px">
+                        <a href="index.php"><span class="link1"> Dashboard <img src="images/dashboard.png" alt="" height="20px"> </a>
                     </div>
                     <div class="link">
                         <a href="appointments.php"><span id='link'> Appointments <img src="images/appointments.png" alt="" height="20px"></span></a>
@@ -71,7 +71,7 @@ if(isset($_GET['delete'])){
                         <a href="notifications.php"><span id='link'> Notifications <img src="images/notifications.png" alt="" height="20px"></span> </a>
                     </div>
                     <div class="link">
-                        <a href="settings.php"><span id='link'> Settings <img src="images/settings.png" alt="" height="20px"></span> </a>
+                        <span id='link'> Settings <img src="images/settings.png" alt="" height="20px"></span>
                     </div>
                     <div class="logout">
                         <a href="logout.php" style="text-decoration: none; color: white">
@@ -95,72 +95,20 @@ if(isset($_GET['delete'])){
                 <!-- 1.Dashboard -->
                 <div class="main-dashboard-container" id="main-dashboard-container">
                     <div class="dashboard" id="dashboard"> 
-                        <a href="appointments.php" class="appointments-container" id="link2">
+                        <a href="edit-profile.php" class="appointments-container" id="link2">
                             <div class="appointments">
                                 <div class="count-container">
                                     <div class="count-info">
-                                        Appointments
+                                       Edit Profile
                                     </div>
                                     <div class="count">
-                                       <div class="fig">
-                                            <?php
-                                                $count1 = "SELECT * FROM appointments Where session_expiry = 'pending' and approved != 'rejected' and phone = '" .$_SESSION['phone']."'";
-                                                $countlink = mysqli_query($conn, $count1);
-                                                $count = mysqli_num_rows($countlink);
-                                                echo $count;
-                                            ?>
-                                       </div>
                                        <div class="recimage">
-                                            <img src="images/appoint.png" alt="appointments" height="150px" style="padding-top:10px;" id="image1">
+                                            <img src="images/admin.png" alt="appointments" height="150px" style="padding-top:10px;" id="image1">
                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </a>
-                        <div class="notifications-container" id="link2">
-                            <a href="notifications.php">
-                                <div class="notifications">
-                                    <div class="count-container">
-                                        <div class="count-info">
-                                            Notifications
-                                        </div>
-                                        <!-- this is the number badge for the counter -->
-                                        <div class="count">
-                                            <div class="fig">
-                                                <?php
-                                                    $count1 = "SELECT * FROM notifications Where reciever = '" .$_SESSION['phone']."'";
-                                                    $countlink = mysqli_query($conn, $count1);
-                                                    $count = mysqli_num_rows($countlink);
-                                                    echo $count;
-                                                ?>
-                                            </div>
-                                            <div class="recimage">
-                                                <img src="images/received" alt="notifications recieved" height="135px" style="padding-top:10px;" id="image3">
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="notifications-container" id="link2">
-                            <a href="settings.php">
-                                <div class="notifications">
-                                    <div class="count-container">
-                                        <div class="count-info">
-                                            Settings
-                                        </div>
-                                        <!-- this is the number badge for the counter -->
-                                        <div class="count">
-                                            <div class="recimage">
-                                                <img src="images/settings.png" alt="notifications recieved" height="135px" style="padding-top:25px;" id="image3">
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
                     </div>
                 </div>
             </div>

@@ -32,8 +32,7 @@ if(isset($_POST['edit'])){
     
     // inserting data into the appointments table in the database
     $update = "UPDATE accountant SET address = '$address', password='$password', fullname = '$fullname', phone = '$phone' where phone = '".$_SESSION['values2']."' ";
-    mysqli_query($conn, $update);
-    // header('location:edit-doctor.php');   
+    mysqli_query($conn, $update); 
 }
 // this is the test date function for the one i found on youtube
 date_default_timezone_set("Africa/Harare");

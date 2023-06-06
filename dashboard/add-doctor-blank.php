@@ -1,27 +1,27 @@
 <?php
 session_start();
-include('../../../connect.php');
-include('../../../functions.php');
+include('../connect.php');
+include('../functions.php');
 
 if(!isset($_SESSION['name'])){
-    header('location:../../../login.php');
+    header('location:../login.php');
 }
+
 if(isset($_POST['submit'])){
     
     $fullname = $_POST['fullname'];
     $address = $_POST['address'];
     $phone = $_POST['phone'];
     $field = $_POST['field'];
-    $password = $_POST['password'];    
+    $password = $_POST['password'];
     $s = "select * from doctors where phone = '$phone'";
-
     $result = mysqli_query($conn, $s);
     $num = mysqli_num_rows($result);
 
     if (empty($fullname) || empty($address) || empty($phone) || empty($field) || empty($password)) {
         header('location: add-doctor-blank.php');
     }else{
-        if($num == 1 and $phone != $_SESSION['values3']){
+        if($num == 1){
         
             header('location: add-doctor-error.php');
        
@@ -29,7 +29,7 @@ if(isset($_POST['submit'])){
          else{
              $reg = "insert into doctors(fullname, address, phone, field, password) values ('$fullname', '$address', '$phone', '$field', '$password')";
              mysqli_query($conn, $reg);
-             header('location: add-doctor.php');
+             header('location: add-doctor-success.php');
          }
     }
 }
@@ -87,19 +87,30 @@ if(isset($_POST['submit'])){
             <!-- the form that will allow the admin to add a doctor -->
             <div class="main-dashboard-container" id="main-dashboard-container">
                 <div class="header">
-                   <div class="pagetitle">  ADD ACCOUNTANT.</div>
+                   <div class="pagetitle">  ADD A DOCTOR.</div>
                    <a href="settings.php">
-                        <div class="backarrow" style="color:white;"><- Previous Page</div>
+                        <div class="backarrow" style="color:white"><- Previous Page</div>
                     </a>
                 </div>
                 <div class="form-container">
                     <div class="form">
-                        <form action="add-accountant-success.php" method="post">
-                            <input type="text" name="fullname" id="input" placeholder="Fullname">
-                            <input type="text" name="address" id="input" placeholder="Address">
-                            <input type="text" name="phone" id="input" placeholder="Phone number">   
+                        <form action="" method="post">
+                            <input type="text" name="fullname" id="input" placeholder="Doctors Fullname">
+                            <input type="text" name="address" id="input" placeholder="Doctors Address">
+                            <div class="col">
+                                <div class="col1"><input type="text" name="phone" id="input2" placeholder="Doctors Phone number"></div>
+                                <div class="col2"> 
+                                   <div class="docfield"> Doctors Field:</div>
+                                    <div class="fieldbox">
+                                    <select name="field" id="field" required>
+                                        <option value="pet">Pet</option>
+                                        <option value="livestock">Livestock</option>
+                                    </select> 
+                                   </div>
+                            </div>
+                            </div>    
                             <input type="password" name="password" id="input" placeholder="Password">
-                            <input type="submit" value="Add Accountant" name="submit" id="bttn" class="submit">
+                            <input type="submit" value="Add Doctor" name="submit" id="bttn" class="submit">
                         </form>
                     </div>
                 </div>
@@ -135,7 +146,7 @@ if(isset($_POST['submit'])){
      <script>
         Swal.fire({
         title: 'Error!',
-        text: 'Doctor phone number already exists, please enter a different one',
+        text: 'Entry Fields Cannot Be Blank',
         icon: 'error',
         confirmButtonText: 'Okay'
 })

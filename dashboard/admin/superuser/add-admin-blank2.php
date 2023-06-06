@@ -24,11 +24,11 @@ if(isset($_POST['edit'])){
     $num = mysqli_num_rows($result);
 
     if (empty($fullname) || empty($address) || empty($phone) || empty($password)) {
-        header('location: add-admin-blank.php');
+        header('location: add-admin-blank2.php');
     }else{
         if($num == 1 and $phone != $_SESSION['values3']){
         
-            header('location: add-admin-error.php');
+            header('location: add-admin-error2.php');
        
          }
          else{
@@ -42,7 +42,7 @@ if(isset($_POST['edit'])){
                 // inserting data into the appointments table in the database
                 $update = "UPDATE admin SET address = '$address', password='$password', fullname = '$fullname', phone = '$phone' where phone = '".$_SESSION['values3']."' ";
                 mysqli_query($conn, $update);
-                header('location: add-admin-success.php');   
+                header('location: add-admin-success2.php');   
             }
          }
     }
@@ -58,6 +58,9 @@ if(isset($_GET['edit'])){
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.all.js"></script>
+    <script src="sweetalert2.all.min.js"></script>
     <link rel="stylesheet" href="add-accountant.css">
     <title>Dashboard</title>
 </head>
@@ -99,7 +102,7 @@ if(isset($_GET['edit'])){
         <!-- this is the second column -->
         <div class="column2">
             <div class="greetings-container" style="padding-right: 20px">
-               <a href="my-profile.php" style="text-decoration:underline"> <-- Previous Page </a>
+               <a href="my-profile2.php" style="text-decoration:underline"> <-- Previous Page </a>
             </div>
             <!-- the form that will allow the admin to add a doctor -->
             <div class="main-dashboard-container" id="main-dashboard-container">
@@ -109,7 +112,7 @@ if(isset($_GET['edit'])){
                 <div class="anothercontainer">
                     <div class="form-container">
                         <div class="form">
-                            <form action="profile-edit3.php" method="post">
+                            <form action="profile-edit2.php" method="post">
 
                             <input type="text" name="fullname" id="input" value="<?php
                                 $namevalue = "SELECT * from admin where phone = '".$_SESSION['values3']."'";
@@ -171,6 +174,14 @@ if(isset($_GET['edit'])){
 
         // this is to close the modal
         
+    </script>
+     <script>
+        Swal.fire({
+        title: 'Error!',
+        text: 'Input fields can not be blank',
+        icon: 'error',
+        confirmButtonText: 'Okay'
+})
     </script>
 </body>
 </html>

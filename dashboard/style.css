@@ -137,6 +137,7 @@ body{
     justify-content: center;
     height: 100%;
     padding: 70px 20px;
+    margin-left: 50px;
     opacity:0;
 }
 @keyframes my-animation {

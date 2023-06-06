@@ -1,51 +1,37 @@
 <?php
 session_start();
-include('../../../connect.php');
-include('../../../functions.php');
+include('../connect.php');
+include('../functions.php');
 
 if(!isset($_SESSION['name'])){
-    header('location:../../../login.php');
+    header('location:../login.php');
 }
-if(isset($_POST['edit'])){
+if(isset($_POST['submit'])){
     
     $fullname = $_POST['fullname'];
     $address = $_POST['address'];
     $phone = $_POST['phone'];
+    $field = $_POST['field'];
     $password = $_POST['password'];
     
-    $s = "SELECT phone FROM doctors WHERE phone = '$phone'
-    UNION
-    SELECT phone FROM users WHERE phone = '$phone'
-    UNION
-    SELECT phone FROM admin WHERE phone = '$phone'
-    UNION
-    SELECT phone FROM accountant WHERE phone = '$phone'";
+    $s = "select * from users where phone = '$phone'";
     $result = mysqli_query($conn, $s);
     $num = mysqli_num_rows($result);
 
-    if (empty($fullname) || empty($address) || empty($phone) || empty($password)) {
-        header('location: add-admin-blank.php');
+    if (empty($fullname) || empty($address) || empty($phone) || empty($field) || empty($password)) {
+        header('location: add-doctor-blank.php');
     }else{
-        if($num == 1 and $phone != $_SESSION['values3']){
+        if($num == 1){
         
-            header('location: add-admin-error.php');
+            header('location: add-doctor-error.php');
        
          }
          else{
-            if(isset($_POST['edit'])){
-
-                $fullname = $_POST['fullname'];
-                $address = $_POST['address'];
-                $phone = $_POST['phone'];
-                $password = $_POST['password'];
-                
-                // inserting data into the appointments table in the database
-                $update = "UPDATE admin SET address = '$address', password='$password', fullname = '$fullname', phone = '$phone' where phone = '".$_SESSION['values3']."' ";
-                mysqli_query($conn, $update);
-                header('location: add-admin-success.php');   
-            }
+             $reg = "insert into doctors(fullname, address, phone, field, password) values ('$fullname', '$address', '$phone', '$field', '$password')";
+             mysqli_query($conn, $reg);
          }
     }
+    header('location: add-doctor-success.php');
 }
 if(isset($_GET['edit'])){
     $_SESSION['values3'] = $_GET['edit'];
@@ -76,64 +62,64 @@ if(isset($_GET['edit'])){
                 </div>
             </div>
             <div class="links-container">
-                <div class="link">
-                     <a href="dashboard.php"><span id='link'> Dashboard <img src="images/dashboard.png" alt="" height="20px"></span> </a>
+                    <div class="link">
+                        <a href="index.php"><span class="link1"> Dashboard <img src="images/dashboard.png" alt="" height="20px"> </a>
+                    </div>
+                    <div class="link">
+                        <a href="appointments.php"><span id='link'> Appointments <img src="images/appointments.png" alt="" height="20px"></span></a>
+                    </div>
+                    <div class="link">
+                        <a href="notifications.php"><span id='link'> Notifications <img src="images/notifications.png" alt="" height="20px"></span> </a>
+                    </div>
+                    <div class="link">
+                        <a href="settings.php"><span id='link'> Settings <img src="images/settings.png" alt="" height="20px"></span> </a>
+                    </div>
+                    <div class="logout">
+                        <a href="logout.php" style="text-decoration: none; color: white">
+                            <button id="bttn">Logout</button>
+                        </a>
+                    </div>
                 </div>
-                <div class="link">
-                    <a href="profiles.php"><span id="link"> Profiles <img src="images/user-small.png" alt="" height="20px"></span></a>
-                </div>
-                <div class="link">
-                    <a href="appointments.php"><span id='link'> Appointments <img src="images/appointments.png" alt="" height="20px"></span></a>
-                </div>
-                <div class="link">
-                    <a href="settings.php"><span id='link'> Settings <img src="images/settings.png" alt="" height="20px"></span></a>
-                </div>
-                <div class="link">
-                    <a href="../../logout.php" style="text-decoration: none; color: white">
-                        <button class="logout" id="bttn">Logout</button>
-                    </a>
-                </div>
-            </div>
         </div>
 
         <!-- this is the second column -->
         <div class="column2">
             <div class="greetings-container" style="padding-right: 20px">
-               <a href="my-profile.php" style="text-decoration:underline"> <-- Previous Page </a>
+               <a href="settings.php" style="text-decoration:underline"> <-- Previous Page </a>
             </div>
             <!-- the form that will allow the admin to add a doctor -->
             <div class="main-dashboard-container" id="main-dashboard-container">
                 <div class="header">
-                   <div class="pagetitle">  EDIT ADMIN.</div>
+                   <div class="pagetitle">  EDIT MY PROFILE.</div>
                 </div>
                 <div class="anothercontainer">
                     <div class="form-container">
                         <div class="form">
-                            <form action="profile-edit3.php" method="post">
+                            <form action="edit-profile.php" method="post">
 
                             <input type="text" name="fullname" id="input" value="<?php
-                                $namevalue = "SELECT * from admin where phone = '".$_SESSION['values3']."'";
+                                $namevalue = "SELECT * from users where phone = '".$_SESSION['phone']."'";
                                 $namelink = mysqli_query($conn, $namevalue);
                                 $fetchname = mysqli_fetch_assoc($namelink);
                                 echo $fetchname['fullname']
                                 ?>">
 
                             <input type="text" name="address" id="input"value="<?php
-                                $addressvalue = "SELECT * from admin where phone = '".$_SESSION['values3']."'";
+                                $addressvalue = "SELECT * from users where phone = '".$_SESSION['phone']."'";
                                 $addresslink = mysqli_query($conn, $addressvalue);
                                 $fetchaddress = mysqli_fetch_assoc($addresslink);
                                 echo $fetchaddress['address']
                                 ?>">
 
                             <input type="text" name="phone" id="input" value="<?php
-                                $phonevalue = "SELECT * from admin where phone = '".$_SESSION['values3']."'";
+                                $phonevalue = "SELECT * from users where phone = '".$_SESSION['phone']."'";
                                 $phonelink = mysqli_query($conn, $phonevalue);
                                 $fetchphone = mysqli_fetch_assoc($phonelink);
                                 echo $fetchphone['phone']
                                 ?>">    
 
                             <input type="passoword" name="password" id="input" value="<?php
-                                $passwordvalue = "SELECT * from admin where phone = '".$_SESSION['values3']."'";
+                                $passwordvalue = "SELECT * from users where phone = '".$_SESSION['phone']."'";
                                 $passwordlink = mysqli_query($conn, $passwordvalue);
                                 $fetchpassword = mysqli_fetch_assoc($passwordlink);
                                 echo  str_replace('*', '', $fetchpassword['password']);
