@@ -6,47 +6,9 @@ include('../../../functions.php');
 if(!isset($_SESSION['name'])){
     header('location:../../../login.php');
 }
-if(isset($_POST['submit'])){
-    
-    $fullname = $_POST['fullname'];
-    $address = $_POST['address'];
-    $phone = $_POST['phone'];
-    $password = $_POST['password'];
-    
-    $s = "SELECT phone FROM doctors WHERE phone = '$phone'
-    UNION
-    SELECT phone FROM users WHERE phone = '$phone'
-    UNION
-    SELECT phone FROM admin WHERE phone = '$phone'
-    UNION
-    SELECT phone FROM accountant WHERE phone = '$phone'";
-    $result = mysqli_query($conn, $s);
-    $num = mysqli_num_rows($result);
 
-    if (empty($fullname) || empty($address) || empty($phone) || empty($password)) {
-        header('location: add-accountant-blank3.php');
-    }else{
-        if($num == 1 and $phone != $_SESSION['valuess']){
-        
-            header('location: add-accountant-error3.php');
-       
-         }
-         else{
-            if(isset($_POST['submit'])){
+header('refresh: 2; url=accountants.php');
 
-                $fullname = $_POST['fullname'];
-                $address = $_POST['address'];
-                $phone = $_POST['phone'];
-                $password = $_POST['password'];
-                
-                // inserting data into the appointments table in the database
-                $update = "INSERT INTO accountant (fullname, address, phone, password) VALUES ('$fullname', '$address', '$phone', '$password')";
-                mysqli_query($conn, $update);
-                header('location: add-accountant-success3.php');   
-            }
-         }
-    }
-}
 ?>
 
 <DOCTYPE html>
@@ -55,6 +17,9 @@ if(isset($_POST['submit'])){
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.all.js"></script>
+    <script src="sweetalert2.all.min.js"></script>
     <link rel="stylesheet" href="add-accountant.css">
     <title>Dashboard</title>
 </head>
@@ -106,7 +71,7 @@ if(isset($_POST['submit'])){
                 <div class="anothercontainer">
                     <div class="form-container">
                         <div class="form">
-                            <form action="add-accountant.php" method="POST">
+                            <form action="" method="post">
                                 <input type="text" name="fullname" id="input" placeholder="Fullname">
                                 <input type="text" name="address" id="input" placeholder="Address">
                                 <input type="text" name="phone" id="input" placeholder="Phone number">   
@@ -142,8 +107,20 @@ if(isset($_POST['submit'])){
 
         greeting.innerHTML = welcomeText;
 
-        // this is to close the modal
+        // this is to open the modal
+        $(function(){
+        $(".alert-container").css({"animation":"opacity-animation2 1s forwards"});
+        $(".alert").css({"animation":" opacity-foralert 1s forwards"});
+    });
         
+    </script>
+    <script>
+        Swal.fire({
+        title: 'Success!',
+        text: 'Doctor added successfully',
+        icon: 'success',
+        confirmButtonText: 'Okay'
+})
     </script>
 </body>
 </html>
