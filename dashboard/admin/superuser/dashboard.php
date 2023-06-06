@@ -78,12 +78,17 @@ if(!isset($_SESSION['name'])){
                                     Appointments
                                 </div>
                                 <div class="count">
-                                    <?php
-                                        $appointments = "SELECT * from appointments";
-                                        $link_appointments = mysqli_query($conn, $appointments);
-                                        $appointments_num = mysqli_num_rows($link_appointments);
-                                        echo $appointments_num;
-                                    ?>
+                                    <div class="fig">
+                                        <?php
+                                            $appointments = "SELECT * from appointments";
+                                            $link_appointments = mysqli_query($conn, $appointments);
+                                            $appointments_num = mysqli_num_rows($link_appointments);
+                                            echo $appointments_num;
+                                        ?>
+                                    </div>
+                                   <div class="recimage">
+                                    <img src="images/appoint.png" alt="Appointments" height="150px" style='padding-top:10px;' id="image1">
+                                   </div>
                                 </div>
                             </div>
                         </div>

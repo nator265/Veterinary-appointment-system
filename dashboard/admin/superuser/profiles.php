@@ -75,12 +75,17 @@ if(!isset($_SESSION['name'])){
                                     Doctors
                                 </div>
                                 <div class="count">
-                                    <?php
-                                        $count1 = "SELECT * FROM doctors";
-                                        $countlink = mysqli_query($conn, $count1);
-                                        $count = mysqli_num_rows($countlink);
-                                        echo $count;
-                                    ?>
+                                    <div class="fig">
+                                        <?php
+                                            $count1 = "SELECT * FROM doctors";
+                                            $countlink = mysqli_query($conn, $count1);
+                                            $count = mysqli_num_rows($countlink);
+                                            echo $count;
+                                        ?>
+                                    </div>
+                                    <div class="recimage">
+                                    <img src="images/doctor.png" alt="edit doctor" height="150px" style='padding-top:10px;' id="image1">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -94,12 +99,17 @@ if(!isset($_SESSION['name'])){
                                     </div>
                                 <!-- thi is the number badge for the counter -->
                                 <div class="count">
-                                    <?php
-                                        $count1 = "SELECT * FROM accountant";
-                                        $countlink = mysqli_query($conn, $count1);
-                                        $count = mysqli_num_rows($countlink);
-                                        echo $count;
-                                    ?>
+                                    <div class="fig">
+                                        <?php
+                                            $count1 = "SELECT * FROM accountant";
+                                            $countlink = mysqli_query($conn, $count1);
+                                            $count = mysqli_num_rows($countlink);
+                                            echo $count;
+                                        ?>
+                                    </div>
+                                    <div class="recimage">
+                                        <img src="images/accountant.png" alt="edit accountant" height="150px" style='padding-top:10px;' id="image2">
+                                    </div>
                                 </div>
                             </div>
                             </div>
@@ -114,12 +124,17 @@ if(!isset($_SESSION['name'])){
                                     </div>
                                 <!-- thi is the number badge for the counter -->
                                 <div class="count">
-                                    <?php
-                                        $count1 = "SELECT * FROM admin";
-                                        $countlink = mysqli_query($conn, $count1);
-                                        $count = mysqli_num_rows($countlink);
-                                        echo $count;
-                                    ?>
+                                    <div class="fig">
+                                        <?php
+                                            $count1 = "SELECT * FROM admin";
+                                            $countlink = mysqli_query($conn, $count1);
+                                            $count = mysqli_num_rows($countlink);
+                                            echo $count;
+                                        ?>
+                                    </div>
+                                    <div class="recimage">
+                                        <img src="images/admin.png" alt="edit my profile" height="150px" style='padding-top:10px;' id="image3">
+                                    </div>
                                 </div>
                             </div>
                             </div>
