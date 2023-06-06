@@ -14,24 +14,40 @@ if(isset($_POST['submit'])){
     $field = $_POST['field'];
     $password = $_POST['password'];
     
-    $s = "select * from doctors where phone = '$phone'";
+    $s = "SELECT phone FROM doctors WHERE phone = '$phone'
+    UNION
+    SELECT phone FROM users WHERE phone = '$phone'
+    UNION
+    SELECT phone FROM admin WHERE phone = '$phone'
+    UNION
+    SELECT phone FROM accountant WHERE phone = '$phone'";
     $result = mysqli_query($conn, $s);
     $num = mysqli_num_rows($result);
 
-    if (empty($fullname) || empty($address) || empty($phone) || empty($field) || empty($password)) {
-        header('location: add-doctor-blank.php');
+    if (empty($fullname) || empty($address) || empty($phone)  || empty($field) || empty($password)) {
+        header('location: add-doctor-blank3.php');
     }else{
-        if($num == 1){
+        if($num == 1 and $phone != $_SESSION['valuess']){
         
-            header('location: add-doctor-error.php');
+            header('location: add-doctor-error3.php');
        
          }
          else{
-             $reg = "insert into doctors(fullname, address, phone, field, password) values ('$fullname', '$address', '$phone', '$field', '$password')";
-             mysqli_query($conn, $reg);
+            if(isset($_POST['submit'])){
+
+                $fullname = $_POST['fullname'];
+                $address = $_POST['address'];
+                $phone = $_POST['phone'];
+                $field = $_POST['field'];
+                $password = $_POST['password'];
+                
+                // inserting data into the appointments table in the database
+                $update = "INSERT INTO doctors (fullname, address, phone, field, password) VALUES ('$fullname', '$address', '$phone', '$field', '$password')";
+                mysqli_query($conn, $update);
+                header('location: add-doctor-success3.php');   
+            }
          }
     }
-    header('location: add-doctor-success.php');
 }
 ?>
 
@@ -82,7 +98,7 @@ if(isset($_POST['submit'])){
         <!-- this is the second column -->
         <div class="column2">
             <div class="greetings-container" style="padding-right: 20px">
-               <a href="javascript:history.go(-1)" style="text-decoration:underline"> <-- Previous Page </a>
+               <a href="add-profile.php" style="text-decoration:underline"> <-- Previous Page </a>
             </div>
             <!-- the form that will allow the admin to add a doctor -->
             <div class="main-dashboard-container" id="main-dashboard-container">
@@ -91,7 +107,7 @@ if(isset($_POST['submit'])){
                 </div>
                 <div class="form-container">
                     <div class="form">
-                        <form action="add-doctor-success.php" method="post">
+                        <form action="add-doctor.php" method="post">
                             <input type="text" name="fullname" id="input" placeholder="Fullname">
                             <input type="text" name="address" id="input" placeholder="Address">
                             <div class="col">

@@ -112,7 +112,7 @@ if(isset($_GET['edit'])){
                 <div class="anothercontainer">
                     <div class="form-container">
                         <div class="form">
-                            <form action="profile-edit2.php" method="post">
+                            <form action="profile-edit3.php" method="post">
 
                             <input type="text" name="fullname" id="input" value="<?php
                                 $namevalue = "SELECT * from admin where phone = '".$_SESSION['values3']."'";

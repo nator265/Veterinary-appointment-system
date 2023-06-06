@@ -6,7 +6,6 @@ include('../../../functions.php');
 if(!isset($_SESSION['name'])){
     header('location:../../../login.php');
 }
-header('refresh: 2; url=my-profile2.php');
 
 ?>
 
@@ -19,7 +18,7 @@ header('refresh: 2; url=my-profile2.php');
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.all.js"></script>
     <script src="sweetalert2.all.min.js"></script>
-    <link rel="stylesheet" href="add-accountant.css">
+    <link rel="stylesheet" href="add-doctor.css">
     <title>Dashboard</title>
 </head>
 <body>
@@ -32,7 +31,7 @@ header('refresh: 2; url=my-profile2.php');
 
         <div class="column1">
             <div class="company-name-container">
-                <div class="company-name" style="font-size:x-large">
+            <div class="company-name" style="font-size:x-large">
                     GSJ Animal Health & Production
                 </div>
             </div>
@@ -60,29 +59,33 @@ header('refresh: 2; url=my-profile2.php');
         <!-- this is the second column -->
         <div class="column2">
             <div class="greetings-container" style="padding-right: 20px">
-               <a href="my-profile2.php" style="text-decoration:underline"> <-- Previous Page </a>
+               <a href="add-profile.php" style="text-decoration:underline"> <-- Previous Page </a>
             </div>
             <!-- the form that will allow the admin to add a doctor -->
             <div class="main-dashboard-container" id="main-dashboard-container">
                 <div class="header">
-                   <div class="pagetitle">  EDIT ADMIN.</div>
+                   <div class="pagetitle">  ADD DOCTOR.</div>
                 </div>
-                <div class="anothercontainer">
-                    <div class="form-container">
-                        <div class="form">
-                            <form action="profile-edit2.php" method="post" >
-
-                            <input type="text" name="fullname" id="input"placeholder="Fullname">
-
-                            <input type="text" name="address" id="input" placeholder="Adress">
-
-                            <input type="text" name="phone" id="input" placeholder="Phone">
-
-                            <input type="passoword" name="password" id="input"placeholder="Password">
-                            
-                            <input type="submit" value="Edit" name="edit" id="bttn" class="submit">
-                            </form>
-                        </div>
+                <div class="form-container">
+                    <div class="form">
+                        <form action="add-doctor.php" method="post">
+                            <input type="text" name="fullname" id="input" placeholder="Fullname">
+                            <input type="text" name="address" id="input" placeholder="Address">
+                            <div class="col">
+                                <div class="col1"><input type="text" name="phone" id="input2" placeholder="Phone number"></div>
+                                <div class="col2"> 
+                                    <div class="docfield"> Doctors Field:</div>
+                                        <div class="fieldbox">
+                                        <select name="field" id="field" required>
+                                            <option value="pet">Pet</option>
+                                            <option value="livestock">Livestock</option>
+                                        </select> 
+                                    </div>
+                                </div>
+                            </div>    
+                            <input type="password" name="password" id="input" placeholder="Password">
+                            <input type="submit" value="Add Doctor" name="submit" id="bttn" class="submit">
+                        </form>
                     </div>
                 </div>
             </div>
@@ -111,18 +114,14 @@ header('refresh: 2; url=my-profile2.php');
 
         greeting.innerHTML = welcomeText;
 
-        // this is to open the modal
-        $(function(){
-        $(".alert-container").css({"animation":"opacity-animation2 1s forwards"});
-        $(".alert").css({"animation":" opacity-foralert 1s forwards"});
-    });
+        // this is to close the modal
         
     </script>
-    <script>
+     <script>
         Swal.fire({
-        title: 'Success!',
-        text: 'Changes made successfully',
-        icon: 'success',
+        title: 'Error!',
+        text: 'Entry Fields Cannot Be Blank',
+        icon: 'error',
         confirmButtonText: 'Okay'
 })
     </script>

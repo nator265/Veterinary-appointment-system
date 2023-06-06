@@ -6,32 +6,38 @@ include('../../../functions.php');
 if(!isset($_SESSION['name'])){
     header('location:../../../login.php');
 }
-if(isset($_POST['submit'])){
+if(isset($_POST['edit'])){
     
     $fullname = $_POST['fullname'];
     $address = $_POST['address'];
     $phone = $_POST['phone'];
-    $field = $_POST['field'];
     $password = $_POST['password'];
     
-    $s = "select * from doctors where phone = '$phone'";
+    $s = "SELECT phone FROM doctors WHERE phone = '$phone'
+    UNION
+    SELECT phone FROM users WHERE phone = '$phone'
+    UNION
+    SELECT phone FROM admin WHERE phone = '$phone'
+    UNION
+    SELECT phone FROM accountant WHERE phone = '$phone'";
     $result = mysqli_query($conn, $s);
     $num = mysqli_num_rows($result);
 
-    if (empty($fullname) || empty($address) || empty($phone) || empty($field) || empty($password)) {
-        header('location: add-doctor-blank.php');
+
+    if (empty($fullname) || empty($address) || empty($phone) || empty($password)) {
+        header('location: add-accountant-blank.php');
     }else{
-        if($num == 1){
+        if($num == 1 and $phone != $_SESSION['values2']){
         
-            header('location: add-doctor-error.php');
+            header('location: add-accountant-error.php');
        
          }
          else{
-             $reg = "insert into doctors(fullname, address, phone, field, password) values ('$fullname', '$address', '$phone', '$field', '$password')";
-             mysqli_query($conn, $reg);
+            $update = "UPDATE accountant SET address = '$address', password='$password', fullname = '$fullname', phone = '$phone' where phone = '".$_SESSION['values2']."' ";
+            mysqli_query($conn, $update);
+            header('location: add-accountant-success.php'); 
          }
     }
-    header('location: add-doctor-success.php');
 }
 if(isset($_GET['edit'])){
     $_SESSION['values2'] = $_GET['edit'];
@@ -95,7 +101,7 @@ if(isset($_GET['edit'])){
                 <div class="anothercontainer">
                     <div class="form-container">
                         <div class="form">
-                            <form action="accountants.php" method="post">
+                            <form action="edit-accountant3.php" method="post">
 
                             <input type="text" name="fullname" id="input" value="<?php
                                 $namevalue = "SELECT * from accountant where phone = '".$_SESSION['values2']."'";

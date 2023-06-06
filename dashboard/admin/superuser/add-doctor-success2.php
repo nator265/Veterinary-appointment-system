@@ -7,50 +7,8 @@ if(!isset($_SESSION['name'])){
     header('location:../../../login.php');
 }
 
-if(isset($_POST['edit'])){
-    
-    $fullname = $_POST['fullname'];
-    $address = $_POST['address'];
-    $phone = $_POST['phone'];
-    $field = $_POST['field'];
-    $password = $_POST['password'];
-    
-    
-    $s = "SELECT phone FROM doctors WHERE phone = '$phone'
-    UNION
-    SELECT phone FROM users WHERE phone = '$phone'
-    UNION
-    SELECT phone FROM admin WHERE phone = '$phone'
-    UNION
-    SELECT phone FROM accountant WHERE phone = '$phone'";
-    $result = mysqli_query($conn, $s);
-    $num = mysqli_num_rows($result);
+header('refresh: 2; url=edit-doctor.php');
 
-    if (empty($fullname) || empty($address) || empty($phone)  || empty($field) || empty($password)) {
-        header('location: add-doctor-blank.php');
-    }else{
-        if($num == 1 and $phone != $_SESSION['values1']){
-        
-            header('location: add-doctor-error.php');
-       
-         }
-         else{
-            if(isset($_POST['edit'])){
-
-                $fullname = $_POST['fullname'];
-                $address = $_POST['address'];
-                $phone = $_POST['phone'];
-                $field = $_POST['field'];
-                $password = $_POST['password'];
-                
-                // inserting data into the appointments table in the database
-                $update = "UPDATE doctors SET address = '$address', password='$password', field = '$field', fullname = '$fullname', phone = '$phone' where phone = '".$_SESSION['values3']."' ";
-                mysqli_query($conn, $update);
-                header('location: add-doctor-success.php');   
-            }
-         }
-    }
-}
 ?>
 
 <DOCTYPE html>
@@ -62,7 +20,7 @@ if(isset($_POST['edit'])){
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.all.js"></script>
     <script src="sweetalert2.all.min.js"></script>
-    <link rel="stylesheet" href="add-doctor.css">
+    <link rel="stylesheet" href="add-doctor-success.css">
     <title>Dashboard</title>
 </head>
 <body>
@@ -74,7 +32,7 @@ if(isset($_POST['edit'])){
     <div class="shadow"></div>
 
         <div class="column1">
-        <div class="company-name-container">
+            <div class="company-name-container">
                 <div class="company-name" style="font-size:x-large">
                     GSJ Animal Health & Production
                 </div>
@@ -103,7 +61,7 @@ if(isset($_POST['edit'])){
         <!-- this is the second column -->
         <div class="column2">
             <div class="greetings-container" style="padding-right: 20px">
-               <a href="doctors.php" style="text-decoration:underline"> <-- Previous Page </a>
+               <a href="edit-doctor.php" style="text-decoration:underline"> <-- Previous Page </a>
             </div>
             <!-- the form that will allow the admin to add a doctor -->
             <div class="main-dashboard-container" id="main-dashboard-container">
@@ -193,14 +151,18 @@ if(isset($_POST['edit'])){
 
         greeting.innerHTML = welcomeText;
 
-        // this is to close the modal
+        // this is to open the modal
+        $(function(){
+        $(".alert-container").css({"animation":"opacity-animation2 1s forwards"});
+        $(".alert").css({"animation":" opacity-foralert 1s forwards"});
+    });
         
     </script>
-     <script>
+    <script>
         Swal.fire({
-        title: 'Error!',
-        text: 'Entry Fields Cannot Be Blank',
-        icon: 'error',
+        title: 'Success!',
+        text: 'Changes made successfully',
+        icon: 'success',
         confirmButtonText: 'Okay'
 })
     </script>

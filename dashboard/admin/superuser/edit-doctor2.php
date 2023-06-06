@@ -6,7 +6,7 @@ include('../../../functions.php');
 if(!isset($_SESSION['name'])){
     header('location:../../../login.php');
 }
-if(isset($_POST['submit'])){
+if(isset($_POST['edit'])){
     
     $fullname = $_POST['fullname'];
     $address = $_POST['address'];
@@ -14,24 +14,40 @@ if(isset($_POST['submit'])){
     $field = $_POST['field'];
     $password = $_POST['password'];
     
-    $s = "select * from doctors where phone = '$phone'";
+    $s = "SELECT phone FROM doctors WHERE phone = '$phone'
+    UNION
+    SELECT phone FROM users WHERE phone = '$phone'
+    UNION
+    SELECT phone FROM admin WHERE phone = '$phone'
+    UNION
+    SELECT phone FROM accountant WHERE phone = '$phone'";
     $result = mysqli_query($conn, $s);
     $num = mysqli_num_rows($result);
 
-    if (empty($fullname) || empty($address) || empty($phone) || empty($field) || empty($password)) {
-        header('location: add-doctor-blank.php');
+    if (empty($fullname) || empty($address) || empty($phone)  || empty($field) || empty($password)) {
+        header('location: add-doctor-blank2.php');
     }else{
-        if($num == 1){
+        if($num == 1 and $phone != $_SESSION['values']){
         
-            header('location: add-doctor-error.php');
+            header('location: add-doctor-error2.php');
        
          }
          else{
-             $reg = "insert into doctors(fullname, address, phone, field, password) values ('$fullname', '$address', '$phone', '$field', '$password')";
-             mysqli_query($conn, $reg);
+            if(isset($_POST['edit'])){
+
+                $fullname = $_POST['fullname'];
+                $address = $_POST['address'];
+                $phone = $_POST['phone'];
+                $field = $_POST['field'];
+                $password = $_POST['password'];
+                
+                // inserting data into the appointments table in the database
+                $update = "UPDATE doctors SET address = '$address', password='$password', fullname = '$fullname', field = '$field', phone = '$phone' where phone = '".$_SESSION['values']."' ";
+                mysqli_query($conn, $update);
+                header('location: add-doctor-success2.php');   
+            }
          }
     }
-    header('location: add-doctor-success.php');
 }
 
 if(isset($_GET['edit'])){
@@ -86,7 +102,7 @@ if(isset($_GET['edit'])){
         <!-- this is the second column -->
         <div class="column2">
             <div class="greetings-container" style="padding-right: 20px">
-               <a href="doctors.php" style="text-decoration:underline"> <-- Previous Page </a>
+               <a href="edit-doctor.php" style="text-decoration:underline"> <-- Previous Page </a>
             </div>
             <!-- the form that will allow the admin to add a doctor -->
             <div class="main-dashboard-container" id="main-dashboard-container">
@@ -95,7 +111,7 @@ if(isset($_GET['edit'])){
                 </div>
                 <div class="form-container">
                     <div class="form">
-                        <form action="edit-doctor.php" method="post">
+                        <form action="edit-doctor2.php" method="post">
                             
                             <input type="text" name="fullname" id="input" value="<?php
                                 $namevalue = "SELECT * from doctors where phone = '".$_SESSION['values']."'";

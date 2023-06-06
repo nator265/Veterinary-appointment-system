@@ -120,8 +120,8 @@ header('refresh: 2; url=my-profile.php');
     </script>
     <script>
         Swal.fire({
-        title: 'success!',
-        text: 'changes made successfully',
+        title: 'Success!',
+        text: 'Changes made successfully',
         icon: 'success',
         confirmButtonText: 'Okay'
 })

@@ -6,36 +6,8 @@ include('../../../functions.php');
 if(!isset($_SESSION['name'])){
     header('location:../../../login.php');
 }
-header('refresh: 2; url=accountants.php');
-if(isset($_POST['submit'])){
-    
-    $fullname = $_POST['fullname'];
-    $address = $_POST['address'];
-    $phone = $_POST['phone'];
-    $password = $_POST['password'];
-    
-    $s = "select * from accountant where phone = '$phone'";
-    $result = mysqli_query($conn, $s);
-    $num = mysqli_num_rows($result);
 
-    if (empty($fullname) || empty($address) || empty($phone) || empty($password)) {
-        header('location: add-accountant-blank.php');
-        exit;
-    }else{
-        if($num == 1){
-        
-            header('location: add-accountant-error.php');
-            exit;
-       
-         }
-         else{
-             $reg = "INSERT into accountant(fullname, address, phone, password) values ('$fullname', '$address', '$phone', '$password')";
-             mysqli_query($conn, $reg);
-             header("location:add-accountant-success.php");
-             exit;
-         }
-    }
-}
+header('refresh: 2; url=accountants.php');
 
 ?>
 
@@ -45,8 +17,11 @@ if(isset($_POST['submit'])){
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.all.js"></script>
+    <script src="sweetalert2.all.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="add-doctor-success.css">
+    <link rel="stylesheet" href="add-accountant.css">
     <title>Dashboard</title>
 </head>
 <body>
@@ -105,21 +80,6 @@ if(isset($_POST['submit'])){
                     </div>
                 </div>
             </div>
-            <div class="alert-container" id="target">
-                    <div class="alert" id="alert">
-                        <div class="warning-container">
-
-                            <div class="warning-header">
-                                Accountant added successfully!
-                            </div>
-                            <div class="buttonsection">
-                                <a href="add-doctor.php">
-                                    <input type="button" class="edit2" value="Okay">
-                                </a>     
-                            </div>
-                        </div>
-                    </div>
-                </div>
         </div>
     <script>
 
@@ -150,7 +110,14 @@ if(isset($_POST['submit'])){
         $(".alert-container").css({"animation":"opacity-animation2 1s forwards"});
         $(".alert").css({"animation":" opacity-foralert 1s forwards"});
     });
-        
+    </script>
+     <script>
+        Swal.fire({
+        title: 'Success!',
+        text: 'Changes done sucessfully',
+        icon: 'success',
+        confirmButtonText: 'Okay'
+})
     </script>
 </body>
 </html>

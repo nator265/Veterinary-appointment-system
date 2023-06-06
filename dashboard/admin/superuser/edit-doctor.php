@@ -108,7 +108,7 @@ function time_elapsed_string($datetime, $full = false) {
 
         <div class="column2">
             <div class="greetings-container" style="padding-right: 20px">
-               <a href="javascript:history.go(-1)" style="text-decoration:underline"> <-- Previous Page </a>
+               <a href="edit-profiles.php" style="text-decoration:underline"> <-- Previous Page </a>
             </div>
           
             <!-- 2.appointmets tab -->
