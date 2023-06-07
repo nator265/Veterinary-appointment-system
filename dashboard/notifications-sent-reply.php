@@ -73,24 +73,27 @@ if(isset($_POST['submit'])){
         <div class="shadow"></div>
     
             <div class="column1">
-                <div class="company-name-container">
-                    <div class="company-name">
-                        Veterinary
+            <div class="company-name-container">
+                    <div class="company-name" style="font-size: x-large; font-weight:100">
+                    GSJ Animal Health & Production
                     </div>
                 </div>
                 <div class="links-container">
                     <div class="link">
-                       <a href="index.php"> <span id='link'> Dashboard <img src="images/dashboard.png" alt="" height="20px"></span> </a>
+                        <a href="index.php"><span class="link1"> Dashboard <img src="images/dashboard.png" alt="" height="20px"></a>
                     </div>
                     <div class="link">
                         <a href="appointments.php"><span id='link'> Appointments <img src="images/appointments.png" alt="" height="20px"></span></a>
                     </div>
                     <div class="link">
-                        <span id='link'> Notifications <img src="images/notifications.png" alt="" height="20px"></span>
+                        <a href="notifications.php"><span id='link'> Notifications <img src="images/notifications.png" alt="" height="20px"></span> </a>
                     </div>
                     <div class="link">
+                        <a href="settings.php"><span id='link'> Settings <img src="images/settings.png" alt="" height="20px"></span> </a>
+                    </div>
+                    <div class="logout">
                         <a href="logout.php" style="text-decoration: none; color: white">
-                            <button class="logout" id="bttn">Logout</button>
+                            <button id="bttn">Logout</button>
                         </a>
                     </div>
                 </div>
@@ -123,7 +126,9 @@ if(isset($_POST['submit'])){
                         <div id="thisform">
                         <form action="notifications-sent-reply.php" method="POST">
                             
-                                <textarea type="text" name="message" id="fullname" placeholder="Type message here..." cols="67" rows="4" style="padding:10px" required></textarea>
+                                <input type="text" name="message" id="fullname" value="<?php
+                                    echo $_SESSION['message-for-reciever'];
+                                ?>" class="fullname" required></textarea>
                                 <br>
                                 <br>
                                 <div class="bttn-container">

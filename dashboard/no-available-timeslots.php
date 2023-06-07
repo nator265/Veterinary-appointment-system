@@ -2,11 +2,13 @@
 session_start();
 include('../connect.php');
 include('../functions.php');
+
 echo "<script>";
 echo "setTimeout(function() {";
 echo "    history.go(-1);";
-echo "}, 5000);"; // 1.5 seconds delay
+echo "}, 5000);"; // 5 seconds delay
 echo "</script>";
+
 if(!isset($_SESSION['name'])){
     header('location:../login.php');
 }
@@ -422,8 +424,10 @@ if(isset($_GET['yes'])){
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="no-available-timeslots.css">
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.all.js"></script>
+    <script src="sweetalert2.all.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
     <title>Appointments</title>
 </head>
 <body>
@@ -436,23 +440,26 @@ if(isset($_GET['yes'])){
 
         <div class="column1">
             <div class="company-name-container">
-                <div class="company-name" style="font-size:x-large">
+                <div class="company-name" style="font-size: x-large; font-weight:100">
                 GSJ Animal Health & Production
                 </div>
             </div>
             <div class="links-container">
                 <div class="link">
-                    <a href="index.php"> <span id='link'> Dashboard <img src="images/dashboard.png" alt="" height="20px"></span> </a>
+                    <a href="index.php"><span class="link1"> Dashboard <img src="images/dashboard.png" alt="" height="20px"></a>
                 </div>
                 <div class="link">
                     <a href="appointments.php"><span id='link'> Appointments <img src="images/appointments.png" alt="" height="20px"></span></a>
                 </div>
                 <div class="link">
-                    <span id='link'> Notifications <img src="images/notifications.png" alt="" height="20px"></span>
+                    <a href="notifications.php"><span id='link'> Notifications <img src="images/notifications.png" alt="" height="20px"></span> </a>
                 </div>
                 <div class="link">
+                    <a href="settings.php"><span id='link'> Settings <img src="images/settings.png" alt="" height="20px"></span> </a>
+                </div>
+                <div class="logout">
                     <a href="logout.php" style="text-decoration: none; color: white">
-                        <button class="logout" id="bttn">Logout</button>
+                        <button id="bttn">Logout</button>
                     </a>
                 </div>
             </div>
@@ -600,18 +607,6 @@ if(isset($_GET['yes'])){
                         </table>
                     </div>
                 </div> 
-                <div class="alert-container" id="target">
-                                        <div class="alert" id="alert">
-                                            <div class="warning-container">
-                                                <div class="warning-header">
-                                                    No available timeslots.
-                                                </div>
-                                                <div class="subtext">
-                                                Sorry, no available time slots. Please choose a different day.
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
             </div>
         </div>
     <script>
@@ -686,6 +681,14 @@ if(isset($_GET['yes'])){
         // changing the dates form-container
     
         
+    </script>
+    <script>
+        Swal.fire({
+        title: 'No available timeslots!',
+        text: 'The day chosen has been fully booked, please select another day',
+        icon: 'error',
+        confirmButtonText: 'Okay'
+})
     </script>
 </body>
 </html>

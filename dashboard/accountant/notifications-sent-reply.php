@@ -120,7 +120,9 @@ if(isset($_POST['submit'])){
                         <div id="thisform">
                         <form action="notifications-sent-reply.php" method="POST">
                             
-                                <textarea type="text" name="message" id="fullname" placeholder="Type message here..." cols="67" rows="4" style="padding:10px" required></textarea>
+                                <input type="text" name="message" id="fullname" value="<?php
+                                    echo $_SESSION['message-for-reciever'];
+                                ?>" required></textarea>
                                 <br>
                                 <br>
                                 <div class="bttn-container">

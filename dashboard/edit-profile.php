@@ -6,28 +6,34 @@ include('../functions.php');
 if(!isset($_SESSION['name'])){
     header('location:../login.php');
 }
-if(isset($_POST['submit'])){
+if(isset($_POST['edit'])){
     
     $fullname = $_POST['fullname'];
     $address = $_POST['address'];
     $phone = $_POST['phone'];
     $password = $_POST['password'];
     
-    $s = "select * from users where phone = '".$_SESSION['name']."'";
+    $s = "SELECT phone FROM doctors WHERE phone = '$phone'
+    UNION
+    SELECT phone FROM users WHERE phone = '$phone'
+    UNION
+    SELECT phone FROM admin WHERE phone = '$phone'
+    UNION
+    SELECT phone FROM accountant WHERE phone = '$phone'";
     $result = mysqli_query($conn, $s);
     $num = mysqli_num_rows($result);
 
-    if (empty($fullname) || empty($address) || empty($phone) || empty($field) || empty($password)) {
+    if (empty($fullname) || empty($address) || empty($phone) || empty($password)) {
         header('location: add-doctor-blank.php');
     }else{
-        if($num == 1){
+        if($num == 1  and $phone != $_SESSION['phone']){
         
             header('location: add-doctor-error.php');
        
          }
          else{
             $reg = "UPDATE users
-                SET fullname = $fullname, address = $address, phone = $phone, password = $password
+                SET fullname = '$fullname', address = '$address', phone = '$phone', password = '$password'
                 WHERE phone = '".$_SESSION['phone']."'";
 
             $link = mysqli_query($conn, $reg);
@@ -36,9 +42,6 @@ if(isset($_POST['submit'])){
     }   
 }
 
-if(isset($_GET['edit'])){
-    $_SESSION['values3'] = $_GET['edit'];
-}
 ?>
 
 <DOCTYPE html>
@@ -60,29 +63,29 @@ if(isset($_GET['edit'])){
 
         <div class="column1">
             <div class="company-name-container">
-                <div class="company-name" style="font-size:x-large">
-                    GSJ Animal Health & Production
+                <div class="company-name" style="font-size: x-large; font-weight:100">
+                GSJ Animal Health & Production
                 </div>
             </div>
             <div class="links-container">
-                    <div class="link">
-                        <a href="index.php"><span class="link1"> Dashboard <img src="images/dashboard.png" alt="" height="20px"> </a>
-                    </div>
-                    <div class="link">
-                        <a href="appointments.php"><span id='link'> Appointments <img src="images/appointments.png" alt="" height="20px"></span></a>
-                    </div>
-                    <div class="link">
-                        <a href="notifications.php"><span id='link'> Notifications <img src="images/notifications.png" alt="" height="20px"></span> </a>
-                    </div>
-                    <div class="link">
-                        <a href="settings.php"><span id='link'> Settings <img src="images/settings.png" alt="" height="20px"></span> </a>
-                    </div>
-                    <div class="logout">
-                        <a href="logout.php" style="text-decoration: none; color: white">
-                            <button id="bttn">Logout</button>
-                        </a>
-                    </div>
+                <div class="link">
+                    <a href="index.php"><span class="link1"> Dashboard <img src="images/dashboard.png" alt="" height="20px"></a>
                 </div>
+                <div class="link">
+                    <a href="appointments.php"><span id='link'> Appointments <img src="images/appointments.png" alt="" height="20px"></span></a>
+                </div>
+                <div class="link">
+                    <a href="notifications.php"><span id='link'> Notifications <img src="images/notifications.png" alt="" height="20px"></span> </a>
+                </div>
+                <div class="link">
+                    <a href="settings.php"><span id='link'> Settings <img src="images/settings.png" alt="" height="20px"></span> </a>
+                </div>
+                <div class="logout">
+                    <a href="logout.php" style="text-decoration: none; color: white">
+                        <button id="bttn">Logout</button>
+                    </a>
+                </div>
+            </div>
         </div>
 
         <!-- this is the second column -->

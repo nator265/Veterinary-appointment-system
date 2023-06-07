@@ -149,22 +149,46 @@ if(!isset($_SESSION['name'])){
                                 ?>
                             </div>
                             <div class="nextdate">
-                            <?php
-                                    $field = "SELECT field from doctors where phone = '".$_SESSION['phone']."'";
-                                    $fieldlink = mysqli_query($conn, $field);
-                                    $field2 = mysqli_fetch_assoc($fieldlink);                               
-                                    $_SESSION['field3'] =  $field2["field"];
-                                    // showing the number of appointments that the doctor has
-                                    $count1 = "SELECT * FROM appointments Where session_expiry = 'pending' and approved = 'approved' and field = '".$_SESSION['field3']."'";
-                                    $countlink = mysqli_query($conn, $count1);
-                                    if(mysqli_num_rows($countlink) == 0){
-                                        echo 'N/A';
-                                    }else{
-                                        $fetchdate = mysqli_fetch_assoc($countlink);
-                                        $thisdate = $fetchdate['ap_date'];
-                                        echo $thisdate;
-                                    }
-                                ?>
+                                <div class="one">
+                                    <?php
+                                        $field = "SELECT field from doctors where phone = '".$_SESSION['phone']."'";
+                                        $fieldlink = mysqli_query($conn, $field);
+                                        $field2 = mysqli_fetch_assoc($fieldlink);                               
+                                        $_SESSION['field3'] =  $field2["field"];
+                                        // showing the number of appointments that the doctor has
+                                        $count1 = "SELECT * FROM appointments Where session_expiry = 'pending' and approved = 'approved' and field = '".$_SESSION['field3']."'";
+                                        $countlink = mysqli_query($conn, $count1);
+                                        if(mysqli_num_rows($countlink) == 0){
+                                            echo 'N/A';
+                                        }else{
+                                            $fetchdate = mysqli_fetch_assoc($countlink);
+                                            $thisdate = $fetchdate['ap_date'];
+                                            $timestamp = strtotime($thisdate);
+                                            $date = date('l, F Y', $timestamp);
+                                            echo $date;
+                                        }
+                                    ?>
+                                </div>
+                                <div class="two">
+                                        <?php
+                                           $field = "SELECT field from doctors where phone = '".$_SESSION['phone']."'";
+                                           $fieldlink = mysqli_query($conn, $field);
+                                           $field2 = mysqli_fetch_assoc($fieldlink);                               
+                                           $_SESSION['field3'] =  $field2["field"];
+                                           // showing the number of appointments that the doctor has
+                                           $count1 = "SELECT * FROM appointments Where session_expiry = 'pending' and approved = 'approved' and field = '".$_SESSION['field3']."'";
+                                            $countlink = mysqli_query($conn, $count1);
+                                            if(mysqli_num_rows($countlink) == 0){
+                                                echo 'N/A';
+                                            }else{
+                                                $fetchdate = mysqli_fetch_assoc($countlink);
+                                                $thisdate = $fetchdate['ap_date'];
+                                                $timestamp = strtotime($thisdate);
+                                                $date = date('j', $timestamp);
+                                                echo $date;
+                                            }
+                                        ?>
+                                    </div>
                             </div>
                         </div>
                     </div>

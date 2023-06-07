@@ -168,10 +168,30 @@ body{
 .nextapp{
     padding: 20px;
     font-size: x-large;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight: 800;
+    color: rgba(0, 0, 0, 0.521);
 }
 .nextdate{
     padding: 40px;
     font-size: x-large;
+}
+.one{
+    z-index: 1;
+    position:relative;
+    font-family: sans-serif;
+    font-weight: 800;
+    color: rgba(0, 0, 0, 0.603);
+}
+.two{
+    color: white;
+    text-shadow: 2px 2px 4px #000000;
+    z-index: 0;
+    position:relative;
+    text-align: center;
+    bottom: 130;
+    font-size: 200px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 @keyframes my-animation {
     0% {

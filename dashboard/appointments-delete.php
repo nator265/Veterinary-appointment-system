@@ -67,23 +67,26 @@ if(isset($_GET['delete'])){
 
         <div class="column1">
             <div class="company-name-container">
-                <div class="company-name">
-                    Veterinary
+                <div class="company-name" style="font-size: x-large; font-weight:100">
+                GSJ Animal Health & Production
                 </div>
             </div>
             <div class="links-container">
                 <div class="link">
-                    <a href="index.php"> <span id='link'> Dashboard <img src="images/dashboard.png" alt="" height="20px"></span> </a>
+                    <a href="index.php"><span class="link1"> Dashboard <img src="images/dashboard.png" alt="" height="20px"></a>
                 </div>
                 <div class="link">
-                    <span id='link'> Appointments <img src="images/appointments.png" alt="" height="20px"></span>
+                    <a href="appointments.php"><span id='link'> Appointments <img src="images/appointments.png" alt="" height="20px"></span></a>
                 </div>
                 <div class="link">
                     <a href="notifications.php"><span id='link'> Notifications <img src="images/notifications.png" alt="" height="20px"></span> </a>
                 </div>
-                <div class="button-position">
+                <div class="link">
+                    <a href="settings.php"><span id='link'> Settings <img src="images/settings.png" alt="" height="20px"></span> </a>
+                </div>
+                <div class="logout">
                     <a href="logout.php" style="text-decoration: none; color: white">
-                        <button class="logout" id="bttn">Logout</button>
+                        <button id="bttn">Logout</button>
                     </a>
                 </div>
             </div>
@@ -92,33 +95,60 @@ if(isset($_GET['delete'])){
         <!-- thi is the modal for the appointments registration -->
         <div class="modal-container" id="modal-container">
             <div class="modal">
-                <div class="close">&times;</div>
+                <div class="close" onClick="document.getElementById('modal-container').style.display='none'">&times;</div>
                 <div class="form-container">
                     <div class="form-header">
                         <h1 style="text-align: center; color: white;">
                             Book An Appointment.
                         </h1>
                     </div>
-                    <form action="appointments.php" method="POST" onsubmit="return validateForm(this);">
-                        <input type="text" name="fullname" id="fullname" placeholder="Owner Name(Fullname)" required>
-                        <br>
-                        <br>
-                        <span style="color:white;"> Select Animal Type</span>
-                        <br>
-                        <div class="type">
-                            <select name="field" id="field" required>
-                                <option value="pet">Pet</option>
-                                <option value="livestock">Livestock</option>
-                            </select>                        
-                            <input type="text" name="animal" id="animal" placeholder="Pet e.g. Dog | Livestock e.g. Cow" required>
+                    <form action="appointments.php" method="POST" onsubmit="return validateForm()">
+                        <div class="pushcontainer">
+                            <div class="pushleft">
+                                <input type="text" name="fullname" id="fullname" placeholder="Owner Name(Fullname)" required>
+                                <br>
+                                <br>
+                                <span style="color:white;"> Select Animal Type</span>
+                                <br>
+                                <div class="type">
+                                    <select name="field" id="field" required>
+                                        <option value="pet">Pet</option>
+                                        <option value="livestock">Livestock</option>
+                                    </select>                        
+                                    <input type="text" name="animal" id="animal" placeholder="Pet e.g. Dog | Livestock e.g. Cow" required>
+                                </div>
+                                <br>
+                                <input type="date" name="ap_date" id="date" required>
+                                <br>
+                            </div>
+                            <div class="pushright">
+                                <div style="margin-bottom: 5px;" id="msg">Select Service:</div>
+                                <?php
+                                    // this is to bring out the services and costs from the service table
+                                    $service = "SELECT * FROM service_costs";
+                                    $runservice = mysqli_query($conn, $service);
+                                    checkSQL($conn, $runservice);
+                                    $service_row = mysqli_num_rows($runservice);
+                                    if (!$runservice){
+                                        die("Invalid query: " .$conn->error);
+                                    }  
+                                    $values = [];
+                                    $price = [];
+                                    // reading data contained in each row
+                                    while($service_row = $runservice->fetch_assoc()){                                    
+                                        $values[] =  $service_row["servicename"];
+                                        $price[] = $service_row["service_cost"];
+                                    }
+                                    
+                                    $combined_arr = array_combine($values, $price);
+                                    
+                                    foreach ($values as $value) {
+                                        $formated = number_format($combined_arr[$value]);
+                                        echo "<input type='checkbox' id='checkbox' name='ap_type[]' value='". $value."' .style='margin-top: 10px'>   $value (K$formated) <br> ";
+                                    }
+                                ?>
+                            </div>
                         </div>
-                        <br>
-                        <input type="date" name="ap_date" id="date" required>
-                        <br>
-                        <div style="margin-bottom: 5px;" id="msg">Select Service:</div>
-                        <input type="checkbox" class="checkboxes" name="ap_type[]" id="checkbox" value="Vaccination"> Vaccination <br>
-                        <input type="checkbox" class="checkboxes" name="ap_type[]" id="checkbox" value="Check up"> Check up <br>
-                        <input type="checkbox" class="checkboxes" name="ap_type[]" id="checkbox" value="Diet"> Diet<br>
                         <div class="bttn-container">
                             <input type="submit" value="Submit" name="submit"  id="btn">    
                         </div>
@@ -156,7 +186,13 @@ if(isset($_GET['delete'])){
                                     Appointment Type
                                 </th>
                                 <th>
+                                    Time
+                                </th>
+                                <th>
                                     Date
+                                </th>                                
+                                <th>
+                                    Total
                                 </th>
                                 <th colspan="2" style = "z-index: 2">
                                     Actions
@@ -168,9 +204,7 @@ if(isset($_GET['delete'])){
                                 $fetch_rest2 = mysqli_fetch_assoc($rest2);
                                 
                                 // retrieve data for the user matching the phone number
-                                // if($fetch_rest2['phone'] == )
-                                // retrieving data from the database for the user to see
-                                $retrieve = "SELECT doctors.fullname as name, appointments.animal, appointments.ap_type, appointments.ap_date, appointments.ap_id FROM doctors INNER JOIN appointments ON doctors.field = appointments.field where appointments.phone = '".$_SESSION['phone']."'";
+                                $retrieve = "SELECT doctors.fullname as name, appointments.animal, appointments.ap_type, appointments.ap_time, appointments.ap_date, appointments.ap_id, appointments.total FROM doctors INNER JOIN appointments ON doctors.field = appointments.field where appointments.phone = '".$_SESSION['phone']."' and appointments.session_expiry = 'pending' and appointments.bill_status = 'Not Paid' and approved != 'rejected' ORDER BY appointments.ap_date ASC, appointments.ap_time ASC";
                                 $link = mysqli_query($conn, $retrieve);
                                 checkSQL($conn, $link);
                                 $row = mysqli_num_rows($link);
@@ -180,21 +214,26 @@ if(isset($_GET['delete'])){
 
                                 // reading data contained in each row
                                 while($row = $link->fetch_assoc()){
-                                        $ap_date2 = date("d-m-Y", strtotime($row["ap_date"]));
-                                        $ap_id = $row["ap_id"];
+                                    $dateString = $row["ap_date"]; // Your date in YYYY-MM-DD format
+                                    $date = strtotime($dateString); // Convert the string to a Unix timestamp
+                                    $ap_date2 = date("j F Y", $date); // Format the date
+                                    $ap_id = $row["ap_id"];
                                     ?>
                                     <tr>
                                     <td><?php echo $row["name"] ?></td>
                                     <td><?php echo $row["animal"] ?></td>
                                     <td><?php echo $row["ap_type"] ?></td>
+                                    <td><?php echo $row["ap_time"] ?></td>
                                     <td><?php echo $ap_date2 ?></td>
+                                    <td><?php echo "K".number_format($row["total"]) ?></td>
                                     <td style = "z-index: 1"><a href="appointments-edit.php?edit=<?php echo $ap_id ?>" class="edit">Edit</td>
-                                    <td style = "z-index: 1"><a href="#" class="cancel" id="clearance">Cancel</a></td>
+                                    <td style = "z-index: 1"><a href="appointments-delete.php?delete=<?php echo $ap_id ?>" class="cancel" id="clearance">Cancel</a></td>
                                     </tr>
-                                    <?php } ?>                                    
+                                <?php } 
+                            ?>                                    
                         </table>
                     </div>
-                </div> 
+                </div>                                 
                 <div class="alert-container" id="target">
                     <div class="alert" id="alert">
                         <div class="warning-container">

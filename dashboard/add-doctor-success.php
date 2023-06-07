@@ -6,38 +6,7 @@ include('../functions.php');
 if(!isset($_SESSION['name'])){
     header('location:../login.php');
 }
-
-if(isset($_POST['submit'])){
-    
-    $fullname = $_POST['fullname'];
-    $address = $_POST['address'];
-    $phone = $_POST['phone'];
-    $password = $_POST['password'];
-    
-    $s = "select * from users where phone = '".$_SESSION['phone']."'";
-    $result = mysqli_query($conn, $s);
-    $num = mysqli_num_rows($result);
-
-    if (empty($fullname) || empty($address) || empty($phone) || empty($password)) {
-        header('location: add-doctor-blank.php');
-    }else{
-        if($num == 1){
-        
-            header('location: add-doctor-error.php');
-       
-         }
-         else{
-            $reg = "UPDATE users
-                SET fullname = '$fullname', address = '$address', phone = 'phone', password = '$password'
-                WHERE phone = '".$_SESSION['phone']."'";
-
-            $link = mysqli_query($conn, $reg);
-            header('refresh: 2; url=edit-profile.php');
-         }
-    }
-}
-
-
+header('refresh: 2; url=settings.php');
 ?>
 
 <DOCTYPE html>
@@ -46,8 +15,10 @@ if(isset($_POST['submit'])){
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="add-doctor-success.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.all.js"></script>
+    <script src="sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="add-accountant.css">
     <title>Dashboard</title>
 </head>
 <body>
@@ -58,32 +29,31 @@ if(isset($_POST['submit'])){
     <!-- this is a shadow that make the first column come out -->
     <div class="shadow"></div>
 
-        <!-- this is the second column -->
         <div class="column1">
             <div class="company-name-container">
-                <div class="company-name" style="font-size:x-large">
-                    GSJ Animal Health & Production
+                <div class="company-name" style="font-size: x-large; font-weight:100">
+                GSJ Animal Health & Production
                 </div>
             </div>
             <div class="links-container">
-                    <div class="link">
-                        <a href="index.php"><span class="link1"> Dashboard <img src="images/dashboard.png" alt="" height="20px"> </a>
-                    </div>
-                    <div class="link">
-                        <a href="appointments.php"><span id='link'> Appointments <img src="images/appointments.png" alt="" height="20px"></span></a>
-                    </div>
-                    <div class="link">
-                        <a href="notifications.php"><span id='link'> Notifications <img src="images/notifications.png" alt="" height="20px"></span> </a>
-                    </div>
-                    <div class="link">
-                        <a href="settings.php"><span id='link'> Settings <img src="images/settings.png" alt="" height="20px"></span> </a>
-                    </div>
-                    <div class="logout">
-                        <a href="logout.php" style="text-decoration: none; color: white">
-                            <button id="bttn">Logout</button>
-                        </a>
-                    </div>
+                <div class="link">
+                    <a href="index.php"><span class="link1"> Dashboard <img src="images/dashboard.png" alt="" height="20px"></a>
                 </div>
+                <div class="link">
+                    <a href="appointments.php"><span id='link'> Appointments <img src="images/appointments.png" alt="" height="20px"></span></a>
+                </div>
+                <div class="link">
+                    <a href="notifications.php"><span id='link'> Notifications <img src="images/notifications.png" alt="" height="20px"></span> </a>
+                </div>
+                <div class="link">
+                    <a href="settings.php"><span id='link'> Settings <img src="images/settings.png" alt="" height="20px"></span> </a>
+                </div>
+                <div class="logout">
+                    <a href="logout.php" style="text-decoration: none; color: white">
+                        <button id="bttn">Logout</button>
+                    </a>
+                </div>
+            </div>
         </div>
 
         <!-- this is the second column -->
@@ -99,57 +69,18 @@ if(isset($_POST['submit'])){
                 <div class="anothercontainer">
                     <div class="form-container">
                         <div class="form">
-                            <form action="add-doctor-success.php" method="post">
+                            <form action="edit-profile.php" method="POST">
 
-                            <input type="text" name="fullname" id="input" value="<?php
-                                $namevalue = "SELECT * from users where phone = '".$_SESSION['phone']."'";
-                                $namelink = mysqli_query($conn, $namevalue);
-                                $fetchname = mysqli_fetch_assoc($namelink);
-                                echo $fetchname['fullname']
-                                ?>">
+                            <input type="text" name="fullname" id="input" placeholder="Fullname">
 
-                            <input type="text" name="address" id="input"value="<?php
-                                $addressvalue = "SELECT * from users where phone = '".$_SESSION['phone']."'";
-                                $addresslink = mysqli_query($conn, $addressvalue);
-                                $fetchaddress = mysqli_fetch_assoc($addresslink);
-                                echo $fetchaddress['address']
-                                ?>">
+                            <input type="text" name="address" id="input" placeholder="Address">
 
-                            <input type="text" name="phone" id="input" value="<?php
-                                $phonevalue = "SELECT * from users where phone = '".$_SESSION['phone']."'";
-                                $phonelink = mysqli_query($conn, $phonevalue);
-                                $fetchphone = mysqli_fetch_assoc($phonelink);
-                                echo $fetchphone['phone']
-                                ?>">    
+                            <input type="text" name="phone" id="input" placeholder="Phone">    
 
-                            <input type="passoword" name="password" id="input" value="<?php
-                                $passwordvalue = "SELECT * from users where phone = '".$_SESSION['phone']."'";
-                                $passwordlink = mysqli_query($conn, $passwordvalue);
-                                $fetchpassword = mysqli_fetch_assoc($passwordlink);
-                                echo  str_replace('*', '', $fetchpassword['password']);
-                                ?>">
+                            <input type="passoword" name="password" id="input" placeholder="Password">
                             <input type="submit" value="Edit" name="edit" id="bttn" class="submit">
                             </form>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="alert-container" id="target">
-                <div class="alert" id="alert">
-                    <div class="warning-container">
-
-                        <div class="warning-header">
-                            Changes have been made successfully!
-                        </div>
-                        
-                        <form action="appointments.php" method="post">
-                                <div class="buttonsection">
-                                    <a href="edit-profile.php">
-                                        <input type="button" class="edit2" value="Okay">
-                                    </a>
-                                    
-                            </div>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -184,6 +115,14 @@ if(isset($_POST['submit'])){
         $(".alert").css({"animation":" opacity-foralert 1s forwards"});
     });
         
+    </script>
+    <script>
+        Swal.fire({
+        title: 'Success!',
+        text: 'Changes made successfully',
+        icon: 'success',
+        confirmButtonText: 'Okay'
+})
     </script>
 </body>
 </html>

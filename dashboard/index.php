@@ -94,72 +94,126 @@ if(isset($_GET['delete'])){
     
                 <!-- 1.Dashboard -->
                 <div class="main-dashboard-container" id="main-dashboard-container">
-                    <div class="dashboard" id="dashboard"> 
-                        <a href="appointments.php" class="appointments-container" id="link2">
-                            <div class="appointments">
-                                <div class="count-container">
-                                    <div class="count-info">
-                                        Appointments
-                                    </div>
-                                    <div class="count">
-                                       <div class="fig">
-                                            <?php
-                                                $count1 = "SELECT * FROM appointments Where session_expiry = 'pending' and approved != 'rejected' and phone = '" .$_SESSION['phone']."'";
-                                                $countlink = mysqli_query($conn, $count1);
-                                                $count = mysqli_num_rows($countlink);
-                                                echo $count;
-                                            ?>
-                                       </div>
-                                       <div class="recimage">
-                                            <img src="images/appoint.png" alt="appointments" height="150px" style="padding-top:10px;" id="image1">
-                                       </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        <div class="notifications-container" id="link2">
-                            <a href="notifications.php">
-                                <div class="notifications">
+                    <div class="dashboard" id="dashboard">
+                        <div class="top">
+                            <a href="appointments.php" class="appointments-container" id="link2">
+                                <div class="appointments">
                                     <div class="count-container">
                                         <div class="count-info">
-                                            Notifications
+                                            Appointments
                                         </div>
-                                        <!-- this is the number badge for the counter -->
                                         <div class="count">
-                                            <div class="fig">
+                                        <div class="fig">
                                                 <?php
-                                                    $count1 = "SELECT * FROM notifications Where reciever = '" .$_SESSION['phone']."'";
+                                                    $count1 = "SELECT * FROM appointments Where session_expiry = 'pending' and approved != 'rejected' and phone = '" .$_SESSION['phone']."'";
                                                     $countlink = mysqli_query($conn, $count1);
                                                     $count = mysqli_num_rows($countlink);
                                                     echo $count;
                                                 ?>
-                                            </div>
-                                            <div class="recimage">
-                                                <img src="images/received" alt="notifications recieved" height="135px" style="padding-top:10px;" id="image3">
-                                            </div>
                                         </div>
-                                        
+                                        <div class="recimage">
+                                                <img src="images/appoint.png" alt="appointments" height="150px" style="padding-top:10px;" id="image1">
+                                        </div>
+                                        </div>
                                     </div>
                                 </div>
                             </a>
+                            <div class="notifications-container" id="link2">
+                                <a href="notifications.php">
+                                    <div class="notifications">
+                                        <div class="count-container">
+                                            <div class="count-info">
+                                                Notifications
+                                            </div>
+                                            <!-- this is the number badge for the counter -->
+                                            <div class="count">
+                                                <div class="fig">
+                                                    <?php
+                                                        $count1 = "SELECT * FROM notifications Where reciever = '" .$_SESSION['phone']."'";
+                                                        $countlink = mysqli_query($conn, $count1);
+                                                        $count = mysqli_num_rows($countlink);
+                                                        echo $count;
+                                                    ?>
+                                                </div>
+                                                <div class="recimage">
+                                                    <img src="images/received" alt="notifications recieved" height="135px" style="padding-top:10px;" id="image3">
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="notifications-container" id="link2">
+                                <a href="settings.php">
+                                    <div class="notifications">
+                                        <div class="count-container">
+                                            <div class="count-info">
+                                                Settings
+                                            </div>
+                                            <!-- this is the number badge for the counter -->
+                                            <div class="count">
+                                                <div class="recimage">
+                                                    <img src="images/settings.png" alt="notifications recieved" height="135px" style="padding-top:25px;" id="image3">
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
                         </div>
-                        <div class="notifications-container" id="link2">
-                            <a href="settings.php">
-                                <div class="notifications">
-                                    <div class="count-container">
-                                        <div class="count-info">
-                                            Settings
-                                        </div>
-                                        <!-- this is the number badge for the counter -->
-                                        <div class="count">
-                                            <div class="recimage">
-                                                <img src="images/settings.png" alt="notifications recieved" height="135px" style="padding-top:25px;" id="image3">
-                                            </div>
-                                        </div>
-                                        
+                        <div class="bottom">
+                            <div class="bottomcontainer">
+                                <div class="textforbottom">
+                                    Your Next appointment is at: 
+                                </div>
+                                <div class="nextapp">
+                                    <?php
+                                        $count1 = "SELECT * FROM appointments Where session_expiry = 'pending' and approved = 'approved' and phone = '".$_SESSION['phone']."'";
+                                        $countlink = mysqli_query($conn, $count1);
+                                        if(mysqli_num_rows($countlink) == 0){
+                                            echo 'N/A';
+                                        }else{
+                                            $fetchtime = mysqli_fetch_assoc($countlink);
+                                            $thistime = $fetchtime['ap_time'];
+                                            echo $thistime;
+                                        }
+                                    ?>
+                                </div>
+                                <div class="nextdate">
+                                    <div class="one">
+                                        <?php
+                                        $count1 = "SELECT * FROM appointments Where session_expiry = 'pending' and approved = 'approved' and phone = '".$_SESSION['phone']."'";
+                                        $countlink = mysqli_query($conn, $count1);
+                                        if(mysqli_num_rows($countlink) == 0){
+                                            echo 'N/A';
+                                        }else{
+                                            $fetchdate = mysqli_fetch_assoc($countlink);
+                                            $thisdate = $fetchdate['ap_date'];
+                                            $timestamp = strtotime($thisdate);
+                                            $date = date('l, F Y', $timestamp);
+                                            echo $date;
+                                        }
+                                        ?>
+                                    </div>
+                                    <div class="two">
+                                        <?php
+                                            $count1 = "SELECT * FROM appointments Where session_expiry = 'pending' and approved = 'approved' and phone = '".$_SESSION['phone']."'";
+                                            $countlink = mysqli_query($conn, $count1);
+                                            if(mysqli_num_rows($countlink) == 0){
+                                                echo 'N/A';
+                                            }else{
+                                                $fetchdate = mysqli_fetch_assoc($countlink);
+                                                $thisdate = $fetchdate['ap_date'];
+                                                $timestamp = strtotime($thisdate);
+                                                $date = date('j', $timestamp);
+                                                echo $date;
+                                            }
+                                        ?>
                                     </div>
                                 </div>
-                            </a>
+                            </div>
                         </div>
                     </div>
                 </div>
