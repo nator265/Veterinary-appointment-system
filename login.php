@@ -108,6 +108,8 @@
                     <input type="password" name="password" id="password" placeholder="Password" style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;"
                         onclick="document.getElementById('password').style.border = 'none'">
                     <br>
+                    <a href="reset.php"><span id="reset">Forgot Password?</span></a>
+                    <br>
                     <div class="btn" style="margin-top: 10px;">
                     <input type="submit" name="login" value="Log In" id="bttn">
                     </div>

@@ -35,8 +35,20 @@ if(isset($_POST['edit'])){
             $reg = "UPDATE users
                 SET fullname = '$fullname', address = '$address', phone = '$phone', password = '$password'
                 WHERE phone = '".$_SESSION['phone']."'";
-
             $link = mysqli_query($conn, $reg);
+            $update2 = "UPDATE allusers SET password='$password', fullname = '$fullname', phone = '$phone' where phone = '".$_SESSION['phone']."' ";
+            mysqli_query($conn, $update2);
+            // for appointments
+            $update3 = "UPDATE appointments SET phone = '$phone' where phone = '".$_SESSION['phone']."' ";
+            mysqli_query($conn, $update3);
+            // for notifications sender
+            $update4 = "UPDATE notifications SET phone = '$phone' where phone = '".$_SESSION['phone']."' ";
+            mysqli_query($conn, $update4);
+            // for notifications reciever
+            $update5 = "UPDATE notifications SET reciever = '$phone' where reciever = '".$_SESSION['phone']."' ";
+            mysqli_query($conn, $update5);
+
+            $_SESSION['phone'] = $phone;
             header('location: add-doctor-success.php');
          }
     }   

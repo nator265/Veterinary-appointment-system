@@ -35,6 +35,14 @@ if(isset($_POST['edit'])){
          else{
             $update = "UPDATE accountant SET address = '$address', password='$password', fullname = '$fullname', phone = '$phone' where phone = '".$_SESSION['values2']."' ";
             mysqli_query($conn, $update);
+            $update2 = "UPDATE allusers SET password='$password', fullname = '$fullname', phone = '$phone' where phone = '".$_SESSION['values2']."' ";
+            mysqli_query($conn, $update2);
+            // for notifications sender
+            $update4 = "UPDATE notifications SET phone = '$phone' where phone = '".$_SESSION['phone']."' ";
+            mysqli_query($conn, $update4);
+            // for notifications reciever
+            $update5 = "UPDATE notifications SET reciever = '$phone' where reciever = '".$_SESSION['phone']."' ";
+            mysqli_query($conn, $update5);
             header('location: add-accountant-success.php'); 
          }
     }

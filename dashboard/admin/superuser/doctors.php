@@ -25,6 +25,8 @@ if(isset($_GET['yes'])){
     $phone = $_GET['yes'];
     $delete = "DELETE FROM doctors where phone = $phone";
     mysqli_query($conn, $delete);
+    $delete2 = "DELETE FROM allusers where phone = $phone";
+    mysqli_query($conn, $delete2);
     header('location: doctors.php');
 }
 // this is the test date function for the one i found on youtube

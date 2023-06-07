@@ -90,28 +90,23 @@
 </head>
 <body>
     <div class="body">
-    <h1>
-        <span id="left-h1">Appointment Booking</span>
-    </h1>
-
     <div class="form-container">
-        <div class="form">
+        <div class="form" style="display:block">
             <div style="text-align:center">
                 <img src="images/gsj logo.png" alt="logo" height="200px" width="200px">
             </div>
             <fieldset class="fieldset">
-                <legend class="legend">
-                    <h2>We are ready to help</h2> 
+                <legend class="legend" style="text-align: center">
+                    <h2>GSJ Animal Health & Production Appointment System</h2> 
                 </legend>
-                <form method="POST" action="login-incorrect.php" name="form" onsubmit="return validated()">
-                    <input type="text" name="fullname" id="email" placeholder="Fullname" style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;"
-                        onclick="document.getElementById('email').style.border = 'none'">
-                    <br>
+                <form method="POST" action="login-incorrect.php" name="form" onsubmit="return validated()" style="text-align:center;">
                     <input type="text" name="phone" id="phone" placeholder="Phone" style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;"
                         onclick="document.getElementById('phone').style.border = 'none'">
                     <br>
                     <input type="password" name="password" id="password" placeholder="Password" style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;"
                         onclick="document.getElementById('password').style.border = 'none'">
+                    <br>
+                    <a href="reset.php"><span id="reset">Forgot Password?</span></a>
                     <br>
                     <div class="btn" style="margin-top: 10px;">
                     <input type="submit" name="login" value="Log In" id="bttn">
@@ -121,7 +116,7 @@
                 <div class="fieldset-container" style="text-align: center;">
                     <fieldset class="fieldset2">
                         <legend class="legend2">
-                            <span style="color: white; font-size: large;">or</span>
+                            <span style="color: white; font-size: large;">Dont have an account?</span>
                         </legend>
                     </fieldset>
                 </div>
@@ -145,5 +140,4 @@
 })
     </script>
 </body>
-
 </html>

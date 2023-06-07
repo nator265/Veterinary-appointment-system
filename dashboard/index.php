@@ -83,14 +83,26 @@ if(isset($_GET['delete'])){
     
             <!-- this is the second column -->
             <div class="column2">
-                <div class="greetings-container">
-                    <span class="greetings" id="greetings"></span>
-                    <?php 
-                        // this is to call the name of the user with the session variable
-                       
-                        echo ucwords($_SESSION['name']) . '.';
-                    ?> 
-                </div>
+               <div class="oneblock">
+                    <div class="giveid">
+                            NOTE: Your ID is <?php 
+                                            $getid = "SELECT * FROM allusers WHERE phone = '".$_SESSION['phone']."'";
+                                            $linkgetid = mysqli_query($conn, $getid);
+                                            $fetchgetid = mysqli_fetch_assoc($linkgetid);
+                                            $theid = $fetchgetid['userid'];
+                                            echo $theid;
+                                        ?>, use it to reset your password.
+                        </div>
+                        <div class="greetings-container">
+                        <span class="greetings" id="greetings"></span>
+                        <?php 
+                            // this is to call the name of the user with the session variable
+                        
+                            echo ucwords($_SESSION['name']) . '.';
+                        ?> 
+                    </div>
+               </div>
+               
     
                 <!-- 1.Dashboard -->
                 <div class="main-dashboard-container" id="main-dashboard-container">

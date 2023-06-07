@@ -66,62 +66,27 @@ header('refresh: 2; url=edit-doctor.php');
             <!-- the form that will allow the admin to add a doctor -->
             <div class="main-dashboard-container" id="main-dashboard-container">
                 <div class="header">
-                   <div class="pagetitle">  EDIT DOCTOR.</div>
+                   <div class="pagetitle">  ADD DOCTOR.</div>
                 </div>
                 <div class="form-container">
                     <div class="form">
-                        <form action="edit-doctor3.php" method="post">
-                            
-                            <input type="text" name="fullname" id="input" value="<?php
-                                $namevalue = "SELECT * from doctors where phone = '".$_SESSION['values']."'";
-                                $namelink = mysqli_query($conn, $namevalue);
-                                $fetchname = mysqli_fetch_assoc($namelink);
-                                echo $fetchname['fullname']
-                                ?>">
-
-                            <input type="text" name="address" id="input"value="<?php
-                                $addressvalue = "SELECT * from doctors where phone = '".$_SESSION['values']."'";
-                                $addresslink = mysqli_query($conn, $addressvalue);
-                                $fetchaddress = mysqli_fetch_assoc($addresslink);
-                                echo $fetchaddress['address']
-                                ?>">
-
+                        <form action="add-doctor.php" method="post">
+                            <input type="text" name="fullname" id="input" placeholder="Fullname">
+                            <input type="text" name="address" id="input" placeholder="Address">
                             <div class="col">
-                                <div class="col1"><input type="text" name="phone" id="input2" value="<?php
-                                $phonevalue = "SELECT * from doctors where phone = '".$_SESSION['values']."'";
-                                $phonelink = mysqli_query($conn, $phonevalue);
-                                $fetchphone = mysqli_fetch_assoc($phonelink);
-                                echo $fetchphone['phone']
-                                ?>"></div>
+                                <div class="col1"><input type="text" name="phone" id="input2" placeholder="Phone number"></div>
                                 <div class="col2"> 
                                     <div class="docfield"> Doctors Field:</div>
                                         <div class="fieldbox">
-                                        <select name="field" id="field" value="<?php
-                                                $inputvalue = "SELECT * from doctors where phone = '".$_SESSION['values']."'";
-                                                $inputlink = mysqli_query($conn, $inputvalue);
-                                                $fetchinput = mysqli_fetch_assoc($inputlink);
-                                                echo $fetchinput['field']
-                                                ?>" required>                                            
-                                            <option value="<?php
-                                                $inputvalue = "SELECT * from doctors where phone = '".$_SESSION['values']."'";
-                                                $inputlink = mysqli_query($conn, $inputvalue);
-                                                $fetchinput = mysqli_fetch_assoc($inputlink);
-                                                echo $fetchinput['field']
-                                                ?>" hidden>Pet</option>
+                                        <select name="field" id="field" required>
                                             <option value="pet">Pet</option>
                                             <option value="livestock">Livestock</option>
                                         </select> 
                                     </div>
                                 </div>
                             </div>    
-
-                            <input type="passoword" name="password" id="input" value="<?php
-                                $passwordvalue = "SELECT * from doctors where phone = '".$_SESSION['values']."'";
-                                $passwordlink = mysqli_query($conn, $passwordvalue);
-                                $fetchpassword = mysqli_fetch_assoc($passwordlink);
-                                echo  str_replace('*', '', $fetchpassword['password']);
-                                ?>">
-                            <input type="submit" value="Edit Doctor" name="edit" id="bttn" class="submit">
+                            <input type="password" name="password" id="input" placeholder="Password">
+                            <input type="submit" value="Add Doctor" name="submit" id="bttn" class="submit">
                         </form>
                     </div>
                 </div>

@@ -1,17 +1,13 @@
 <?php
     session_start();
     include 'connect.php';
-    header( "refresh:1.5; url = login.php" ); 
-
+    header( "refresh:1.5; url = reset.php" );
+    
     if(isset($_POST['login'])){ 
         $phone = $_POST['phone'];
         $password = $_POST['password'];       
         // to make sure that the input fields are not empty
-        if(empty($phone) or empty($password)){
-            header('location: login-error.php');
-        }else{
-
-        
+    
         // authenticating the user input to authorize login
         $s = "select * from users where phone = '$phone' && password = '$password'";
         $d = "select * from doctors where phone = '$phone' && password = '$password'";
@@ -79,7 +75,6 @@
         }
         else{header('location: login-incorrect.php');}
     }
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -102,32 +97,26 @@
             </div>
             <fieldset class="fieldset">
                 <legend class="legend" style="text-align: center">
-                    <h2>GSJ Animal Health & Production Appointment System</h2> 
+                    <h2>Password Reset</h2> 
                 </legend>
-                <form method="POST" action="login-incorrect.php" name="form" onsubmit="return validated()" style="text-align:center;">
+                <form method="POST" action="reset.php" name="form" onsubmit="return validated()" style="text-align:center;">
+                    <input type="text" name="id" id="phone" placeholder="ID" style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;"
+                        onclick="document.getElementById('phone').style.border = 'none'">
+                    <br>
                     <input type="text" name="phone" id="phone" placeholder="Phone" style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;"
                         onclick="document.getElementById('phone').style.border = 'none'">
                     <br>
                     <input type="password" name="password" id="password" placeholder="Password" style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;"
                         onclick="document.getElementById('password').style.border = 'none'">
                     <br>
-                    <a href="reset.php"><span id="reset">Forgot Password?</span></a>
-                    <br>
                     <div class="btn" style="margin-top: 10px;">
-                    <input type="submit" name="login" value="Log In" id="bttn">
+                    <input type="submit" name="reset" value="Reset" id="bttn">
                     </div>
-                </form>
-                
-                <div class="fieldset-container" style="text-align: center;">
-                    <fieldset class="fieldset2">
-                        <legend class="legend2">
-                            <span style="color: white; font-size: large;">Dont have an account?</span>
-                        </legend>
-                    </fieldset>
-                </div>
-                <div class="btn">
-                    <a href="sign-up.php"><button id="bttn">Sign Up</button></a>
-                </div>
+                    
+                </form>   
+                <div class="btn" style="margin-top: 20px;">
+                    <a href="login.php"><button id="bttn">Cancel</button></a>
+                </div>            
             </fieldset>
             
         </div>
@@ -137,12 +126,12 @@
     <script>
         Swal.fire({
         title: 'Error!',
-        text: 'Login Details Dont Match',
+        text: 'Please Fill In All Fields',
         icon: 'error',
+        buttons: 'false',
         showCancelButton: false,
         showConfirmButton: false,
 })
     </script>
 </body>
-
 </html>

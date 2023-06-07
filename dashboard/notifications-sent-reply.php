@@ -19,15 +19,24 @@ if(isset($_GET['reply'])){
     $phone = $fetchphone['reciever'];
     $thereciever = $fetchphone['reciever'];
     // to get the name of the reciever
-    $recievername = "SELECT * from notifications where phone = '$thereciever' and reciever = '".$_SESSION['phone']."'";
+    $recievername = "SELECT * from doctors where phone = '$thereciever'";
     $linkreciever = mysqli_query($conn, $recievername);
-    if($result = $linkreciever -> num_rows > 0){
-
+    if ($result = $linkreciever->num_rows > 0) {
         $fetchname = mysqli_fetch_assoc($linkreciever);
-        $reciever = $fetchname['sender'];
+        $reciever = $fetchname['fullname'];
         $_SESSION['recieversname'] = $reciever;
-    }
-
+    } else {
+        $recievername2 = "SELECT * FROM accountant WHERE phone = '$thereciever'";
+        $linkreciever2 = mysqli_query($conn, $recievername2);
+        if ($result = $linkreciever2->num_rows > 0) {
+            $fetchname = mysqli_fetch_assoc($linkreciever2);
+            $reciever = $fetchname['fullname'];
+            $_SESSION['recieversname'] = $reciever;
+        } else {
+            $_SESSION['recieversname'] = "N/A";
+        }
+    } 
+    $_SESSION['recieversname'] = $reciever;
     // getting the message for the reciever from the database
     $query3 = "SELECT * from notifications where notifications_id = $id";
     $link3 = mysqli_query($conn, $query3);

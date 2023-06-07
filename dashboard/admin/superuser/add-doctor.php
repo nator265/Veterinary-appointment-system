@@ -43,8 +43,12 @@ if(isset($_POST['submit'])){
                 
                 // inserting data into the appointments table in the database
                 $update = "INSERT INTO doctors (fullname, address, phone, field, password) VALUES ('$fullname', '$address', '$phone', '$field', '$password')";
-                mysqli_query($conn, $update);
-                header('location: add-doctor-success3.php');   
+                mysqli_query($conn, $update); 
+                // add into the allusers table
+                $update2 = "INSERT INTO allusers (fullname, phone, password) VALUES ('$fullname', '$phone', '$password')";
+                mysqli_query($conn, $update2);
+                header('location: add-doctor-success3.php');  
+
             }
          }
     }

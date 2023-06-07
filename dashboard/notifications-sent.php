@@ -168,17 +168,23 @@ function time_elapsed_string($datetime, $full = false) {
                                         <?php 
                                             $thereciever = $row['reciever'];
                                             // to get the name of the reciever
-                                            $recievername = "SELECT * from notifications where phone = '$thereciever' and reciever = '".$_SESSION['phone']."'";
+                                            $recievername = "SELECT * from doctors where phone = '$thereciever'";
                                             $linkreciever = mysqli_query($conn, $recievername);
-                                            if($result = $linkreciever -> num_rows > 0){
-
+                                            if ($result = $linkreciever->num_rows > 0) {
                                                 $fetchname = mysqli_fetch_assoc($linkreciever);
-                                                $reciever = $fetchname['sender'];
+                                                $reciever = $fetchname['fullname'];
                                                 echo $reciever;
-                                            }
-                                            
-
-                                           
+                                            } else {
+                                                $recievername2 = "SELECT * FROM accountant WHERE phone = '$thereciever'";
+                                                $linkreciever2 = mysqli_query($conn, $recievername2);
+                                                if ($result = $linkreciever2->num_rows > 0) {
+                                                    $fetchname = mysqli_fetch_assoc($linkreciever2);
+                                                    $reciever = $fetchname['fullname'];
+                                                    echo $reciever;
+                                                } else {
+                                                    echo "N/A";
+                                                }
+                                            } 
                                         ?>
                                     </td>
                                     <td><?php echo $row["title"] ?></td>

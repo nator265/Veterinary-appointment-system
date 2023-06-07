@@ -16,7 +16,6 @@ if(isset($_POST['submit'])){
     $_SESSION['field2'] = $field;
     // converting the ap_type to string
     $allaptype = implode(", ", $ap_type);
-
     // inserting data into the appointments table in the database
     $reg = "INSERT INTO appointments(fullname, field, animal, ap_date, ap_type, phone) VALUES ('$fullname', '$field', '$animal', '$date', '$allaptype', '".$_SESSION['phone']."')";
                             
@@ -24,14 +23,26 @@ if(isset($_POST['submit'])){
     
     checkSQL($conn, $rest);
 }
+if(isset($_POST['re-submit'])){
+    $fullname = $_POST['fullname'];
+    $field = $_POST['field'];
+    $date = $_POST['ap_date'];
+    $animal = $_POST['animal'];
+    $ap_type = $_POST['ap_type'];
+    $_SESSION['field2'] = $field;
+    
+    // converting the ap_type to string
+    $allaptype = implode(", ", $ap_type);
+    
+    // inserting data into the appointments table in the database
+    $update = "UPDATE appointments SET fullname = '$fullname', field = '$field', ap_date = '$date', animal = '$animal', ap_type = '$allaptype' where ap_id = '".$_SESSION['id']."' ";
+    mysqli_query($conn, $update);
+    header('location:appointments.php');
+}
 
-if(isset($_GET['yes'])){
-    $id = $_GET['yes'];
-    $delete = "DELETE FROM users where phone = $id ";
-    mysqli_query($conn, $delete);
-    $delete2 = "DELETE FROM allusers where phone = $id ";
-    mysqli_query($conn, $delete2);
-    header('location:../login.php');
+if(isset($_GET['delete'])){
+    $_SESSION['forthisid'] = $_GET['delete'];
+    
 }
 ?>
 
@@ -41,9 +52,10 @@ if(isset($_GET['yes'])){
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style-fordelete.css">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="namecards.css">
-    <title>Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>Appointments</title>
 </head>
 <body>
    
@@ -111,7 +123,7 @@ if(isset($_GET['yes'])){
                                 </div>
                             </div>
                         </a>
-                        <a href="settingsdelete.php?delete=<?php echo $_SESSION['phone'] ?>" class="appointments-container" id="link2">
+                        <a href="settingsdelete.php" class="appointments-container" id="link2">
                             <div class="appointments">
                                 <div class="count-container">
                                     <div class="count-info" style="background-color:red">
@@ -127,10 +139,38 @@ if(isset($_GET['yes'])){
                         </a>
                     </div>
                 </div>
+            </div>                                
+                <div class="alert-container" id="target">
+                    <div class="alert" id="alert">
+                        <div class="warning-container">
+                            <div class="warning-header">
+                                DELETE ACCOUNTANT.
+                            </div>
+                            <div class="subtext">
+                                Are you sure you want to permanently delete your account?
+                            </div>
+                            <form action="appointments.php" method="post">
+                                    <div class="buttonsection">
+                                    <a href="settings.php?yes=<?php echo $_SESSION['forthisid'] ?>">
+                                        <input type="button" class="edit2" value="Yes" name="yes">
+                                    </a>
+                                    <a href="appointments.php">
+                                        <input type="button" class="cancel2" value="No" name="no" id="noclearance">
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
     <script>
+        // animations for the table and the create button.
+        $(function(){
+            $(".alert").css({"animation":"opacity-foralert 1s forwards"});
+        });
+        // the alert for the delete function
+    
 
         //  greeting the user on top of the dashboad page
 
@@ -154,11 +194,75 @@ if(isset($_GET['yes'])){
 
         greeting.innerHTML = welcomeText;
 
-        // animate the dashboard
-        $(function(){
-            $("#dashboard").animate({opacity:'1', transform: 'translate("0px, 0px")'}, 1500, 'swing');
-            $('#dashboard').css({"animation":"my-animation 2s forwards"});
-        });
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; //January is 0 so need to add 1 to make it 1!
+        var yyyy = today.getFullYear();
+        if(dd<10){
+        dd='0'+dd
+        } 
+        if(mm<10){
+        mm='0'+mm
+        } 
+
+        today = yyyy+'-'+mm+'-'+dd;
+        document.getElementById("date").setAttribute("min", today);
+
+            // checkbox validation
+        function validateForm(form) {
+
+        var ap_type = document.getElementsByName("ap_type[]");
+
+        var checked_ap_type = 0;
+        
+        for (var i = 0; i < ap_type.length; i++) {
+            if (ap_type[i].checked) {
+                checked_ap_type++;
+            }
+        }
+
+
+        if (checked_ap_type == 0) {
+            document.getElementById("msg").innerHTML = "Service is required";
+            document.getElementById('msg').style.color="red";
+            return false;
+        }
+        return true;
+    }
+
+        // changing the dates form-container
+        function fireSweetAlert() {
+            Swal.fire({
+                title: 'CANCEL APPOINTMENT!',
+                text: 'Are you sure?',
+                icon: 'warning',
+                confirmButtonText: 'Yes',
+                showDenyButton: 'false',
+                denyButtonText: 'No',
+            }).then((willdelete) => {
+                if (willdelete) {
+                    $.ajax({
+                        url: "/student/confirm-delete/"+id,
+                        success: function(response){
+                            swal({
+                                title: response.status,
+                                text: response.status_text,
+                                icon: response.status_icon,
+                                button: "Ok",
+                            }).then({
+                                
+                            })
+                        }
+                    })
+                }
+    if (result.isConfirmed) {
+        Swal.fire('Deleted!', '', 'success')
+    } else if (result.isDenied) {
+        Swal.fire('No changes done to the appointment', '', 'info')
+    }
+    })
+        }
+    
         
     </script>
 </body>

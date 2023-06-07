@@ -39,6 +39,10 @@ if(isset($_POST['signup'])){
         mysqli_query($conn, $reg);
         $_SESSION['name'] = $fullname;
         $_SESSION['phone'] = $phone;
+
+        $reg2 = "insert into allusers(fullname, phone, password) values ('$fullname', '$phone', '$password')";
+        mysqli_query($conn, $reg2);
+        
         header('location: dashboard/index.php');
     }
 }

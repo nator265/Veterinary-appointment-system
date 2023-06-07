@@ -47,7 +47,7 @@ h1{
 .form-container{
     display: flex;
     justify-content: center;
-    margin-top: 30px;
+    margin-top: 20px;
 }
 .form{
     display: flex;
