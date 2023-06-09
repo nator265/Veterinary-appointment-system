@@ -205,41 +205,54 @@ function time_elapsed_string($datetime, $full = false) {
             </div>
             <div class="monthlist">
                 <div class="list">
-                    <table>
-                        <tr>
-                            <th>Month</th>
-                            <th>Amount</th>
-                        </tr>
-                        <?php
-                            $retrieve = "SELECT * from total_transactions where year1 = '".$_SESSION['selectedYear']."' ORDER BY month1 DESC";
-                            $link = mysqli_query($conn, $retrieve);
-                            checkSQL($conn, $link);
-                            $row = mysqli_num_rows($link);
-                            if (!$link){
-                                die("Invalid query: " .$conn->error);
-                            }
+                    <?php
+                        $retrieveMonths = "SELECT DISTINCT month1 FROM total_transactions ORDER BY month1 DESC";
+                        $linkMonths = mysqli_query($conn, $retrieveMonths);
+                        checkSQL($conn, $linkMonths);
+
+                        if (!$linkMonths) {
+                            die("Invalid query: " . $conn->error);
+                        }
+
+                        $months = [];
+                        $totalSum = 0;
+
+                        // Collect monthly totals
+                        while ($rowMonths = mysqli_fetch_assoc($linkMonths)) {
+                            $month = ucfirst($rowMonths["month1"]);
+
+                            $retrieveTotal = "SELECT SUM(total) AS totalAmount FROM total_transactions WHERE month1 = '$month'";
+                            $linkTotal = mysqli_query($conn, $retrieveTotal);
+                            checkSQL($conn, $linkTotal);
                             
-                            // reading data contained in each row
-                            while($row = $link->fetch_assoc()){
-                                
-                                ?>
-                                
+                            $rowTotal = mysqli_fetch_assoc($linkTotal);
+                            $totalAmount = $rowTotal['totalAmount'];
+                            $totalSum += $totalAmount;
+
+                            $months[$month] = $totalAmount;
+                        }
+
+                            // Display table
+                    ?>
+                    <table>
+                        <thead>
                             <tr>
-                                <td style="text-align:left; padding-left: 20px; padding-top:11px;">
-                                    <span style="padding-left:20px; font-size:large; font-family:sans-serif; font-weight: 500px">
-                                        <?php echo ucfirst($row["month1"])?>
-                                    </span>
-                                    <hr style="margin-top:5px">
-                                </td>
-                                <td style="text-align:right; padding-right: 20px; font-size:large; font-family:sans-serif; font-weight: 600px">
-                                    <span style="padding-right:20px;">
-                                        <?php echo "K".number_format($row["total"])?>
-                                    </span>
-                                    <hr style="margin-top:5px">
-                                </td>
+                                <th>Month</th>
+                                <th>Amount</th>
                             </tr>
-                            <?php }
-                        ?>
+                        </thead>
+                        <tbody>
+                            <?php
+                            foreach ($months as $month => $amount) {
+                                ?>
+                                 <tr onclick="window.location.href='monthlyrecords.php?selectedmonth=<?php echo $month; ?>';" style="cursor: pointer;" onmouseover="this.style.backgroundColor='#CCCCCC';" onmouseout="this.style.backgroundColor='transparent';">
+                                    <td><?php echo $month; ?></td>
+                                    <td><?php echo "K" . number_format($amount); ?></td>
+                                </tr>
+                                <?php
+                            }
+                            ?>
+                        </tbody>
                     </table>
                 </div>
             </div>

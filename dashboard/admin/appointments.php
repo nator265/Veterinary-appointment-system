@@ -83,7 +83,7 @@ function sendNotification($userId, $message, $phone) {
 $currentDate = date('Y-m-d'); // Get the current date
 
 // Retrieve appointments with the appointment date in the past and not already expired
-$query = "UPDATE appointments SET session_expiry = 'expired' WHERE ap_date < '$currentDate' AND session_expiry <> 'expired'";
+$query = "UPDATE appointments SET session_expiry = 'expired' WHERE ap_date < '$currentDate' AND session_expiry <> 'attended'";
 $result = mysqli_query($conn, $query);
 
 if ($result) {

@@ -67,7 +67,8 @@ if(!isset($_SESSION['name'])){
 
             <!-- 1.Dashboard -->
             <div class="main-dashboard-container" id="main-dashboard-container">
-                <div class="dashboard" id="dashboard" style="padding-left: 80px;"> 
+                <div class="dashboard" id="dashboard" style="padding-left: 80px;">
+                <div class="top">
                     <a href="add-profile.php" class="appointments-container" id="link2">
                         <div class="appointments" onclick="document.getElementById('add-modal').style.display='block'">
                             <div class="count-container">
@@ -102,14 +103,34 @@ if(!isset($_SESSION['name'])){
                                     <div class="count-info">
                                         Edit Profiles
                                     </div>
-                                <!-- thi is the number badge for the counter -->
-                                <div class="count">
-                                    <img src="images/user-icon.png" alt="Profile" height="150px" style="padding-top:20px;" id="image3">
+                                    <!-- thi is the number badge for the counter -->
+                                    <div class="count">
+                                        <img src="images/user-icon.png" alt="Profile" height="150px" style="padding-top:20px;" id="image3">
+                                    </div>
                                 </div>
-                            </div>
                             </div>
                         </a>
                     </div>
+                </div> 
+                <div class="bottom">
+                    <div class="services">
+                       <div class="notifications-container" id="link2">
+                            <a href="services.php">
+                                <div class="notifications">
+                                    <div class="count-container">
+                                        <div class="count-info">
+                                            Services
+                                        </div>
+                                        <!-- thi is the number badge for the counter -->
+                                        <div class="count">
+                                            <img src="images/services.png" alt="Services" height="150px" style="padding-top:20px;" id="image3">
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>

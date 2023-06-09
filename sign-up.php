@@ -8,44 +8,52 @@ if(isset($_POST['signup'])){
     $address = $_POST['address'];
     $phone = $_POST['phone'];
     $password = $_POST['password'];
-    $s = "select * from users where phone = '$phone'";
+    $s = "SELECT phone FROM doctors WHERE phone = '$phone'
+    UNION
+    SELECT phone FROM users WHERE phone = '$phone'
+    UNION
+    SELECT phone FROM admin WHERE phone = '$phone'
+    UNION
+    SELECT phone FROM accountant WHERE phone = '$phone'";
     $result = mysqli_query($conn, $s);
     $num = mysqli_num_rows($result);
-
-    if($num == 1){
-
-        ?>
-        <script>
+    if(empty($fullname) || empty($address) || empty($phone) || empty($password)){
+        ?><script>
             swal({
-                title: "error",
-                text: "The Details Entered Already Exist, Please Log In",
+                title:"error!",
+                text:"Entry fields cannot be blank",
                 icon: "error",
             });
-        </script>
-        <?php
-    }
-    else{
-        ?>
-        <script>
-            swal.fire({
-                title: "success",
-                text: "registration successful",
-                icon: "success",
-            });
-        </script>
-        <?php
-        
-        $reg = "insert into users(fullname, address, phone, password) values ('$fullname', '$address', '$phone', '$password')";
-        mysqli_query($conn, $reg);
-        $_SESSION['name'] = $fullname;
-        $_SESSION['phone'] = $phone;
+        </script><?php
+    }else{
 
-        $reg2 = "insert into allusers(fullname, phone, password) values ('$fullname', '$phone', '$password')";
-        mysqli_query($conn, $reg2);
-        
-        header('location: dashboard/index.php');
+        if($num == 1){
+            header('location:login-incorrect3.php');
+        }
+        else{
+            ?>
+            <script>
+                swal.fire({
+                    title: "success",
+                    text: "registration successful",
+                    icon: "success",
+                });
+            </script>
+            <?php
+            
+            $reg = "insert into users(fullname, address, phone, password) values ('$fullname', '$address', '$phone', '$password')";
+            mysqli_query($conn, $reg);
+            $_SESSION['name'] = $fullname;
+            $_SESSION['phone'] = $phone;
+
+            $reg2 = "insert into allusers(fullname, phone, password) values ('$fullname', '$phone', '$password')";
+            mysqli_query($conn, $reg2);
+            
+            header('location: dashboard/index.php');
+        }
     }
 }
+
 ?>
 <!-- html code -->
 <!DOCTYPE html>
@@ -55,6 +63,7 @@ if(isset($_POST['signup'])){
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.all.js"></script>
     <script src="sweetalert2.all.min.js"></script>
     <title>Sign Up</title>
     <link rel="stylesheet" href="sign-up.css">

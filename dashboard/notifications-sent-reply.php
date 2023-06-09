@@ -137,7 +137,7 @@ if(isset($_POST['submit'])){
                             
                                 <input type="text" name="message" id="fullname" value="<?php
                                     echo $_SESSION['message-for-reciever'];
-                                ?>" class="fullname" required></textarea>
+                                ?>" class="fullname" required>
                                 <br>
                                 <br>
                                 <div class="bttn-container">

@@ -6,6 +6,7 @@ include('../functions.php');
 if(!isset($_SESSION['name'])){
     header('location:../login.php');
 }
+
 if(isset($_POST['edit'])){
     
     $fullname = $_POST['fullname'];
@@ -44,11 +45,14 @@ if(isset($_POST['edit'])){
             // for notifications sender
             $update4 = "UPDATE notifications SET phone = '$phone' where phone = '".$_SESSION['phone']."' ";
             mysqli_query($conn, $update4);
+            $update4 = "UPDATE notifications SET sender = '$fullname' where phone = '".$_SESSION['phone']."' ";
+            mysqli_query($conn, $update4);
             // for notifications reciever
             $update5 = "UPDATE notifications SET reciever = '$phone' where reciever = '".$_SESSION['phone']."' ";
             mysqli_query($conn, $update5);
 
             $_SESSION['phone'] = $phone;
+            $_SESSION['forlater'] = $fullname;
             header('location: add-doctor-success.php');
          }
     }   
@@ -114,35 +118,20 @@ if(isset($_POST['edit'])){
                     <div class="form-container">
                         <div class="form">
                             <form action="edit-profile.php" method="POST">
-
-                            <input type="text" name="fullname" id="input" value="<?php
-                                $namevalue = "SELECT * from users where phone = '".$_SESSION['phone']."'";
-                                $namelink = mysqli_query($conn, $namevalue);
-                                $fetchname = mysqli_fetch_assoc($namelink);
-                                echo $fetchname['fullname']
-                                ?>">
-
-                            <input type="text" name="address" id="input"value="<?php
-                                $addressvalue = "SELECT * from users where phone = '".$_SESSION['phone']."'";
-                                $addresslink = mysqli_query($conn, $addressvalue);
-                                $fetchaddress = mysqli_fetch_assoc($addresslink);
-                                echo $fetchaddress['address']
-                                ?>">
-
-                            <input type="text" name="phone" id="input" value="<?php
-                                $phonevalue = "SELECT * from users where phone = '".$_SESSION['phone']."'";
-                                $phonelink = mysqli_query($conn, $phonevalue);
-                                $fetchphone = mysqli_fetch_assoc($phonelink);
-                                echo $fetchphone['phone']
-                                ?>">    
-
-                            <input type="passoword" name="password" id="input" value="<?php
-                                $passwordvalue = "SELECT * from users where phone = '".$_SESSION['phone']."'";
-                                $passwordlink = mysqli_query($conn, $passwordvalue);
-                                $fetchpassword = mysqli_fetch_assoc($passwordlink);
-                                echo  str_replace('*', '', $fetchpassword['password']);
-                                ?>">
-                            <input type="submit" value="Edit" name="edit" id="bttn" class="submit">
+                                <?php
+                                $query = "SELECT fullname, address, phone, password FROM users WHERE phone = ?";
+                                $stmt = mysqli_prepare($conn, $query);
+                                mysqli_stmt_bind_param($stmt, "s", $_SESSION['phone']);
+                                mysqli_stmt_execute($stmt);
+                                mysqli_stmt_bind_result($stmt, $fullname, $address, $phone, $password);
+                                mysqli_stmt_fetch($stmt);
+                                mysqli_stmt_close($stmt);
+                                ?>
+                                <input type="text" name="fullname" id="input" value="<?php echo htmlspecialchars($fullname); ?>">
+                                <input type="text" name="address" id="input" value="<?php echo htmlspecialchars($address); ?>">
+                                <input type="text" name="phone" id="input" value="<?php echo htmlspecialchars($phone); ?>" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                <input type="password" name="password" id="input" value="<?php echo htmlspecialchars(str_replace('*', '', $password)); ?>">
+                                <input type="submit" value="Edit" name="edit" id="bttn" class="submit">
                             </form>
                         </div>
                     </div>
