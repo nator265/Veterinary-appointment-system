@@ -83,7 +83,7 @@ if(isset($_POST['signup'])){
                     <br>
                     <input type="text" name="address" id="address" placeholder="District e.g. Lilongwe" required style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;">
                     <br>
-                    <input type="text" name="phone" id="phone" placeholder="Phone Number" required style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;">
+                    <input type="text" name="phone" id="phone" placeholder="Phone Number" required style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                     <br>
                     <input type="password" name="password" id="password" placeholder="Password" required style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;">
                     <br>

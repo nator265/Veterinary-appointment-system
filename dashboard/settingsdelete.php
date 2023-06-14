@@ -144,7 +144,7 @@ if(isset($_GET['delete'])){
                     <div class="alert" id="alert">
                         <div class="warning-container">
                             <div class="warning-header">
-                                DELETE ACCOUNTANT.
+                                DELETE ACCOUNT.
                             </div>
                             <div class="subtext">
                                 Are you sure you want to permanently delete your account?
@@ -154,7 +154,7 @@ if(isset($_GET['delete'])){
                                     <a href="settings.php?yes=<?php echo $_SESSION['forthisid'] ?>">
                                         <input type="button" class="edit2" value="Yes" name="yes">
                                     </a>
-                                    <a href="appointments.php">
+                                    <a href="settings.php">
                                         <input type="button" class="cancel2" value="No" name="no" id="noclearance">
                                     </a>
                                 </div>

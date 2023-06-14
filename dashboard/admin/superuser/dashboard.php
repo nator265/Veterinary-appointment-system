@@ -59,13 +59,23 @@ if(!isset($_SESSION['name'])){
 
         <!-- this is the second column -->
         <div class="column2">
-            <div class="greetings-container" style="padding-right: 20px;">
-                <span class="greetings" id="greetings"></span>
-                <?php 
-                    // this is to call the name of the user with the session variable
-                   
-                    echo ucwords($_SESSION['name']) . '.';
-                ?> 
+            <div class="oneblock">
+                <div class="giveid" style="color:white; padding-left: 20px">
+                    Registered Users: <?php 
+                        $getid = "SELECT * FROM users";
+                        $linkgetid = mysqli_query($conn, $getid);
+                        $numusers = mysqli_num_rows($linkgetid);
+                        echo $numusers;
+                    ?>.
+                    </div>
+                    <div class="greetings-container">
+                    <span class="greetings" id="greetings"></span>
+                    <?php 
+                        // this is to call the name of the user with the session variable
+                    
+                        echo ucwords($_SESSION['name']) . '.';
+                    ?> 
+                </div>
             </div>
 
             <!-- 1.Dashboard -->

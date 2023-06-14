@@ -102,11 +102,10 @@
                     <h2>GSJ Animal Health & Production Appointment System</h2> 
                 </legend>
                 <form method="POST" action="login-incorrect.php" name="form" onsubmit="return validated()" style="text-align:center;">
-                    <input type="text" name="phone" id="phone" placeholder="Phone" style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;"
-                        onclick="document.getElementById('phone').style.border = 'none'">
+                    <input type="text" name="phone" id="phone" placeholder="Phone" style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;" oninput="this.value = this.value.replace(/[^0-9]/g, '')" onclick="document.getElementById('phone').style.border = 'none'" value="<?php echo isset($_POST['phone']) ? htmlspecialchars($_POST['phone']) : ''; ?>">
                     <br>
                     <input type="password" name="password" id="password" placeholder="Password" style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;"
-                        onclick="document.getElementById('password').style.border = 'none'">
+                    onclick="document.getElementById('password').style.border = 'none'" value="<?php echo isset($_POST['password']) ? htmlspecialchars($_POST['password']) : ''; ?>">
                     <br>
                     <a href="reset.php"><span id="reset">Forgot Password?</span></a>
                     <br>
