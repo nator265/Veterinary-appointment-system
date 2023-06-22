@@ -43,15 +43,16 @@ date_default_timezone_set("Africa/Harare");
 // Function to remove past time slots
  // allocate time to the user automatically
  $availableTimeSlots = array(
-    '08:00 AM', '08:30 AM',
-    '09:00 AM', '09:30 AM',
-    '10:00 AM', '10:30 AM',
-    '11:00 AM', '11:30 AM',
-    '01:00 PM', '01:30 PM',
-    '02:00 PM', '02:30 PM',
-    '03:00 PM', '03:30 PM',
-    '04:00 PM'
+    '08:00', '08:30',
+    '09:00', '09:30',
+    '10:00', '10:30',
+    '11:00', '11:30',
+    '13:00', '13:30',
+    '14:00', '14:30',
+    '15:00', '15:30',
+    '16:00'
 );
+
 
 $selectedTimeSlot = null;
 foreach ($availableTimeSlots as $timeSlot) {
@@ -97,15 +98,16 @@ $currentTime2 = DateTime::createFromFormat('g:i A', $currentTime);
 if ($allocatedTime3 <= $currentTime2 and $commonFormatDate2 == $commonFormatDate1){
     date_default_timezone_set("Africa/Harare");
     $availableTimeSlots = array(
-        '08:00 AM', '08:30 AM',
-        '09:00 AM', '09:30 AM',
-        '10:00 AM', '10:30 AM',
-        '11:00 AM', '11:30 AM',
-        '01:00 PM', '01:30 PM',
-        '02:00 PM', '02:30 PM',
-        '03:00 PM', '03:30 PM',
-        '04:00 PM'
+        '08:00', '08:30',
+        '09:00', '09:30',
+        '10:00', '10:30',
+        '11:00', '11:30',
+        '13:00', '13:30',
+        '14:00', '14:30',
+        '15:00', '15:30',
+        '16:00'
     );
+    
     $currentDateTime = new DateTime();
     $currentDateTime->modify('+1 hour');
     $oneHourAfterCurrentTime = $currentDateTime->format('g:i A');
@@ -204,145 +206,69 @@ if(isset($_POST['re-submit'])){
     // converting the ap_type to string
     $allaptype = implode(", ", $selectedservices);
 
-    $timedate = "SELECT * from appointments where ap_id = '".$_SESSION['idforedit']."'";
-    $linktime = mysqli_query($conn, $timedate);
-    $fetchtime = mysqli_fetch_assoc($linktime);
-    $time = $fetchtime['ap_time'];
+    $select = "SELECT * FROM appointments WHERE ap_id = '".$_SESSION['idforedit']."'";
+    $selectlink = mysqli_query($conn, $select);
+    $fetchbillstatus = mysqli_fetch_assoc($selectlink);
+    $approved = $fetchapproved['approved'];
 
-    $datetime = "SELECT * from appointments where ap_id = '".$_SESSION['idforedit']."'";
-    $linkdate = mysqli_query($conn, $datetime);
-    $fetchdate = mysqli_fetch_assoc($linkdate);
-    $date2 = $fetchtime['ap_date'];
+    // fetch the billstatus compare it to avoid the user form editing an ongoing appointment
+    if($approved !== 'pending'){
+        header('location:no-edit.php');
+    }else{
+        $timedate = "SELECT * from appointments where ap_id = '".$_SESSION['idforedit']."'";
+        $linktime = mysqli_query($conn, $timedate);
+        $fetchtime = mysqli_fetch_assoc($linktime);
+        $time = $fetchtime['ap_time'];
 
-    if($date == $date2){
-        $allocatedTime = $time;
-     }else{
-        // Check if the selected day is fully booked
-        $query = "SELECT COUNT(*) as count FROM appointments WHERE ap_date = '$date'";
-        $result = mysqli_query($conn, $query);
-        $row = mysqli_fetch_assoc($result);
-        $appointmentCount = intval($row['count']);
+        $datetime = "SELECT * from appointments where ap_id = '".$_SESSION['idforedit']."'";
+        $linkdate = mysqli_query($conn, $datetime);
+        $fetchdate = mysqli_fetch_assoc($linkdate);
+        $date2 = $fetchtime['ap_date'];
 
-    if ($appointmentCount >= 2) {
-        header('location:no-available-timeslots.php');
-        return;
-    }
-        $ap_id = mysqli_insert_id($conn);
-
-        date_default_timezone_set("Africa/Harare");
-
-        $availableTimeSlots = array(
-            '08:00 AM', '08:30 AM',
-            '09:00 AM', '09:30 AM',
-            '10:00 AM', '10:30 AM',
-            '11:00 AM', '11:30 AM',
-            '01:00 PM', '01:30 PM',
-            '02:00 PM', '02:30 PM',
-            '03:00 PM', '03:30 PM',
-            '04:00 PM'
-        );
-
-        $selectedTimeSlot = null;
-     
-        foreach ($availableTimeSlots as $timeSlot) {
-            $query = "SELECT COUNT(*) as count FROM appointments WHERE ap_time = '$timeSlot' AND ap_date = '$date'";
+        if($date == $date2){
+            $allocatedTime = $time;
+        }else{
+            // Check if the selected day is fully booked
+            $query = "SELECT COUNT(*) as count FROM appointments WHERE ap_date = '$date'";
             $result = mysqli_query($conn, $query);
             $row = mysqli_fetch_assoc($result);
             $appointmentCount = intval($row['count']);
-            
-            if ($appointmentCount == 0) {
-                $selectedTimeSlot = $timeSlot;
-                break;
-            }
-        }
-        
-        if ($selectedTimeSlot === null) {
-            // All time slots are taken, handle the case where no available time slot is found
+
+        if ($appointmentCount >= 2) {
             header('location:no-available-timeslots.php');
             return;
         }
-        
-        
-        // Remove the allocated time slot from the available time slots array
-        $index = array_search($selectedTimeSlot, $availableTimeSlots);
-        if ($index !== false) {
-            unset($availableTimeSlots[$index]);
-        }
-        
-        $allocatedTime2 = $selectedTimeSlot;
-        
-        $currentTime = date('g:i A'); // Get current time in 12-hour format with AM/PM (e.g., 2:30 PM)
-        $currentDate = date('j F Y');  // Get current date in the format: Day Month Year (e.g., 23 May 2023)
-        $date1 = $currentDate;
-        $date2 = $date;
-        
-        $dateObj1 = new DateTime($date1);
-        $dateObj2 = new DateTime($date2);
-        
-        $commonFormatDate1 = $dateObj1->format('j F Y');
-        $commonFormatDate2 = $dateObj2->format('j F Y');
-        
-        
-        // ...
-        $allocatedTime3 = DateTime::createFromFormat('g:i A', $allocatedTime2);
-        $currentTime2 = DateTime::createFromFormat('g:i A', $currentTime);
-        if ($allocatedTime3 <= $currentTime2 and $commonFormatDate2 == $commonFormatDate1){
+            $ap_id = mysqli_insert_id($conn);
+
             date_default_timezone_set("Africa/Harare");
+
             $availableTimeSlots = array(
-                '08:00 AM', '08:30 AM',
-                '09:00 AM', '09:30 AM',
-                '10:00 AM', '10:30 AM',
-                '11:00 AM', '11:30 AM',
-                '01:00 PM', '01:30 PM',
-                '02:00 PM', '02:30 PM',
-                '03:00 PM', '03:30 PM',
-                '04:00 PM'
+                '08:00', '08:30',
+                '09:00', '09:30',
+                '10:00', '10:30',
+                '11:00', '11:30',
+                '13:00', '13:30',
+                '14:00', '14:30',
+                '15:00', '15:30',
+                '16:00'
             );
-            $currentDateTime = new DateTime();
-            $currentDateTime->modify('+1 hour');
-            $oneHourAfterCurrentTime = $currentDateTime->format('g:i A');
+            
+
+            $selectedTimeSlot = null;
         
-            $targetTime = $oneHourAfterCurrentTime; // Specify the target time
-            $closestTimeSlot = null;
-            $closestTimeDifference = null;
-            
             foreach ($availableTimeSlots as $timeSlot) {
-                $difference = strtotime($timeSlot) - strtotime($targetTime);
-                $difference = abs($difference);
-            
-                if ($closestTimeDifference === null || $difference < $closestTimeDifference) {
-                    $closestTimeDifference = $difference;
-                    $closestTimeSlot = $timeSlot;
-                }
-            }
-            
-            $foundStartingPoint = false;
-            $availableTimeSlotsFromStartingPoint = array();
-            
-            foreach ($availableTimeSlots as $timeSlot) {
-                if ($foundStartingPoint) {
-                    $availableTimeSlotsFromStartingPoint[] = $timeSlot;
-                }
-            
-                if ($timeSlot === $closestTimeSlot) {
-                    $foundStartingPoint = true;
-                }
-            }
-            $selectedTimeSlot2 = $time;
-            // Output the available time slots from the starting point
-            foreach ($availableTimeSlotsFromStartingPoint as $timeSlot) {
                 $query = "SELECT COUNT(*) as count FROM appointments WHERE ap_time = '$timeSlot' AND ap_date = '$date'";
                 $result = mysqli_query($conn, $query);
                 $row = mysqli_fetch_assoc($result);
                 $appointmentCount = intval($row['count']);
                 
                 if ($appointmentCount == 0) {
-                    $selectedTimeSlot2 = $timeSlot;
+                    $selectedTimeSlot = $timeSlot;
                     break;
                 }
             }
             
-            if ($selectedTimeSlot2 === null) {
+            if ($selectedTimeSlot === null) {
                 // All time slots are taken, handle the case where no available time slot is found
                 header('location:no-available-timeslots.php');
                 return;
@@ -350,39 +276,127 @@ if(isset($_POST['re-submit'])){
             
             
             // Remove the allocated time slot from the available time slots array
-            $index = array_search($selectedTimeSlot2, $availableTimeSlots);
+            $index = array_search($selectedTimeSlot, $availableTimeSlots);
             if ($index !== false) {
                 unset($availableTimeSlots[$index]);
             }
-            $allocatedTime = $selectedTimeSlot2;
-        }else{
-            $allocatedTime = $allocatedTime2;
+            
+            $allocatedTime2 = $selectedTimeSlot;
+            
+            $currentTime = date('g:i A'); // Get current time in 12-hour format with AM/PM (e.g., 2:30 PM)
+            $currentDate = date('j F Y');  // Get current date in the format: Day Month Year (e.g., 23 May 2023)
+            $date1 = $currentDate;
+            $date2 = $date;
+            
+            $dateObj1 = new DateTime($date1);
+            $dateObj2 = new DateTime($date2);
+            
+            $commonFormatDate1 = $dateObj1->format('j F Y');
+            $commonFormatDate2 = $dateObj2->format('j F Y');
+            
+            
+            // ...
+            $allocatedTime3 = DateTime::createFromFormat('g:i A', $allocatedTime2);
+            $currentTime2 = DateTime::createFromFormat('g:i A', $currentTime);
+            if ($allocatedTime3 <= $currentTime2 and $commonFormatDate2 == $commonFormatDate1){
+                date_default_timezone_set("Africa/Harare");
+                $availableTimeSlots = array(
+                    '08:00', '08:30',
+                    '09:00', '09:30',
+                    '10:00', '10:30',
+                    '11:00', '11:30',
+                    '13:00', '13:30',
+                    '14:00', '14:30',
+                    '15:00', '15:30',
+                    '16:00'
+                );
+                
+                $currentDateTime = new DateTime();
+                $currentDateTime->modify('+1 hour');
+                $oneHourAfterCurrentTime = $currentDateTime->format('g:i A');
+            
+                $targetTime = $oneHourAfterCurrentTime; // Specify the target time
+                $closestTimeSlot = null;
+                $closestTimeDifference = null;
+                
+                foreach ($availableTimeSlots as $timeSlot) {
+                    $difference = strtotime($timeSlot) - strtotime($targetTime);
+                    $difference = abs($difference);
+                
+                    if ($closestTimeDifference === null || $difference < $closestTimeDifference) {
+                        $closestTimeDifference = $difference;
+                        $closestTimeSlot = $timeSlot;
+                    }
+                }
+                
+                $foundStartingPoint = false;
+                $availableTimeSlotsFromStartingPoint = array();
+                
+                foreach ($availableTimeSlots as $timeSlot) {
+                    if ($foundStartingPoint) {
+                        $availableTimeSlotsFromStartingPoint[] = $timeSlot;
+                    }
+                
+                    if ($timeSlot === $closestTimeSlot) {
+                        $foundStartingPoint = true;
+                    }
+                }
+                $selectedTimeSlot2 = $time;
+                // Output the available time slots from the starting point
+                foreach ($availableTimeSlotsFromStartingPoint as $timeSlot) {
+                    $query = "SELECT COUNT(*) as count FROM appointments WHERE ap_time = '$timeSlot' AND ap_date = '$date'";
+                    $result = mysqli_query($conn, $query);
+                    $row = mysqli_fetch_assoc($result);
+                    $appointmentCount = intval($row['count']);
+                    
+                    if ($appointmentCount == 0) {
+                        $selectedTimeSlot2 = $timeSlot;
+                        break;
+                    }
+                }
+                
+                if ($selectedTimeSlot2 === null) {
+                    // All time slots are taken, handle the case where no available time slot is found
+                    header('location:no-available-timeslots.php');
+                    return;
+                }
+                
+                
+                // Remove the allocated time slot from the available time slots array
+                $index = array_search($selectedTimeSlot2, $availableTimeSlots);
+                if ($index !== false) {
+                    unset($availableTimeSlots[$index]);
+                }
+                $allocatedTime = $selectedTimeSlot2;
+            }else{
+                $allocatedTime = $allocatedTime2;
+            }
         }
-    }
-     
+        
 
-     // Get the total cost by comparing selected services with `service_costs` table
-     $total = 0;
-     foreach ($selectedservices as $service) {
-         $service = mysqli_real_escape_string($conn, $service); // Prevent SQL injection
-         $query = "SELECT service_cost FROM service_costs WHERE servicename = '$service'";
-         $result = mysqli_query($conn, $query);
- 
-         if ($row = mysqli_fetch_assoc($result)) {
-             $serviceCost = intval($row['service_cost']); // Convert to integer
-             $total += $serviceCost;
-         }
-     }
- 
-      // inserting data into the appointments table in the database
-      $reg = "UPDATE appointments
-                SET fullname = '$fullname', field = '$field', animal = '$animal', ap_time = '$allocatedTime', ap_date = '$date', ap_type = '$allaptype', total = '$total', phone = '".$_SESSION['phone']."'
-                WHERE ap_id = '".$_SESSION['idforedit']."'";
-                            
-      $rest = mysqli_query($conn, $reg);
-      
-      checkSQL($conn, $rest);
-    header('location:appointments.php');
+        // Get the total cost by comparing selected services with `service_costs` table
+        $total = 0;
+        foreach ($selectedservices as $service) {
+            $service = mysqli_real_escape_string($conn, $service); // Prevent SQL injection
+            $query = "SELECT service_cost FROM service_costs WHERE servicename = '$service'";
+            $result = mysqli_query($conn, $query);
+    
+            if ($row = mysqli_fetch_assoc($result)) {
+                $serviceCost = intval($row['service_cost']); // Convert to integer
+                $total += $serviceCost;
+            }
+        }
+    
+        // inserting data into the appointments table in the database
+        $reg = "UPDATE appointments
+                    SET fullname = '$fullname', field = '$field', animal = '$animal', ap_time = '$allocatedTime', ap_date = '$date', ap_type = '$allaptype', total = '$total', phone = '".$_SESSION['phone']."'
+                    WHERE ap_id = '".$_SESSION['idforedit']."'";
+                                
+        $rest = mysqli_query($conn, $reg);
+        
+        checkSQL($conn, $rest);
+        header('location:appointments.php');
+    }
 }
 
 
@@ -464,7 +478,7 @@ if(isset($_GET['yes'])){
                                         <option value="pet">Pet</option>
                                         <option value="livestock">Livestock</option>
                                     </select>                        
-                                    <input type="text" name="animal" id="animal" placeholder="Pet e.g. Dog | Livestock e.g. Cow" required>
+                                    <input type="text" name="animal" id="animal" placeholder="Pet e.g. Dog | Livestock e.g. Cow" required title="If you have more than one pet or livestock write the number then the animal type, eg '2 Dogs' or '2 Cattle' or 'Cat and Dog', then check the services that they require.">
                                 </div>
                                 <br>
                                 <input type="date" name="ap_date" id="date" required>
@@ -520,7 +534,16 @@ if(isset($_GET['yes'])){
             <div class="main-appointments-container" id="main-appointments-container">
                 <div class="create">
                     <button class="create" id="bttn" onclick="document.getElementById('modal-container').style.display='flex'" style="border-radius: 5px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;"> Create Appointment </button>
+                   
                 </div>
+                <a href="confirmpayment.php"><button class="confirm" id="bttn" style="border-radius: 5px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;"> 
+                    Confirm Payment <span id="floating"><?php
+                        $select = "SELECT * FROM appointments WHERE bill_status = 'requesting_payment' and phone = '".$_SESSION['phone']."'";
+                        $linkselect = mysqli_query($conn, $select);
+                        $count = mysqli_num_rows($linkselect);
+                        echo $count;
+                    ?></span>                
+                    </button></a>
                 <div class="table-container"> 
                     <div class="table">
                         <table>
@@ -541,7 +564,7 @@ if(isset($_GET['yes'])){
                                     Date
                                 </th>                                
                                 <th>
-                                    Total
+                                    Status
                                 </th>
                                 <th colspan="2" style = "z-index: 2">
                                     Actions
@@ -553,7 +576,7 @@ if(isset($_GET['yes'])){
                                 $fetch_rest2 = mysqli_fetch_assoc($rest2);
                                 
                                 // retrieve data for the user matching the phone number
-                                $retrieve = "SELECT doctors.fullname as name, appointments.animal, appointments.ap_type, appointments.ap_time, appointments.ap_date, appointments.ap_id, appointments.total FROM doctors INNER JOIN appointments ON doctors.field = appointments.field where appointments.phone = '".$_SESSION['phone']."' and appointments.session_expiry = 'pending' and appointments.bill_status = 'Not Paid' and approved != 'rejected' ORDER BY appointments.ap_date ASC, appointments.ap_time ASC";
+                                $retrieve = "SELECT doctors.fullname as name, appointments.animal, appointments.ap_type, appointments.ap_time, appointments.ap_date, appointments.ap_id, appointments.approved FROM doctors INNER JOIN appointments ON doctors.field = appointments.field where appointments.phone = '".$_SESSION['phone']."' and appointments.session_expiry = 'pending' and appointments.bill_status != 'paid' and approved != 'rejected' ORDER BY appointments.ap_date ASC, appointments.ap_time ASC";
                                 $link = mysqli_query($conn, $retrieve);
                                 checkSQL($conn, $link);
                                 $row = mysqli_num_rows($link);
@@ -574,7 +597,7 @@ if(isset($_GET['yes'])){
                                     <td><?php echo $row["ap_type"] ?></td>
                                     <td><?php echo $row["ap_time"] ?></td>
                                     <td><?php echo $ap_date2 ?></td>
-                                    <td><?php echo "K".number_format($row["total"]) ?></td>
+                                    <td><?php echo $row['approved'] ?></td>
                                     <td style = "z-index: 1"><a href="appointments-edit.php?edit=<?php echo $ap_id ?>" class="edit">Edit</td>
                                     <td style = "z-index: 1"><a href="appointments-delete.php?delete=<?php echo $ap_id ?>" class="cancel" id="clearance">Cancel</a></td>
                                     </tr>
@@ -609,6 +632,7 @@ if(isset($_GET['yes'])){
         // animations for the table and the create button.
         $(function(){
             $(".create").css({"animation":"second-animation 1s forwards"});
+            $(".confirm").css({"animation":"second-animation 1s forwards"});
             $(".table").css({"animation":"third-animation 1s forwards"});
         })
         // the alert for the delete function

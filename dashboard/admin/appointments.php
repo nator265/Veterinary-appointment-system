@@ -29,7 +29,7 @@ if(isset($_GET['yes'])){
     $removelink = mysqli_query($conn, $removeqry);
     header('location:appointments.php');    
 }
-
+date_default_timezone_set("Africa/Harare");
 function time_elapsed_string($datetime, $full = false) {
     $now = new DateTime;
     $ago = new DateTime($datetime);
@@ -80,17 +80,19 @@ function sendNotification($userId, $message, $phone) {
     // Close the database connection
     mysqli_close($conn);
 }
+date_default_timezone_set("Africa/Harare");
 $currentDate = date('Y-m-d'); // Get the current date
+$currentTime = date('H:i:s', strtotime('-30 minutes'));
 
-// Retrieve appointments with the appointment date in the past and not already expired
-$query = "UPDATE appointments SET session_expiry = 'expired' WHERE ap_date < '$currentDate' AND session_expiry <> 'attended'";
+$query = "UPDATE appointments SET session_expiry = 'expired' WHERE ap_date = '$currentDate' AND TIME(ap_time) < TIME('$currentTime') AND session_expiry <> 'attended'";
+
 $result = mysqli_query($conn, $query);
 
 if ($result) {
     $numExpiredAppointments = mysqli_affected_rows($conn);
    
     // Retrieve the details of the expired appointments
-    $expiredQuery = "SELECT fullname, ap_id, phone FROM appointments WHERE ap_date < '$currentDate' AND session_expiry = 'expired'";
+    $expiredQuery = "SELECT fullname, ap_id, phone FROM appointments WHERE ap_date = '$currentDate' AND TIME(ap_time) < TIME('$currentTime') AND session_expiry = 'expired'";
     $expiredResult = mysqli_query($conn, $expiredQuery);
 
     while ($row = mysqli_fetch_assoc($expiredResult)) {

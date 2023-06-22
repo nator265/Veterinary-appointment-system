@@ -29,7 +29,7 @@ if(isset($_GET['yes'])){
     $removelink = mysqli_query($conn, $removeqry);
     header('location:appointments.php');    
 }
-
+date_default_timezone_set("Africa/Harare");
 function time_elapsed_string($datetime, $full = false) {
     $now = new DateTime;
     $ago = new DateTime($datetime);
@@ -109,21 +109,19 @@ function time_elapsed_string($datetime, $full = false) {
         <!-- thi is the modal for the appointments registration -->
 
         <div class="column2">
-            <div class="greetings-container">
-                <span class="greetings" id="greetings"></span>
-                <?php 
-                    // this is to call the name of the user with the session variable
-                   
-                    echo ucwords($_SESSION['name']) . '.';
-                ?> 
-            </div>
           
             <!-- 2.appointmets tab -->
             <div class="main-appointments-container" id="main-appointments-container">
-            <div class="search-container">
-                <input type="text" id="search" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
-                <img src="images/search.webp" height="30px" width="30px" alt=" search">
+                <div class="theader">
+                    <div class="tbuttons">
+                        <button id="btn" class="edit" style="height: 80px; width:150px; margin-top:10px; margin-right:20px;">Past Records</button>
+                    </div>
+                    <div class="search-container">
+                        <input type="text" id="search" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+                        <img src="images/search.webp" height="30px" width="30px" alt=" search">
+                    </div>
                 </div>
+                
                 <div class="table-container">
                 <div class="table" id="recents2">
                         <table id="myTable">
@@ -138,24 +136,20 @@ function time_elapsed_string($datetime, $full = false) {
                                     Appointment Type
                                 </th>
                                 <th>
+                                    Time
+                                </th>
+                                <th>
                                     Date
-                                </th>
-                                <th>
-                                    Session Status
-                                </th>
-                                <th>
-                                    Total
-                                </th>
-                                <th colspan="2" style="z-index:1">
-                                   Actions
-                                </th>
                             </tr>
                             <div class="recents-tab">
                                 <?php
                                     // retrieve data for the user matching the phone number
                                     // if($fetch_rest2['phone'] == )
                                     // retrieving data from the database for the user to see
-                                    $query = "SELECT * from appointments where approved = 'approved' and session_expiry = 'pending' and field = '".$_SESSION['field3']."' ORDER BY ap_date asc";
+                                    $currentDate = date('Y-m-d'); // Get the current date
+                                    $currentTime = date('H:i:s', strtotime('-30 minutes'));
+                                    $query = "SELECT * FROM appointments WHERE approved = 'approved' AND session_expiry = 'pending' AND field = '" . $_SESSION['field3'] . "' ORDER BY ap_date ASC";
+
                                         $approved_filter = mysqli_query($conn, $query);
                                         checkSQL($conn, $approved_filter);
                                         $row = mysqli_num_rows($approved_filter);
@@ -167,16 +161,16 @@ function time_elapsed_string($datetime, $full = false) {
                                             $date = strtotime($dateString); // Convert the string to a Unix timestamp
                                             $ap_date2 = date("j F Y", $date); // Format the date
                                             $ap_id = $row["ap_id"];
+                                            $kaid = $row["phone"];
                                         ?>
                                         
-                                        <tr>
+                                        <tr onclick="window.location.href='prescription.php?pre=<?php echo $kaid; ?>&ap_id=<?php echo $ap_id?>';" style="cursor: pointer;" onmouseover="this.style.backgroundColor='#CCCCCC';" onmouseout="this.style.backgroundColor='transparent';">
                                         <td><?php echo $row["fullname"] ?></td>
                                         <td><?php echo $row["animal"] ?></td>
                                         <td><?php echo $row["ap_type"] ?></td>
+                                        <td><?php echo $row["ap_time"] ?> </td>
                                         <td><?php echo $ap_date2?></td>
-                                        <td><?php echo $row["session_expiry"] ?></td>
-                                        <td><?php echo "K".number_format($row["total"]) ?></td>
-                                        <td style="z-index:2"><a href="check-off.php?checked=<?php echo $row['ap_id'] ?>"> <button class="edit">Attended</button></a></td>
+                                        <!-- <td style="z-index:2"><a href="check-off.php?checked=<?php echo $row['ap_id'] ?>"> <button class="edit">Attended</button></a></td> -->
                                         </tr>
                                     <?php }
                                 ?>

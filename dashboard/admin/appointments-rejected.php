@@ -24,7 +24,7 @@ if(isset($_GET['yes'])){
 
     // to remove the appoitnment from the pending tab to the rejected tab.
     $removeqry = "UPDATE appointments 
-        SET approved = 'approved' 
+        SET approved = 'Approved' 
         WHERE ap_id = $approvedPhone";
     $removelink = mysqli_query($conn, $removeqry);
     header('location:appointments-rejected.php');        

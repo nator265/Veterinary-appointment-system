@@ -79,7 +79,7 @@ if(!isset($_SESSION['name'])){
                                     <div class="fig">
                                         <?php
                                             // showing the number of appointments that the doctor has
-                                            $count1 = "SELECT * FROM appointments where session_expiry = 'Attended' and bill_status = 'Not paid' "; 
+                                            $count1 = "SELECT * FROM appointments where bill_status = 'confirmed'"; 
                                             $countlink = mysqli_query($conn, $count1);
                                             $count = mysqli_num_rows($countlink);
                                             echo $count;

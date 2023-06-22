@@ -113,6 +113,31 @@ if(!isset($_SESSION['name'])){
                                 </div>
                             </a>
                         </div>
+                        <div class="notifications-container" id="link2">
+                            <a href="receipts.php">
+                                <div class="notifications">
+                                    <div class="count-container">
+                                        <div class="count-info">
+                                            Receipts
+                                        </div>
+                                        <!-- this is the number badge for the counter -->
+                                        <div class="count">
+                                            <div class="fig">
+                                                <?php
+                                                    $count1 = "SELECT * FROM appointments Where bill_status = 'paid' AND phone = '" .$_SESSION['phone']."'";
+                                                    $countlink = mysqli_query($conn, $count1);
+                                                    $count = mysqli_num_rows($countlink);
+                                                    echo $count;
+                                                ?>
+                                            </div>
+                                            <div class="recimage">
+                                                <img src="images/received.png" alt="received" height="140px" id="image3" style="padding-top:10px">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

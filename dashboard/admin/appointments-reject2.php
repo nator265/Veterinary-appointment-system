@@ -25,7 +25,7 @@ if(isset($_POST['submit'])){
  
     // to remove the appoitnment from the pending tab to the rejected tab.
     $removeqry = "UPDATE appointments 
-        SET approved = 'rejected' 
+        SET approved = 'Rejected' 
         WHERE ap_id = '".$_SESSION['apid']."'";
     $removelink = mysqli_query($conn, $removeqry);
     checkSQL($conn, $removelink);

@@ -33,16 +33,20 @@ if(isset($_GET['reply'])){
             $reciever = $fetchname['fullname'];
             $_SESSION['recieversname'] = $reciever;
         } else {
-            $_SESSION['recieversname'] = "N/A";
+            $_SESSION['recieversname'] = "GSJ APPOINTMENT SYSTEM";
         }
-    } 
-    $_SESSION['recieversname'] = $reciever;
-    // getting the message for the reciever from the database
-    $query3 = "SELECT * from notifications where notifications_id = $id";
-    $link3 = mysqli_query($conn, $query3);
-    $fetchmessage = mysqli_fetch_assoc($link3);
-    $message = $fetchmessage['message1'];
-    $_SESSION['message-for-reciever'] = $message;
+    }
+    if(empty($reciever)) {
+        $_SESSION['recieversname'] = 'GSJ APPOINTMENT SYSTEM';
+    }else{
+        $_SESSION['recieversname'] = $reciever;
+        // getting the message for the reciever from the database
+        $query3 = "SELECT * from notifications where notifications_id = $id";
+        $link3 = mysqli_query($conn, $query3);
+        $fetchmessage = mysqli_fetch_assoc($link3);
+        $message = $fetchmessage['message1'];
+        $_SESSION['message-for-reciever'] = $message;
+    }
 
 }
 if(isset($_POST['submit'])){

@@ -90,7 +90,7 @@ if(isset($_GET['edit'])){
                                         $fetchfullname = mysqli_fetch_assoc($linkedit);
                                         $fullname = $fetchfullname['field'];
                                         echo $fullname;
-                                            ?>
+                                        ?>
                                         ">
                                         <option hidden><?php
                                         $edit = "SELECT * from appointments where ap_id = '".$_SESSION['idforedit']."'";

@@ -2,6 +2,14 @@
     session_start();
     include 'connect.php';
 
+    if (isset($_SESSION['name'])) {
+        // User is already logged in, redirect to the home page or perform any other desired action
+        
+        // Destroy the session
+        session_destroy();
+        // Unset all session variables
+        $_SESSION = array();
+    }
     if(isset($_POST['login'])){ 
         $phone = $_POST['phone'];
         $password = $_POST['password'];       
@@ -107,7 +115,7 @@
                     <input type="password" name="password" id="password" placeholder="Password" style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;"
                     onclick="document.getElementById('password').style.border = 'none'" value="<?php echo isset($_POST['password']) ? htmlspecialchars($_POST['password']) : ''; ?>">
                     <br>
-                    <a href="reset.php"><span id="reset">Forgot Password?</span></a>
+                    <!-- <a href="reset.php"><span id="reset">Forgot Password?</span></a> -->
                     <br>
                     <div class="btn" style="margin-top: 10px;">
                     <input type="submit" name="login" value="Log In" id="bttn">

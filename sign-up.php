@@ -8,6 +8,7 @@ if(isset($_POST['signup'])){
     $address = $_POST['address'];
     $phone = $_POST['phone'];
     $password = $_POST['password'];
+    $email = $_POST['email'];
     $s = "SELECT phone FROM doctors WHERE phone = '$phone'
     UNION
     SELECT phone FROM users WHERE phone = '$phone'
@@ -41,12 +42,12 @@ if(isset($_POST['signup'])){
             </script>
             <?php
             
-            $reg = "insert into users(fullname, address, phone, password) values ('$fullname', '$address', '$phone', '$password')";
+            $reg = "insert into users(fullname, address, phone, password, email) values ('$fullname', '$address', '$phone', '$password, $email')";
             mysqli_query($conn, $reg);
             $_SESSION['name'] = $fullname;
             $_SESSION['phone'] = $phone;
 
-            $reg2 = "insert into allusers(fullname, phone, password) values ('$fullname', '$phone', '$password')";
+            $reg2 = "insert into allusers(fullname, phone, password, email) values ('$fullname', '$phone', '$password', $email)";
             mysqli_query($conn, $reg2);
             
             header('location: dashboard/index.php');
@@ -72,7 +73,7 @@ if(isset($_POST['signup'])){
     <div class="form-container">
         <div class="form" style="display:block">
            <div style="text-align:center">
-                <img src="images/gsj logo.png" alt="logo" height="200px" width="200px">
+                <img src="images/gsj logo.png" alt="logo" height="140px" width="140px">
             </div>
             <fieldset class="fieldset">
                 <legend class="legend" style="text-align: center">
@@ -82,6 +83,8 @@ if(isset($_POST['signup'])){
                     <input type="text" name="fullname" id="email" placeholder="Fullname" required style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;">
                     <br>
                     <input type="text" name="address" id="address" placeholder="District e.g. Lilongwe" required style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;">
+                    <br>
+                    <input type="email" name="email" id="phone" placeholder="E-mail" required style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                     <br>
                     <input type="text" name="phone" id="phone" placeholder="Phone Number" required style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                     <br>

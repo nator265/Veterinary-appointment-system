@@ -159,7 +159,7 @@ function time_elapsed_string($datetime, $full = false) {
                                 $retrieve = "SELECT appointments.fullname, appointments.animal, appointments.ap_type, appointments.ap_id, appointments.ap_date, appointments.session_expiry, appointments.bill_status, appointments.total, doctors.fullname AS 'name'
                                 FROM appointments
                                 INNER JOIN doctors ON appointments.field = doctors.field
-                                WHERE appointments.session_expiry = 'attended' AND appointments.bill_status = 'Paid' AND MONTH(appointments.ap_date) = MONTH(STR_TO_DATE('" . $_SESSION['monthz'] . "', '%M')) -- Compare month only
+                                WHERE appointments.bill_status = 'Paid' AND MONTH(appointments.ap_date) = MONTH(STR_TO_DATE('" . $_SESSION['monthz'] . "', '%M')) -- Compare month only
                                 ORDER BY appointments.ap_date ASC, appointments.ap_time ASC";
                                 
                                 $link = mysqli_query($conn, $retrieve);

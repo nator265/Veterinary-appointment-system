@@ -179,7 +179,7 @@ function time_elapsed_string($datetime, $full = false) {
                             <div class="rejected">
                                 <a href="appointments-rejected.php">
                                     <button class="sort-buttons" id="rejected" name="rejected">
-                                        Halted Payments
+                                        Unpaid Payments
                                     </button>
                                 </a>
                             </div>
@@ -221,7 +221,7 @@ function time_elapsed_string($datetime, $full = false) {
                                     $approved = "yes";
 
                                     $retrieve = "SELECT appointments.fullname, appointments.animal, appointments.ap_type, appointments.ap_id, appointments.ap_date, appointments.session_expiry, appointments.total, doctors.fullname as 'name'
-                                        from appointments INNER JOIN doctors on appointments.field = doctors.field  where appointments.session_expiry = 'attended' and bill_status = 'Not Paid' ORDER BY appointments.ap_date asc, appointments.ap_time asc";
+                                        from appointments INNER JOIN doctors on appointments.field = doctors.field  where bill_status = 'confirmed' ORDER BY appointments.ap_date asc, appointments.ap_time asc";
 
                                     $link = mysqli_query($conn, $retrieve);
                                     checkSQL($conn, $link);
@@ -244,7 +244,7 @@ function time_elapsed_string($datetime, $full = false) {
                                         <td><?php echo $row["session_expiry"] ?></td>
                                         <td><?php echo 'K'.number_format($row["total"]) ?></td>
                                         <td style="z-index:2"><a href="appointments-approve.php?approve=<?php echo $row['ap_id'] ?>"> <button class="action-buttons" id="approve-button"> Paid</button></a></td>
-                                        <td style="z-index:2"><a href="appointments-reject2.php?reject=<?php echo $row['ap_id'] ?>"> <button class="action-buttons" id="reject-button">Halt</button></a></td>
+                                        <td style="z-index:2"><a href="appointments-reject2.php?reject=<?php echo $row['ap_id'] ?>"> <button class="action-buttons" id="reject-button">Unpaid</button></a></td>
                                         </tr>
                                         
                                     <?php } ?>
