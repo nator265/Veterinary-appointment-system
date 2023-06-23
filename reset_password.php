@@ -14,14 +14,14 @@
         $mail ->SMTPAuth = true;
         $mail ->Username = 'Kelvinzimba2322000@gmail.com';
         $mail ->Password = '2875 3394';
-        $mail ->SMTPSecure = 'ssl';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail ->Port = 465;
         $mail ->setFrom('Kelvinzimba2322000@gmail.com');
 
         $mail ->addAddress($_POST['email']);
         $mail->isHTML(true);
-        $mail->Subject = $_POST['subject'];
-        $mail->Body = $_POST['message'];
+        $mail->Subject = "Reset Password";
+        $mail->Body = "12345";
 
         $mail->send();
 

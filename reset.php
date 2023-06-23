@@ -50,7 +50,6 @@ exit();
                 <form method="POST" action="reset_password.php" name="form" onsubmit="return validated()" style="text-align:center;">
                     <input type="email" name="email" id="phone" placeholder="Enter Your Email" style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 100;">
                     <br>
-                    <input type="text" >
                     <div class="btn" style="margin-top: 10px;">
                     <input type="submit" name="reset" value="Send reset code" id="bttn">
                     </div>
