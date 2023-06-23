@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- <script src="sweetalert2.all.min.js"></script> -->
+    <title>Document</title>
+</head>
+<body>
+    <button id="btn">click me</button>
+    <script src="jquery.js"></script>
+    <script>
+        $(document).ready(function (){
+            $('#btn').click(function(){
+                console.log("hello");
+                Swal.fire({
+                title: 'Error!',
+                text: 'Do you want to continue',
+                icon: 'error',
+                confirmButtonText: 'Cool'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
